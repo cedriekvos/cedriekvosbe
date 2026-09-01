@@ -24,9 +24,7 @@ final readonly class PostFileParser
         $frontmatter = $document->frontMatter;
         $body = $document->body;
 
-        if (! isset($frontmatter['slug'])) {
-            $frontmatter['slug'] = $slug;
-        }
+        $frontmatter['slug'] ??= $slug;
 
         $content = $this->highlightedPostMarkdownToHtmlConverter->convert($body);
 

@@ -27,9 +27,7 @@ final readonly class MessageFileParser
         $document = $this->frontMatterParser->parse($contents);
         $frontmatter = $document->frontMatter;
 
-        if (! isset($frontmatter['id'])) {
-            $frontmatter['id'] = $id;
-        }
+        $frontmatter['id'] ??= $id;
 
         return array_merge($frontmatter, ['body' => rtrim($document->body, "\n")]);
     }
