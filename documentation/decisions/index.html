@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Architecture Decision Records · cedriekvos blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .lbl { font-size: .625rem; letter-spacing: .12em; text-transform: uppercase; }
+      details[open] > summary { margin-bottom: .25rem; }
+      html { scroll-behavior: smooth; }
+    </style>
+  </head>
+  <body class="bg-stone-50 text-slate-900 font-sans antialiased">
+    <main class="max-w-4xl mx-auto px-6 py-12 sm:py-16 space-y-14">
+
+      <header class="space-y-5">
+        <div class="flex items-baseline justify-between flex-wrap gap-2">
+          <h1 class="font-serif text-4xl tracking-tight">Architecture Decision Records</h1>
+          <span class="font-mono text-xs text-slate-400">cedriekvos/blog · 7 decisions</span>
+        </div>
+        <p class="text-slate-600 leading-relaxed max-w-2xl">
+          The project’s cross-cutting <strong class="font-semibold text-slate-900">technical</strong> decisions, one per page.
+          This is the counterpart to <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">documentation/leesmij/</code>: where a leesmij records
+          <em>why a behavior is what it is</em>, an ADR records <em>why a technical choice was made and what was rejected</em>.
+        </p>
+        <p class="text-slate-600 leading-relaxed max-w-2xl text-sm">
+          ADRs are owned by the <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">feature-architect</code> skill, which sits between
+          <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">feature-specifier</code> and <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">feature-to-pest</code> in the pipeline and
+          is invoked only when a change raises a foundational technical question — a new dependency, a file or serialization
+          format, a new bounded domain’s storage strategy. Most features raise none and skip it.
+        </p>
+      </header>
+
+      <section class="space-y-3">
+        <h2 class="lbl text-slate-400">Decisions</h2>
+        <div class="space-y-3">
+        <a href="0001-composer-vulnerability-alert-security-domain.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
+          <div class="flex items-baseline gap-3 flex-wrap">
+            <span class="font-mono text-sm text-slate-400">0001</span>
+            <h3 class="font-serif text-lg leading-snug text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4 flex-1 min-w-[16rem]">App\Security: a file-based operational domain, no new dependency</h3>
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Accepted</span>
+            <span class="font-mono text-[11px] text-slate-400">2026-06-09</span>
+          </div>
+          <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">The project’s first operational domain, how it runs the audit, and where the 48-hour mute state lives.</p>
+        </a>
+        <a href="0002-microblog-domain-storage.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
+          <div class="flex items-baseline gap-3 flex-wrap">
+            <span class="font-mono text-sm text-slate-400">0002</span>
+            <h3 class="font-serif text-lg leading-snug text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4 flex-1 min-w-[16rem]">App\Microblog: flat files keyed by ULID</h3>
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Accepted</span>
+            <span class="font-mono text-[11px] text-slate-400">2026-07-15</span>
+          </div>
+          <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">How a message with no title gets an identity, and how its sort order survives an edit.</p>
+        </a>
+        <a href="0003-post-code-highlighting.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
+          <div class="flex items-baseline gap-3 flex-wrap">
+            <span class="font-mono text-sm text-slate-400">0003</span>
+            <h3 class="font-serif text-lg leading-snug text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4 flex-1 min-w-[16rem]">Syntax highlighting: tempest/highlight, scoped to posts only</h3>
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Accepted</span>
+            <span class="font-mono text-[11px] text-slate-400">2026-07-22</span>
+          </div>
+          <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">The highlighting library, how it is kept away from the About bio, and which theme pair.</p>
+        </a>
+        <a href="0004-highlight-extension-fenced-only-wiring.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
+          <div class="flex items-baseline gap-3 flex-wrap">
+            <span class="font-mono text-sm text-slate-400">0004</span>
+            <h3 class="font-serif text-lg leading-snug text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4 flex-1 min-w-[16rem]">Highlight fenced code only, not the whole HighlightExtension</h3>
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Accepted</span>
+            <span class="font-mono text-[11px] text-slate-400">2026-07-22</span>
+          </div>
+          <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">Which renderer actually gets registered — and why not the whole extension.</p>
+        </a>
+        <a href="0005-theme-scenario-verification-browser-tests.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
+          <div class="flex items-baseline gap-3 flex-wrap">
+            <span class="font-mono text-sm text-slate-400">0005</span>
+            <h3 class="font-serif text-lg leading-snug text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4 flex-1 min-w-[16rem]">Verify the light/dark highlight scenarios in a real browser</h3>
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Accepted</span>
+            <span class="font-mono text-[11px] text-slate-400">2026-07-22</span>
+          </div>
+          <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">How a theme toggle that only exists in the browser gets tested at all.</p>
+        </a>
+        <a href="0006-equivalent-mutant-renderer-priority.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
+          <div class="flex items-baseline gap-3 flex-wrap">
+            <span class="font-mono text-sm text-slate-400">0006</span>
+            <h3 class="font-serif text-lg leading-snug text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4 flex-1 min-w-[16rem]">Keeping <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">--min=100</code> green against an equivalent mutant</h3>
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Accepted</span>
+            <span class="font-mono text-[11px] text-slate-400">2026-07-23</span>
+          </div>
+          <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">The single sanctioned mutation-testing carve-out, with the proof that earns it.</p>
+        </a>
+        <a href="0007-shared-front-matter-codec.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
+          <div class="flex items-baseline gap-3 flex-wrap">
+            <span class="font-mono text-sm text-slate-400">0007</span>
+            <h3 class="font-serif text-lg leading-snug text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4 flex-1 min-w-[16rem]">A shared front-matter codec in App\Markdown</h3>
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Accepted</span>
+            <span class="font-mono text-[11px] text-slate-400">2026-08-04</span>
+          </div>
+          <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">Where the duplicated front-matter mechanics go, and everything that stays behind.</p>
+        </a>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl tracking-tight">Conventions</h2>
+        <dl class="rounded-xl border border-slate-200 bg-white px-5 py-2"><div class="grid sm:grid-cols-[11rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">Filename</dt><dd class="text-sm leading-relaxed text-slate-600">ADR pages are <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">NNNN-kebab-title.html</code>, zero-padded 4-digit sequence. Start from <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">template.html</code> and add a row to this index.</dd></div><div class="grid sm:grid-cols-[11rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">Language</dt><dd class="text-sm leading-relaxed text-slate-600">English. The <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">leesmij</code> is Dutch; ADRs are not.</dd></div><div class="grid sm:grid-cols-[11rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">One decision per file</dt><dd class="text-sm leading-relaxed text-slate-600">If a page decides two things, it is two pages.</dd></div><div class="grid sm:grid-cols-[11rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">Status</dt><dd class="text-sm leading-relaxed text-slate-600"><code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">Proposed</code> → <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">Accepted</code> / <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">Rejected</code>, later <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">Superseded by NNNN</code>. It lives in the header pill, not in a field list.</dd></div><div class="grid sm:grid-cols-[11rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">Immutable once Accepted</dt><dd class="text-sm leading-relaxed text-slate-600">The <em>decision</em> is. Don’t rewrite it to change what was decided: write a new ADR that supersedes it, and point the old one at it. Reformatting, fixing a link, or adding a back-reference to a later ADR is not a rewrite.</dd></div></dl>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl tracking-tight">House style for the writing</h2>
+        <p class="text-slate-600 text-sm leading-relaxed max-w-2xl">An ADR that nobody rereads has failed, so these are rules, not suggestions.</p>
+        <dl class="rounded-xl border border-slate-200 bg-white px-5 py-2"><div class="grid sm:grid-cols-[16rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">The title states the decision, not the topic</dt><dd class="text-sm leading-relaxed text-slate-600">“Highlight fenced code only” beats “Wire tempest/highlight for fenced code only, not via HighlightExtension wholesale”.</dd></div><div class="grid sm:grid-cols-[16rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">Lead with the decision and its reason</dt><dd class="text-sm leading-relaxed text-slate-600">The blockquote under the title carries both. A reader who stops there should still be correctly informed.</dd></div><div class="grid sm:grid-cols-[16rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">Shape: The rule · Why · Why not · Fallout</dt><dd class="text-sm leading-relaxed text-slate-600"><em>The rule</em> comes first because the usual reader is the coder looking for a constraint. From three options up, <em>Why not</em> is a table — the argument should be visible as structure, not prose.</dd></div><div class="grid sm:grid-cols-[16rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">Budget the prose: one screen</dt><dd class="text-sm leading-relaxed text-slate-600">Tables, snippets and <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">&lt;details&gt;</code> blocks don’t count; everything else does. Past that, something on the page is not a decision. A genuinely small decision gets the one-paragraph form.</dd></div><div class="grid sm:grid-cols-[16rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">Cite, don’t paste</dt><dd class="text-sm leading-relaxed text-slate-600">A path and a line number, not a quoted block of vendor source. Pasted vendor code goes stale silently.</dd></div><div class="grid sm:grid-cols-[16rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">No process narration</dt><dd class="text-sm leading-relaxed text-slate-600">Not who discovered what, not which skill read which file, not what was asked in what order. Only what is true and what it costs. “Rejected by the user” is worth one clause when it explains an otherwise odd choice; the deliberation is not.</dd></div><div class="grid sm:grid-cols-[16rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">Evidence longer than the decision</dt><dd class="text-sm leading-relaxed text-slate-600">Goes in a collapsed <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">&lt;details&gt;</code> block.</dd></div></dl>
+        <p class="text-sm text-slate-500 pt-2">
+          Start a new one from <a class="text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900 transition" href="template.html">template.html</a>.
+        </p>
+      </section>
+
+    </main>
+  </body>
+</html>

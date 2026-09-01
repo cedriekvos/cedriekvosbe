@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Domain anatomy · cedriekvos blog architecture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose", flowchart: { curve: "basis", useMaxWidth: true } });
+    </script>
+    <style>
+      .lbl { font-size: .625rem; letter-spacing: .12em; text-transform: uppercase; }
+      html { scroll-behavior: smooth; }
+      .mermaid { display: flex; justify-content: center; }
+      .mermaid svg { max-width: 100%; height: auto; }
+    </style>
+  </head>
+  <body class="bg-stone-50 text-slate-900 font-sans antialiased">
+    <main class="max-w-5xl mx-auto px-6 py-12 sm:py-16 space-y-14">
+
+      <nav class="flex flex-wrap items-center gap-1 text-xs font-medium -mx-1"><a href="index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Overview</a><a href="modules.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Module map</a><span class="px-2.5 py-1 rounded bg-slate-900 text-white">Domain anatomy</span><a href="flows.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Flow traces</a><a href="dependencies.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Dependency graph</a></nav>
+
+      <header class="space-y-4">
+        <div class="flex items-baseline justify-between flex-wrap gap-2">
+          <h1 class="font-serif text-4xl tracking-tight">Domain anatomy</h1>
+          <span class="font-mono text-xs text-slate-400">2026-08-26 · app/ @ fd1d235</span>
+        </div>
+        <p class="text-slate-600 leading-relaxed max-w-3xl">Learn one domain and you have mostly learned all of them. This page shows the repeated slice, then exactly where each module deviates from it.</p>
+      </header>
+
+      <section class="space-y-5">
+        <h2 class="lbl text-slate-400">The pattern</h2>
+        <h3 class="font-serif text-2xl tracking-tight text-slate-900 -mt-3">One slice, repeated five times</h3>
+<p class="text-slate-600 leading-relaxed max-w-3xl">Every file-backed domain is built from the same parts, wired by constructor injection. <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Blog</code> is the most complete instance, so read it as the reference: the facade is the only class the delivery layer touches, and the storage class is the only one that touches disk.</p>
+<div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Blog_DraftSlug[&quot;DraftSlug&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Blog_Markdown_FencedCodeHighlightExtension[&quot;FencedCodeHighlightExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
+  App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter[&quot;HighlightedPostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostFileParser[&quot;PostFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostFileSerializer[&quot;PostFileSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostMarkdownToHtmlConverter[&quot;PostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Blog_Post[&quot;Post&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Blog_PostFactory[&quot;PostFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Blog_PostFilter[&quot;PostFilter&lt;br/&gt;&lt;i&gt;Filter&lt;/i&gt;&quot;]
+  App_Blog_PostReadTimeCalculator[&quot;PostReadTimeCalculator&lt;br/&gt;&lt;i&gt;Calculator&lt;/i&gt;&quot;]
+  App_Blog_PostSorter[&quot;PostSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostGetRepository[&quot;PostGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostSource[&quot;PostSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostWriteRepository[&quot;PostWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostsRepository[&quot;PostsRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_Blog_Storage_PostFileStorage[&quot;PostFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter --&gt; App_Blog_Markdown_FencedCodeHighlightExtension
+  App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;App\\Markdown&lt;/i&gt;&quot;]
+  class App_Markdown_FrontMatterParser external
+  App_Blog_Markdown_PostFileParser --&gt; App_Markdown_FrontMatterParser
+  App_Blog_Markdown_PostFileParser --&gt; App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter
+  App_Blog_Markdown_PostFileParser --&gt; App_Blog_PostReadTimeCalculator
+  App_Markdown_FrontMatterSerializer[&quot;FrontMatterSerializer&lt;br/&gt;&lt;i&gt;App\\Markdown&lt;/i&gt;&quot;]
+  class App_Markdown_FrontMatterSerializer external
+  App_Blog_Markdown_PostFileSerializer --&gt; App_Markdown_FrontMatterSerializer
+  App_Blog_PostFilter --&gt; App_Blog_DraftSlug
+  App_Blog_Repositories_PostGetRepository --&gt; App_Blog_Repositories_PostSource
+  App_Blog_Repositories_PostGetRepository --&gt; App_Blog_PostSorter
+  App_Blog_Repositories_PostSource --&gt; App_Blog_Storage_PostFileStorage
+  App_Blog_Repositories_PostSource --&gt; App_Blog_Markdown_PostFileParser
+  App_Blog_Repositories_PostSource --&gt; App_Blog_PostFactory
+  App_Blog_Repositories_PostSource --&gt; App_Blog_PostFilter
+  App_Blog_Repositories_PostWriteRepository --&gt; App_Blog_Storage_PostFileStorage
+  App_Blog_Repositories_PostWriteRepository --&gt; App_Blog_Markdown_PostFileSerializer
+  App_Blog_Repositories_PostsRepository --&gt; App_Blog_Repositories_PostGetRepository
+  App_Blog_Repositories_PostsRepository --&gt; App_Blog_Repositories_PostWriteRepository
+  App_Blog_Storage_PostFileStorage --&gt; App_Blog_DraftSlug
+  classDef external fill:#ecfdf5,stroke:#059669,color:#064e3b</pre></div>
+      </section>
+
+      <section class="space-y-5">
+        <h2 class="lbl text-slate-400">The matrix</h2>
+        <h3 class="font-serif text-2xl tracking-tight text-slate-900 -mt-3">Which domain fills which slot</h3>
+<p class="text-slate-600 leading-relaxed max-w-3xl">Rows are the slots in the pattern above; columns are the modules that implement it. Empty cells are the point of this table — they show where a domain is simpler than the reference, not where it is missing something.</p>
+<div class="xl:-mx-24"><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 overflow-x-auto"><table class="w-full border-collapse table-fixed"><thead><tr><th class="py-2 pr-3 text-left lbl text-slate-400 w-[9rem]">Slot</th><th class="py-2 px-2 text-left lbl text-slate-500 align-bottom">About</th><th class="py-2 px-2 text-left lbl text-slate-500 align-bottom">Blog</th><th class="py-2 px-2 text-left lbl text-slate-500 align-bottom">Microblog</th><th class="py-2 px-2 text-left lbl text-slate-500 align-bottom">Scratchpad</th><th class="py-2 px-2 text-left lbl text-slate-500 align-bottom">Security</th><th class="py-2 px-2 text-left lbl text-slate-500 align-bottom">Markdown<span class="block font-normal normal-case tracking-normal text-[10px] text-emerald-600">shared kernel</span></th></tr></thead><tbody><tr class="border-t border-slate-100 align-top"><td class="py-2 pr-3"><div class="font-medium text-[13px] text-slate-900 leading-snug">Value object</div><div class="text-[11px] text-slate-500 leading-snug">the immutable thing the domain is about</div></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">About</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">DraftSlug</span><br/><span class="text-slate-700">Post</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">Message</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">Scratchpad</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MuteWindow</span><br/><span class="text-slate-700">Vulnerability</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">FrontMatterDocument</span></td></tr><tr class="border-t border-slate-100 align-top"><td class="py-2 pr-3"><div class="font-medium text-[13px] text-slate-900 leading-snug">Factory</div><div class="text-[11px] text-slate-500 leading-snug">builds it from already-parsed data</div></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">AboutFactory</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">PostFactory</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MessageFactory</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">VulnerabilityFactory</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td></tr><tr class="border-t border-slate-100 align-top"><td class="py-2 pr-3"><div class="font-medium text-[13px] text-slate-900 leading-snug">Repository facade</div><div class="text-[11px] text-slate-500 leading-snug">the single seam the delivery layer is allowed to see</div></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">AboutRepository</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">PostsRepository</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MessagesRepository</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">ScratchpadRepository</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MuteStateRepository</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td></tr><tr class="border-t border-slate-100 align-top"><td class="py-2 pr-3"><div class="font-medium text-[13px] text-slate-900 leading-snug">Read repository</div><div class="text-[11px] text-slate-500 leading-snug">queries</div></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">AboutGetRepository</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">PostGetRepository</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MessageGetRepository</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">ScratchpadGetRepository</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MuteStateGetRepository</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td></tr><tr class="border-t border-slate-100 align-top"><td class="py-2 pr-3"><div class="font-medium text-[13px] text-slate-900 leading-snug">Write repository</div><div class="text-[11px] text-slate-500 leading-snug">mutations</div></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">AboutWriteRepository</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">PostWriteRepository</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MessageWriteRepository</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">ScratchpadWriteRepository</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MuteStateWriteRepository</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td></tr><tr class="border-t border-slate-100 align-top"><td class="py-2 pr-3"><div class="font-medium text-[13px] text-slate-900 leading-snug">Source</div><div class="text-[11px] text-slate-500 leading-snug">loads and assembles every record from storage</div></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">PostSource</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MessageSource</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">VulnerabilitySource</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td></tr><tr class="border-t border-slate-100 align-top"><td class="py-2 pr-3"><div class="font-medium text-[13px] text-slate-900 leading-snug">File storage</div><div class="text-[11px] text-slate-500 leading-snug">the only class that touches the disk</div></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">AboutFileStorage</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">PostFileStorage</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MessageFileStorage</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">ScratchpadFileStorage</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MuteFileStorage</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td></tr><tr class="border-t border-slate-100 align-top"><td class="py-2 pr-3"><div class="font-medium text-[13px] text-slate-900 leading-snug">Parser</div><div class="text-[11px] text-slate-500 leading-snug">file text into structured data</div></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">AboutFileParser</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">PostFileParser</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MessageFileParser</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">VulnerabilityParser</span><br/><span class="text-slate-700">MuteStateParser</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">FrontMatterParser</span></td></tr><tr class="border-t border-slate-100 align-top"><td class="py-2 pr-3"><div class="font-medium text-[13px] text-slate-900 leading-snug">Serializer</div><div class="text-[11px] text-slate-500 leading-snug">structured data back into file text</div></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">AboutFileSerializer</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">PostFileSerializer</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MessageFileSerializer</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MuteStateSerializer</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">FrontMatterSerializer</span></td></tr><tr class="border-t border-slate-100 align-top"><td class="py-2 pr-3"><div class="font-medium text-[13px] text-slate-900 leading-snug">Converter</div><div class="text-[11px] text-slate-500 leading-snug">markdown or plain text into HTML</div></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">HighlightedPostMarkdownToHtmlConverter</span><br/><span class="text-slate-700">PostMarkdownToHtmlConverter</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MessageTextToHtmlConverter</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MarkdownToHtmlConverter</span></td></tr><tr class="border-t border-slate-100 align-top"><td class="py-2 pr-3"><div class="font-medium text-[13px] text-slate-900 leading-snug">Sorter</div><div class="text-[11px] text-slate-500 leading-snug">ordering</div></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">PostSorter</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">MessageSorter</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td></tr><tr class="border-t border-slate-100 align-top"><td class="py-2 pr-3"><div class="font-medium text-[13px] text-slate-900 leading-snug">Filter</div><div class="text-[11px] text-slate-500 leading-snug">visibility rules</div></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-700">PostFilter</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td><td class="py-2 px-2 text-[11px] font-mono leading-tight break-words"><span class="text-slate-300">&mdash;</span></td></tr></tbody></table></div></div>
+      </section>
+
+      <section class="space-y-5">
+        <h2 class="lbl text-slate-400">Deviations</h2>
+        <h3 class="font-serif text-2xl tracking-tight text-slate-900 -mt-3">Where each domain departs from the pattern</h3>
+<div class="grid gap-3"><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><h4 class="font-serif text-lg text-slate-900">App\About</h4><div class="mt-3 grid sm:grid-cols-2 gap-3 text-sm"><div><div class="lbl text-slate-400 mb-1">Slots left empty</div><div class="flex flex-wrap gap-1"><span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Source</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Converter</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Sorter</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Filter</span></div></div><div><div class="lbl text-slate-400 mb-1">Beyond the pattern</div><span class="text-slate-400">nothing</span></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><h4 class="font-serif text-lg text-slate-900">App\Blog</h4><div class="mt-3 grid sm:grid-cols-2 gap-3 text-sm"><div><div class="lbl text-slate-400 mb-1">Slots left empty</div><span class="text-emerald-700">fills every slot</span></div><div><div class="lbl text-slate-400 mb-1">Beyond the pattern</div><div class="flex flex-wrap gap-1"><span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800">CommonMark extension</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800">Calculator</span></div></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><h4 class="font-serif text-lg text-slate-900">App\Microblog</h4><div class="mt-3 grid sm:grid-cols-2 gap-3 text-sm"><div><div class="lbl text-slate-400 mb-1">Slots left empty</div><div class="flex flex-wrap gap-1"><span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Filter</span></div></div><div><div class="lbl text-slate-400 mb-1">Beyond the pattern</div><div class="flex flex-wrap gap-1"><span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800">CommonMark extension</span></div></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><h4 class="font-serif text-lg text-slate-900">App\Scratchpad</h4><div class="mt-3 grid sm:grid-cols-2 gap-3 text-sm"><div><div class="lbl text-slate-400 mb-1">Slots left empty</div><div class="flex flex-wrap gap-1"><span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Factory</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Source</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Parser</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Serializer</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Converter</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Sorter</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Filter</span></div></div><div><div class="lbl text-slate-400 mb-1">Beyond the pattern</div><span class="text-slate-400">nothing</span></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><h4 class="font-serif text-lg text-slate-900">App\Security</h4><div class="mt-3 grid sm:grid-cols-2 gap-3 text-sm"><div><div class="lbl text-slate-400 mb-1">Slots left empty</div><div class="flex flex-wrap gap-1"><span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Converter</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Sorter</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Filter</span></div></div><div><div class="lbl text-slate-400 mb-1">Beyond the pattern</div><div class="flex flex-wrap gap-1"><span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800">Process adapter</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800">Domain service</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800">Result object</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800">Notifier</span></div></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><h4 class="font-serif text-lg text-slate-900">App\Markdown</h4><div class="mt-3 grid sm:grid-cols-2 gap-3 text-sm"><div><div class="lbl text-slate-400 mb-1">Slots left empty</div><div class="flex flex-wrap gap-1"><span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Factory</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Repository facade</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Read repository</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Write repository</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Source</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">File storage</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Sorter</span> <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Filter</span></div></div><div><div class="lbl text-slate-400 mb-1">Beyond the pattern</div><span class="text-slate-400">nothing</span></div></div></div></div>
+      </section>
+
+      <section class="space-y-5">
+        <h2 class="lbl text-slate-400">Per module</h2>
+        <h3 class="font-serif text-2xl tracking-tight text-slate-900 -mt-3">The same diagram for every domain</h3>
+<div class="space-y-8"><div class="space-y-2"><h4 class="font-serif text-lg text-slate-900">App\About</h4><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_About_About[&quot;About&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_About_AboutFactory[&quot;AboutFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_About_Markdown_AboutFileParser[&quot;AboutFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_About_Markdown_AboutFileSerializer[&quot;AboutFileSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_About_Repositories_AboutGetRepository[&quot;AboutGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_About_Repositories_AboutRepository[&quot;AboutRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_About_Repositories_AboutWriteRepository[&quot;AboutWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_About_Storage_AboutFileStorage[&quot;AboutFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostMarkdownToHtmlConverter[&quot;PostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;App\\Blog&lt;/i&gt;&quot;]
+  class App_Blog_Markdown_PostMarkdownToHtmlConverter external
+  App_About_AboutFactory --&gt; App_Blog_Markdown_PostMarkdownToHtmlConverter
+  App_About_Repositories_AboutGetRepository --&gt; App_About_Storage_AboutFileStorage
+  App_About_Repositories_AboutGetRepository --&gt; App_About_Markdown_AboutFileParser
+  App_About_Repositories_AboutGetRepository --&gt; App_About_AboutFactory
+  App_About_Repositories_AboutRepository --&gt; App_About_Repositories_AboutGetRepository
+  App_About_Repositories_AboutRepository --&gt; App_About_Repositories_AboutWriteRepository
+  App_About_Repositories_AboutWriteRepository --&gt; App_About_Storage_AboutFileStorage
+  App_About_Repositories_AboutWriteRepository --&gt; App_About_Markdown_AboutFileSerializer
+  classDef external fill:#ecfdf5,stroke:#059669,color:#064e3b</pre></div></div><div class="space-y-2"><h4 class="font-serif text-lg text-slate-900">App\Blog</h4><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Blog_DraftSlug[&quot;DraftSlug&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Blog_Markdown_FencedCodeHighlightExtension[&quot;FencedCodeHighlightExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
+  App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter[&quot;HighlightedPostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostFileParser[&quot;PostFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostFileSerializer[&quot;PostFileSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostMarkdownToHtmlConverter[&quot;PostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Blog_Post[&quot;Post&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Blog_PostFactory[&quot;PostFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Blog_PostFilter[&quot;PostFilter&lt;br/&gt;&lt;i&gt;Filter&lt;/i&gt;&quot;]
+  App_Blog_PostReadTimeCalculator[&quot;PostReadTimeCalculator&lt;br/&gt;&lt;i&gt;Calculator&lt;/i&gt;&quot;]
+  App_Blog_PostSorter[&quot;PostSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostGetRepository[&quot;PostGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostSource[&quot;PostSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostWriteRepository[&quot;PostWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostsRepository[&quot;PostsRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_Blog_Storage_PostFileStorage[&quot;PostFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter --&gt; App_Blog_Markdown_FencedCodeHighlightExtension
+  App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;App\\Markdown&lt;/i&gt;&quot;]
+  class App_Markdown_FrontMatterParser external
+  App_Blog_Markdown_PostFileParser --&gt; App_Markdown_FrontMatterParser
+  App_Blog_Markdown_PostFileParser --&gt; App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter
+  App_Blog_Markdown_PostFileParser --&gt; App_Blog_PostReadTimeCalculator
+  App_Markdown_FrontMatterSerializer[&quot;FrontMatterSerializer&lt;br/&gt;&lt;i&gt;App\\Markdown&lt;/i&gt;&quot;]
+  class App_Markdown_FrontMatterSerializer external
+  App_Blog_Markdown_PostFileSerializer --&gt; App_Markdown_FrontMatterSerializer
+  App_Blog_PostFilter --&gt; App_Blog_DraftSlug
+  App_Blog_Repositories_PostGetRepository --&gt; App_Blog_Repositories_PostSource
+  App_Blog_Repositories_PostGetRepository --&gt; App_Blog_PostSorter
+  App_Blog_Repositories_PostSource --&gt; App_Blog_Storage_PostFileStorage
+  App_Blog_Repositories_PostSource --&gt; App_Blog_Markdown_PostFileParser
+  App_Blog_Repositories_PostSource --&gt; App_Blog_PostFactory
+  App_Blog_Repositories_PostSource --&gt; App_Blog_PostFilter
+  App_Blog_Repositories_PostWriteRepository --&gt; App_Blog_Storage_PostFileStorage
+  App_Blog_Repositories_PostWriteRepository --&gt; App_Blog_Markdown_PostFileSerializer
+  App_Blog_Repositories_PostsRepository --&gt; App_Blog_Repositories_PostGetRepository
+  App_Blog_Repositories_PostsRepository --&gt; App_Blog_Repositories_PostWriteRepository
+  App_Blog_Storage_PostFileStorage --&gt; App_Blog_DraftSlug
+  classDef external fill:#ecfdf5,stroke:#059669,color:#064e3b</pre></div></div><div class="space-y-2"><h4 class="font-serif text-lg text-slate-900">App\Microblog</h4><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Microblog_Markdown_MessageFileParser[&quot;MessageFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_MessageFileSerializer[&quot;MessageFileSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_MessageTextToHtmlConverter[&quot;MessageTextToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_PlainTextRenderingExtension[&quot;PlainTextRenderingExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_WebUrlAutolinkExtension[&quot;WebUrlAutolinkExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
+  App_Microblog_Message[&quot;Message&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Microblog_MessageFactory[&quot;MessageFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Microblog_MessageSorter[&quot;MessageSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessageGetRepository[&quot;MessageGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessageSource[&quot;MessageSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessageWriteRepository[&quot;MessageWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessagesRepository[&quot;MessagesRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_Microblog_Storage_MessageFileStorage[&quot;MessageFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;App\\Markdown&lt;/i&gt;&quot;]
+  class App_Markdown_FrontMatterParser external
+  App_Microblog_Markdown_MessageFileParser --&gt; App_Markdown_FrontMatterParser
+  App_Markdown_FrontMatterSerializer[&quot;FrontMatterSerializer&lt;br/&gt;&lt;i&gt;App\\Markdown&lt;/i&gt;&quot;]
+  class App_Markdown_FrontMatterSerializer external
+  App_Microblog_Markdown_MessageFileSerializer --&gt; App_Markdown_FrontMatterSerializer
+  App_Microblog_Markdown_MessageTextToHtmlConverter --&gt; App_Microblog_Markdown_PlainTextRenderingExtension
+  App_Microblog_Markdown_MessageTextToHtmlConverter --&gt; App_Microblog_Markdown_WebUrlAutolinkExtension
+  App_Microblog_MessageFactory --&gt; App_Microblog_Markdown_MessageTextToHtmlConverter
+  App_Microblog_Repositories_MessageGetRepository --&gt; App_Microblog_Repositories_MessageSource
+  App_Microblog_Repositories_MessageGetRepository --&gt; App_Microblog_MessageSorter
+  App_Microblog_Repositories_MessageSource --&gt; App_Microblog_Storage_MessageFileStorage
+  App_Microblog_Repositories_MessageSource --&gt; App_Microblog_Markdown_MessageFileParser
+  App_Microblog_Repositories_MessageSource --&gt; App_Microblog_MessageFactory
+  App_Microblog_Repositories_MessageWriteRepository --&gt; App_Microblog_Storage_MessageFileStorage
+  App_Microblog_Repositories_MessageWriteRepository --&gt; App_Microblog_Markdown_MessageFileSerializer
+  App_Microblog_Repositories_MessageWriteRepository --&gt; App_Microblog_Repositories_MessageSource
+  App_Microblog_Repositories_MessagesRepository --&gt; App_Microblog_Repositories_MessageGetRepository
+  App_Microblog_Repositories_MessagesRepository --&gt; App_Microblog_Repositories_MessageWriteRepository
+  classDef external fill:#ecfdf5,stroke:#059669,color:#064e3b</pre></div></div><div class="space-y-2"><h4 class="font-serif text-lg text-slate-900">App\Scratchpad</h4><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Scratchpad_Repositories_ScratchpadGetRepository[&quot;ScratchpadGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Scratchpad_Repositories_ScratchpadRepository[&quot;ScratchpadRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_Scratchpad_Repositories_ScratchpadWriteRepository[&quot;ScratchpadWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_Scratchpad_Scratchpad[&quot;Scratchpad&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Scratchpad_Storage_ScratchpadFileStorage[&quot;ScratchpadFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Scratchpad_Repositories_ScratchpadGetRepository --&gt; App_Scratchpad_Storage_ScratchpadFileStorage
+  App_Scratchpad_Repositories_ScratchpadRepository --&gt; App_Scratchpad_Repositories_ScratchpadGetRepository
+  App_Scratchpad_Repositories_ScratchpadRepository --&gt; App_Scratchpad_Repositories_ScratchpadWriteRepository
+  App_Scratchpad_Repositories_ScratchpadWriteRepository --&gt; App_Scratchpad_Storage_ScratchpadFileStorage
+  classDef external fill:#ecfdf5,stroke:#059669,color:#064e3b</pre></div></div><div class="space-y-2"><h4 class="font-serif text-lg text-slate-900">App\Security</h4><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Security_Audit_ComposerAudit[&quot;ComposerAudit&lt;br/&gt;&lt;i&gt;Process adapter&lt;/i&gt;&quot;]
+  App_Security_Audit_VulnerabilityParser[&quot;VulnerabilityParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Security_Json_MuteStateParser[&quot;MuteStateParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Security_Json_MuteStateSerializer[&quot;MuteStateSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Security_MuteWindow[&quot;MuteWindow&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Security_Repositories_MuteStateGetRepository[&quot;MuteStateGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Security_Repositories_MuteStateRepository[&quot;MuteStateRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_Security_Repositories_MuteStateWriteRepository[&quot;MuteStateWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_Security_Repositories_VulnerabilitySource[&quot;VulnerabilitySource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Security_Storage_MuteFileStorage[&quot;MuteFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Security_Vulnerability[&quot;Vulnerability&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Security_VulnerabilityCheck[&quot;VulnerabilityCheck&lt;br/&gt;&lt;i&gt;Domain service&lt;/i&gt;&quot;]
+  App_Security_VulnerabilityCheckResult[&quot;VulnerabilityCheckResult&lt;br/&gt;&lt;i&gt;Result object&lt;/i&gt;&quot;]
+  App_Security_VulnerabilityFactory[&quot;VulnerabilityFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Security_VulnerabilityNotifier[&quot;VulnerabilityNotifier&lt;br/&gt;&lt;i&gt;Notifier&lt;/i&gt;&quot;]
+  App_Security_Repositories_MuteStateGetRepository --&gt; App_Security_Storage_MuteFileStorage
+  App_Security_Repositories_MuteStateGetRepository --&gt; App_Security_Json_MuteStateParser
+  App_Security_Repositories_MuteStateRepository --&gt; App_Security_Repositories_MuteStateGetRepository
+  App_Security_Repositories_MuteStateRepository --&gt; App_Security_Repositories_MuteStateWriteRepository
+  App_Security_Repositories_MuteStateWriteRepository --&gt; App_Security_Storage_MuteFileStorage
+  App_Security_Repositories_MuteStateWriteRepository --&gt; App_Security_Json_MuteStateSerializer
+  App_Security_Repositories_VulnerabilitySource --&gt; App_Security_Audit_ComposerAudit
+  App_Security_Repositories_VulnerabilitySource --&gt; App_Security_Audit_VulnerabilityParser
+  App_Security_Repositories_VulnerabilitySource --&gt; App_Security_VulnerabilityFactory
+  App_Security_VulnerabilityCheck --&gt; App_Security_Repositories_VulnerabilitySource
+  App_Security_VulnerabilityCheck --&gt; App_Security_Repositories_MuteStateRepository
+  App_Security_VulnerabilityCheck --&gt; App_Security_MuteWindow
+  App_Security_VulnerabilityCheck --&gt; App_Security_VulnerabilityNotifier
+  classDef external fill:#ecfdf5,stroke:#059669,color:#064e3b</pre></div></div><div class="space-y-2"><h4 class="font-serif text-lg text-slate-900">App\Markdown</h4><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Markdown_FrontMatterDocument[&quot;FrontMatterDocument&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterSerializer[&quot;FrontMatterSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Markdown_MarkdownToHtmlConverter[&quot;MarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  classDef external fill:#ecfdf5,stroke:#059669,color:#064e3b</pre></div></div></div>
+      </section>
+
+      <footer class="border-t border-slate-200 pt-6 text-xs text-slate-400 leading-relaxed space-y-1">
+        <p>Generated from <code class="font-mono">app/</code> and <code class="font-mono">routes/</code> by <code class="font-mono">documentation/architecture/generate.php</code>. Do not hand-edit — re-run the script instead.</p>
+        <p>Related: <a class="underline underline-offset-2 decoration-slate-300 hover:text-slate-600" href="../decisions/index.html">Architecture Decision Records</a> · <code class="font-mono">documentation/features/</code> · <code class="font-mono">documentation/leesmij/</code></p>
+      </footer>
+    </main>
+  </body>
+</html>

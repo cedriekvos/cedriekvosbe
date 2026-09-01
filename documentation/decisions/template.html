@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ADR template</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .lbl { font-size: .625rem; letter-spacing: .12em; text-transform: uppercase; }
+      details[open] > summary { margin-bottom: .25rem; }
+      html { scroll-behavior: smooth; }
+    </style>
+  </head>
+  <body class="bg-stone-50 text-slate-900 font-sans antialiased">
+    <main class="max-w-3xl mx-auto px-6 py-12 sm:py-16">
+
+      <nav class="flex items-center justify-between text-xs mb-12">
+        <a href="index.html" class="text-slate-500 hover:text-slate-900 transition">&larr; Architecture Decision Records</a>
+        <span class="font-mono text-slate-400">template</span>
+      </nav>
+
+      <div class="rounded-lg border border-sky-200 bg-sky-50/70 px-5 py-4 mb-10 text-sm leading-relaxed text-sky-900">
+        <strong class="font-semibold">Copy this file to <code class="font-mono text-[0.875em] bg-white/60 rounded px-1">NNNN-kebab-title.html</code></strong>,
+        replace every placeholder, delete the sections you don’t need, and add a row to
+        <a class="underline decoration-sky-300 underline-offset-2 hover:decoration-sky-900" href="index.html">index.html</a>.
+        Delete this box. Status pill colours: <code class="font-mono text-[0.875em] bg-white/60 rounded px-1">bg-emerald-100 text-emerald-800</code> Accepted ·
+        <code class="font-mono text-[0.875em] bg-white/60 rounded px-1">bg-amber-100 text-amber-800</code> Proposed ·
+        <code class="font-mono text-[0.875em] bg-white/60 rounded px-1">bg-slate-200 text-slate-600</code> Superseded.
+      </div>
+
+      <header class="space-y-6">
+        <div class="flex items-center gap-3 flex-wrap">
+          <span class="font-mono text-sm text-slate-400">NNNN</span>
+          <span class="text-xs font-semibold px-2 py-1 rounded bg-amber-100 text-amber-800">Proposed</span>
+          <span class="font-mono text-xs text-slate-400">YYYY-MM-DD</span>
+        </div>
+        <h1 class="font-serif text-3xl sm:text-4xl tracking-tight leading-[1.15] text-slate-900">The decision itself, as a headline</h1>
+        <blockquote class="border-l-4 border-slate-900 bg-white rounded-r-lg px-5 py-4 text-[1.0625rem] leading-relaxed text-slate-700 shadow-sm">
+          <strong class="font-semibold text-slate-900">We &lt;do X&gt; instead of &lt;Y&gt;</strong> — &lt;the one constraint that decided it&gt;.
+        </blockquote>
+        <dl class="grid sm:grid-cols-[5.5rem_1fr] gap-x-5 gap-y-2 pt-2 border-t border-slate-200 mt-2 pt-5">
+          <dt class="lbl text-slate-400 pt-1 sm:text-right">Driver</dt>
+          <dd class="text-sm leading-relaxed text-slate-600"><code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">features/&lt;domain&gt;/&lt;name&gt;.feature</code></dd>
+          <dt class="lbl text-slate-400 pt-1 sm:text-right">Related</dt>
+          <dd class="text-sm leading-relaxed text-slate-600">Other ADRs this builds on or corrects. Delete the pair if none.</dd>
+        </dl>
+      </header>
+
+      <section class="pt-12 space-y-5">
+        <h2 class="font-serif text-2xl tracking-tight text-slate-900">The rule</h2>
+        <p class="leading-relaxed text-slate-700">The constraint the coder must honour, as concretely as possible: a snippet, a class name, a path, a forbidden call. This is the part <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">feature-development</code> comes back for — put it first and keep it short.</p>
+        <div class="rounded-lg bg-slate-900 overflow-hidden"><div class="lbl text-slate-500 px-4 pt-3">php</div><pre class="overflow-x-auto px-4 py-3 text-[13px] leading-relaxed whitespace-pre-wrap break-words"><code class="font-mono text-slate-100">// a snippet showing exactly what to do, or not do</code></pre></div>
+      </section>
+
+      <section class="pt-12 space-y-5">
+        <h2 class="font-serif text-2xl tracking-tight text-slate-900">Why</h2>
+        <p class="leading-relaxed text-slate-700">Three to six sentences: the constraint that forced a choice, and why this option satisfies it. Cite evidence as <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">vendor/some/lib/File.php:42</code> — do not paste source. Do not narrate how the decision was reached.</p>
+        <details class="group rounded-lg border border-slate-200 bg-white"><summary class="cursor-pointer select-none px-4 py-3 text-sm font-medium text-slate-700 hover:text-slate-900 marker:text-slate-400">Evidence longer than the decision goes in here</summary><div class="px-4 pb-4 pt-1 space-y-3 border-t border-slate-100"><p class="leading-relaxed text-slate-700">Proof, vendor behaviour, measurements. Delete if unused.</p></div></details>
+      </section>
+
+      <section class="pt-12 space-y-5">
+        <h2 class="font-serif text-2xl tracking-tight text-slate-900">Why not</h2>
+        <div class="overflow-x-auto rounded-lg border border-slate-200 bg-white"><table class="w-full border-collapse min-w-[34rem]"><colgroup><col style="width:40%" /></colgroup><thead><th class="text-left lbl text-slate-500 font-semibold px-4 py-3 border-b border-slate-200">Option</th><th class="text-left lbl text-slate-500 font-semibold px-4 py-3 border-b border-slate-200">Why not</th></thead><tbody><tr class="even:bg-stone-50/60"><td class="align-top px-4 py-3 text-sm leading-relaxed text-slate-700 border-b border-slate-100 font-medium text-slate-900">The runner-up</td><td class="align-top px-4 py-3 text-sm leading-relaxed text-slate-700 border-b border-slate-100">The one reason it lost</td></tr><tr class="even:bg-stone-50/60"><td class="align-top px-4 py-3 text-sm leading-relaxed text-slate-700 border-b border-slate-100 font-medium text-slate-900">The other real contender</td><td class="align-top px-4 py-3 text-sm leading-relaxed text-slate-700 border-b border-slate-100">The one reason it lost</td></tr></tbody></table></div>
+        <p class="text-sm text-slate-500">A two-item list is fine when there were only two options; use the table from three up. Always name at least the runner-up.</p>
+      </section>
+
+      <section class="pt-12 space-y-5">
+        <h2 class="font-serif text-2xl tracking-tight text-slate-900">Fallout</h2>
+        <ul class="list-disc list-outside pl-5 space-y-3"><li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400">What this makes harder, and any new constraint the implementation must honour.</li><li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400">Follow-up work it implies.</li><li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400">What would trigger superseding this ADR.</li></ul>
+      </section>
+
+      <nav class="mt-16 pt-6 border-t border-slate-200 flex justify-between gap-6">
+        <span></span><span></span>
+      </nav>
+
+    </main>
+  </body>
+</html>

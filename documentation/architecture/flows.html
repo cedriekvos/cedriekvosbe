@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Flow traces · cedriekvos blog architecture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose", flowchart: { curve: "basis", useMaxWidth: true } });
+    </script>
+    <style>
+      .lbl { font-size: .625rem; letter-spacing: .12em; text-transform: uppercase; }
+      html { scroll-behavior: smooth; }
+      .mermaid { display: flex; justify-content: center; }
+      .mermaid svg { max-width: 100%; height: auto; }
+    </style>
+  </head>
+  <body class="bg-stone-50 text-slate-900 font-sans antialiased">
+    <main class="max-w-5xl mx-auto px-6 py-12 sm:py-16 space-y-14">
+
+      <nav class="flex flex-wrap items-center gap-1 text-xs font-medium -mx-1"><a href="index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Overview</a><a href="modules.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Module map</a><a href="anatomy.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Domain anatomy</a><span class="px-2.5 py-1 rounded bg-slate-900 text-white">Flow traces</span><a href="dependencies.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Dependency graph</a></nav>
+
+      <header class="space-y-4">
+        <div class="flex items-baseline justify-between flex-wrap gap-2">
+          <h1 class="font-serif text-4xl tracking-tight">Flow traces</h1>
+          <span class="font-mono text-xs text-slate-400">2026-08-26 · app/ @ fd1d235</span>
+        </div>
+        <p class="text-slate-600 leading-relaxed max-w-3xl">What actually happens when someone hits a URL. Each trace starts at an entry point and follows constructor and method injection outward — this is the object graph the container builds, not a sketch of it.</p>
+      </header>
+
+      <section class="space-y-5">
+        <h2 class="lbl text-slate-400">Public web</h2>
+        <h3 class="font-serif text-2xl tracking-tight text-slate-900 -mt-3">Public web entry points</h3>
+<p class="text-slate-600 leading-relaxed max-w-3xl">A visitor hits a URL. The controller is invoked, the container resolves its collaborators, and a Blade view is returned.</p>
+<div class="grid gap-3"><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">AuthenticatedSessionController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /login</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">POST /login</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">POST /logout</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Auth/AuthenticatedSessionController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 0 classes through injection.</p><div class="mt-3"><p class="text-sm text-slate-500 leading-relaxed">Injects nothing — it renders a view or issues a redirect on its own.</p></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">BlogRedirectController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /blog</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Blog/Frontend/BlogRedirectController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 0 classes through injection.</p><div class="mt-3"><p class="text-sm text-slate-500 leading-relaxed">Injects nothing — it renders a view or issues a redirect on its own.</p></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">IndexController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Blog/Frontend/IndexController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 33 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Http_Controllers_Blog_Frontend_IndexController[&quot;IndexController&lt;br/&gt;&lt;i&gt;HTTP entry point&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostGetRepository[&quot;PostGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_About_Repositories_AboutRepository[&quot;AboutRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessagesRepository[&quot;MessagesRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostSource[&quot;PostSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Blog_PostSorter[&quot;PostSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
+  App_About_Repositories_AboutGetRepository[&quot;AboutGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_About_Repositories_AboutWriteRepository[&quot;AboutWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessageGetRepository[&quot;MessageGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessageWriteRepository[&quot;MessageWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_Blog_Storage_PostFileStorage[&quot;PostFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostFileParser[&quot;PostFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Blog_PostFactory[&quot;PostFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Blog_PostFilter[&quot;PostFilter&lt;br/&gt;&lt;i&gt;Filter&lt;/i&gt;&quot;]
+  App_About_Storage_AboutFileStorage[&quot;AboutFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_About_Markdown_AboutFileParser[&quot;AboutFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_About_AboutFactory[&quot;AboutFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_About_Markdown_AboutFileSerializer[&quot;AboutFileSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessageSource[&quot;MessageSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Microblog_MessageSorter[&quot;MessageSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
+  App_Microblog_Storage_MessageFileStorage[&quot;MessageFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_MessageFileSerializer[&quot;MessageFileSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Blog_DraftSlug[&quot;DraftSlug&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter[&quot;HighlightedPostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Blog_PostReadTimeCalculator[&quot;PostReadTimeCalculator&lt;br/&gt;&lt;i&gt;Calculator&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostMarkdownToHtmlConverter[&quot;PostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_MessageFileParser[&quot;MessageFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Microblog_MessageFactory[&quot;MessageFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterSerializer[&quot;FrontMatterSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Blog_Markdown_FencedCodeHighlightExtension[&quot;FencedCodeHighlightExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_MessageTextToHtmlConverter[&quot;MessageTextToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_PlainTextRenderingExtension[&quot;PlainTextRenderingExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_WebUrlAutolinkExtension[&quot;WebUrlAutolinkExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
+  App_Http_Controllers_Blog_Frontend_IndexController --&gt; App_Blog_Repositories_PostGetRepository
+  App_Http_Controllers_Blog_Frontend_IndexController --&gt; App_About_Repositories_AboutRepository
+  App_Http_Controllers_Blog_Frontend_IndexController --&gt; App_Microblog_Repositories_MessagesRepository
+  App_Blog_Repositories_PostGetRepository --&gt; App_Blog_Repositories_PostSource
+  App_Blog_Repositories_PostGetRepository --&gt; App_Blog_PostSorter
+  App_About_Repositories_AboutRepository --&gt; App_About_Repositories_AboutGetRepository
+  App_About_Repositories_AboutRepository --&gt; App_About_Repositories_AboutWriteRepository
+  App_Microblog_Repositories_MessagesRepository --&gt; App_Microblog_Repositories_MessageGetRepository
+  App_Microblog_Repositories_MessagesRepository --&gt; App_Microblog_Repositories_MessageWriteRepository
+  App_Blog_Repositories_PostSource --&gt; App_Blog_Storage_PostFileStorage
+  App_Blog_Repositories_PostSource --&gt; App_Blog_Markdown_PostFileParser
+  App_Blog_Repositories_PostSource --&gt; App_Blog_PostFactory
+  App_Blog_Repositories_PostSource --&gt; App_Blog_PostFilter
+  App_About_Repositories_AboutGetRepository --&gt; App_About_Storage_AboutFileStorage
+  App_About_Repositories_AboutGetRepository --&gt; App_About_Markdown_AboutFileParser
+  App_About_Repositories_AboutGetRepository --&gt; App_About_AboutFactory
+  App_About_Repositories_AboutWriteRepository --&gt; App_About_Storage_AboutFileStorage
+  App_About_Repositories_AboutWriteRepository --&gt; App_About_Markdown_AboutFileSerializer
+  App_Microblog_Repositories_MessageGetRepository --&gt; App_Microblog_Repositories_MessageSource
+  App_Microblog_Repositories_MessageGetRepository --&gt; App_Microblog_MessageSorter
+  App_Microblog_Repositories_MessageWriteRepository --&gt; App_Microblog_Storage_MessageFileStorage
+  App_Microblog_Repositories_MessageWriteRepository --&gt; App_Microblog_Markdown_MessageFileSerializer
+  App_Microblog_Repositories_MessageWriteRepository --&gt; App_Microblog_Repositories_MessageSource
+  App_Blog_Storage_PostFileStorage --&gt; App_Blog_DraftSlug
+  App_Blog_Markdown_PostFileParser --&gt; App_Markdown_FrontMatterParser
+  App_Blog_Markdown_PostFileParser --&gt; App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter
+  App_Blog_Markdown_PostFileParser --&gt; App_Blog_PostReadTimeCalculator
+  App_Blog_PostFilter --&gt; App_Blog_DraftSlug
+  App_About_AboutFactory --&gt; App_Blog_Markdown_PostMarkdownToHtmlConverter
+  App_Microblog_Repositories_MessageSource --&gt; App_Microblog_Storage_MessageFileStorage
+  App_Microblog_Repositories_MessageSource --&gt; App_Microblog_Markdown_MessageFileParser
+  App_Microblog_Repositories_MessageSource --&gt; App_Microblog_MessageFactory
+  App_Microblog_Markdown_MessageFileSerializer --&gt; App_Markdown_FrontMatterSerializer
+  App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter --&gt; App_Blog_Markdown_FencedCodeHighlightExtension
+  App_Microblog_Markdown_MessageFileParser --&gt; App_Markdown_FrontMatterParser
+  App_Microblog_MessageFactory --&gt; App_Microblog_Markdown_MessageTextToHtmlConverter
+  App_Microblog_Markdown_MessageTextToHtmlConverter --&gt; App_Microblog_Markdown_PlainTextRenderingExtension
+  App_Microblog_Markdown_MessageTextToHtmlConverter --&gt; App_Microblog_Markdown_WebUrlAutolinkExtension
+  class App_Http_Controllers_Blog_Frontend_IndexController entry
+  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
+  class App_Blog_Storage_PostFileStorage disk
+  class App_About_Storage_AboutFileStorage disk
+  class App_Microblog_Storage_MessageFileStorage disk
+  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">ShowController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /blog/{slug}</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Blog/Frontend/ShowController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 12 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Http_Controllers_Blog_Frontend_ShowController[&quot;ShowController&lt;br/&gt;&lt;i&gt;HTTP entry point&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostGetRepository[&quot;PostGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostSource[&quot;PostSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Blog_PostSorter[&quot;PostSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
+  App_Blog_Storage_PostFileStorage[&quot;PostFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostFileParser[&quot;PostFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Blog_PostFactory[&quot;PostFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Blog_PostFilter[&quot;PostFilter&lt;br/&gt;&lt;i&gt;Filter&lt;/i&gt;&quot;]
+  App_Blog_DraftSlug[&quot;DraftSlug&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter[&quot;HighlightedPostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Blog_PostReadTimeCalculator[&quot;PostReadTimeCalculator&lt;br/&gt;&lt;i&gt;Calculator&lt;/i&gt;&quot;]
+  App_Blog_Markdown_FencedCodeHighlightExtension[&quot;FencedCodeHighlightExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
+  App_Http_Controllers_Blog_Frontend_ShowController --&gt; App_Blog_Repositories_PostGetRepository
+  App_Blog_Repositories_PostGetRepository --&gt; App_Blog_Repositories_PostSource
+  App_Blog_Repositories_PostGetRepository --&gt; App_Blog_PostSorter
+  App_Blog_Repositories_PostSource --&gt; App_Blog_Storage_PostFileStorage
+  App_Blog_Repositories_PostSource --&gt; App_Blog_Markdown_PostFileParser
+  App_Blog_Repositories_PostSource --&gt; App_Blog_PostFactory
+  App_Blog_Repositories_PostSource --&gt; App_Blog_PostFilter
+  App_Blog_Storage_PostFileStorage --&gt; App_Blog_DraftSlug
+  App_Blog_Markdown_PostFileParser --&gt; App_Markdown_FrontMatterParser
+  App_Blog_Markdown_PostFileParser --&gt; App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter
+  App_Blog_Markdown_PostFileParser --&gt; App_Blog_PostReadTimeCalculator
+  App_Blog_PostFilter --&gt; App_Blog_DraftSlug
+  App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter --&gt; App_Blog_Markdown_FencedCodeHighlightExtension
+  class App_Http_Controllers_Blog_Frontend_ShowController entry
+  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
+  class App_Blog_Storage_PostFileStorage disk
+  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div></div>
+      </section>
+
+      <section class="space-y-5">
+        <h2 class="lbl text-slate-400">Admin</h2>
+        <h3 class="font-serif text-2xl tracking-tight text-slate-900 -mt-3">Admin entry points</h3>
+<p class="text-slate-600 leading-relaxed max-w-3xl">An authenticated editor loads a Livewire component. The component holds no domain logic of its own — it injects a repository facade and hands off.</p>
+<div class="grid gap-3"><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">AboutForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/about/edit</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/AboutForm.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 8 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Livewire_Admin_AboutForm[&quot;AboutForm&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
+  App_About_Repositories_AboutRepository[&quot;AboutRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_About_Repositories_AboutGetRepository[&quot;AboutGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_About_Repositories_AboutWriteRepository[&quot;AboutWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_About_Storage_AboutFileStorage[&quot;AboutFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_About_Markdown_AboutFileParser[&quot;AboutFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_About_AboutFactory[&quot;AboutFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_About_Markdown_AboutFileSerializer[&quot;AboutFileSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostMarkdownToHtmlConverter[&quot;PostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Livewire_Admin_AboutForm --&gt; App_About_Repositories_AboutRepository
+  App_About_Repositories_AboutRepository --&gt; App_About_Repositories_AboutGetRepository
+  App_About_Repositories_AboutRepository --&gt; App_About_Repositories_AboutWriteRepository
+  App_About_Repositories_AboutGetRepository --&gt; App_About_Storage_AboutFileStorage
+  App_About_Repositories_AboutGetRepository --&gt; App_About_Markdown_AboutFileParser
+  App_About_Repositories_AboutGetRepository --&gt; App_About_AboutFactory
+  App_About_Repositories_AboutWriteRepository --&gt; App_About_Storage_AboutFileStorage
+  App_About_Repositories_AboutWriteRepository --&gt; App_About_Markdown_AboutFileSerializer
+  App_About_AboutFactory --&gt; App_Blog_Markdown_PostMarkdownToHtmlConverter
+  class App_Livewire_Admin_AboutForm entry
+  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
+  class App_About_Storage_AboutFileStorage disk
+  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">MessageForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/messages/new</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/messages/{id}/edit</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/MessageForm.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 14 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Livewire_Admin_MessageForm[&quot;MessageForm&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessagesRepository[&quot;MessagesRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessageGetRepository[&quot;MessageGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessageWriteRepository[&quot;MessageWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessageSource[&quot;MessageSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Microblog_MessageSorter[&quot;MessageSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
+  App_Microblog_Storage_MessageFileStorage[&quot;MessageFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_MessageFileSerializer[&quot;MessageFileSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_MessageFileParser[&quot;MessageFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Microblog_MessageFactory[&quot;MessageFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterSerializer[&quot;FrontMatterSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_MessageTextToHtmlConverter[&quot;MessageTextToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_PlainTextRenderingExtension[&quot;PlainTextRenderingExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_WebUrlAutolinkExtension[&quot;WebUrlAutolinkExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
+  App_Livewire_Admin_MessageForm --&gt; App_Microblog_Repositories_MessagesRepository
+  App_Microblog_Repositories_MessagesRepository --&gt; App_Microblog_Repositories_MessageGetRepository
+  App_Microblog_Repositories_MessagesRepository --&gt; App_Microblog_Repositories_MessageWriteRepository
+  App_Microblog_Repositories_MessageGetRepository --&gt; App_Microblog_Repositories_MessageSource
+  App_Microblog_Repositories_MessageGetRepository --&gt; App_Microblog_MessageSorter
+  App_Microblog_Repositories_MessageWriteRepository --&gt; App_Microblog_Storage_MessageFileStorage
+  App_Microblog_Repositories_MessageWriteRepository --&gt; App_Microblog_Markdown_MessageFileSerializer
+  App_Microblog_Repositories_MessageWriteRepository --&gt; App_Microblog_Repositories_MessageSource
+  App_Microblog_Repositories_MessageSource --&gt; App_Microblog_Storage_MessageFileStorage
+  App_Microblog_Repositories_MessageSource --&gt; App_Microblog_Markdown_MessageFileParser
+  App_Microblog_Repositories_MessageSource --&gt; App_Microblog_MessageFactory
+  App_Microblog_Markdown_MessageFileSerializer --&gt; App_Markdown_FrontMatterSerializer
+  App_Microblog_Markdown_MessageFileParser --&gt; App_Markdown_FrontMatterParser
+  App_Microblog_MessageFactory --&gt; App_Microblog_Markdown_MessageTextToHtmlConverter
+  App_Microblog_Markdown_MessageTextToHtmlConverter --&gt; App_Microblog_Markdown_PlainTextRenderingExtension
+  App_Microblog_Markdown_MessageTextToHtmlConverter --&gt; App_Microblog_Markdown_WebUrlAutolinkExtension
+  class App_Livewire_Admin_MessageForm entry
+  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
+  class App_Microblog_Storage_MessageFileStorage disk
+  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">MessageIndex</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/messages</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/MessageIndex.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 14 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Livewire_Admin_MessageIndex[&quot;MessageIndex&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessagesRepository[&quot;MessagesRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessageGetRepository[&quot;MessageGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessageWriteRepository[&quot;MessageWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_Microblog_Repositories_MessageSource[&quot;MessageSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Microblog_MessageSorter[&quot;MessageSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
+  App_Microblog_Storage_MessageFileStorage[&quot;MessageFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_MessageFileSerializer[&quot;MessageFileSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_MessageFileParser[&quot;MessageFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Microblog_MessageFactory[&quot;MessageFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterSerializer[&quot;FrontMatterSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_MessageTextToHtmlConverter[&quot;MessageTextToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_PlainTextRenderingExtension[&quot;PlainTextRenderingExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
+  App_Microblog_Markdown_WebUrlAutolinkExtension[&quot;WebUrlAutolinkExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
+  App_Livewire_Admin_MessageIndex --&gt; App_Microblog_Repositories_MessagesRepository
+  App_Microblog_Repositories_MessagesRepository --&gt; App_Microblog_Repositories_MessageGetRepository
+  App_Microblog_Repositories_MessagesRepository --&gt; App_Microblog_Repositories_MessageWriteRepository
+  App_Microblog_Repositories_MessageGetRepository --&gt; App_Microblog_Repositories_MessageSource
+  App_Microblog_Repositories_MessageGetRepository --&gt; App_Microblog_MessageSorter
+  App_Microblog_Repositories_MessageWriteRepository --&gt; App_Microblog_Storage_MessageFileStorage
+  App_Microblog_Repositories_MessageWriteRepository --&gt; App_Microblog_Markdown_MessageFileSerializer
+  App_Microblog_Repositories_MessageWriteRepository --&gt; App_Microblog_Repositories_MessageSource
+  App_Microblog_Repositories_MessageSource --&gt; App_Microblog_Storage_MessageFileStorage
+  App_Microblog_Repositories_MessageSource --&gt; App_Microblog_Markdown_MessageFileParser
+  App_Microblog_Repositories_MessageSource --&gt; App_Microblog_MessageFactory
+  App_Microblog_Markdown_MessageFileSerializer --&gt; App_Markdown_FrontMatterSerializer
+  App_Microblog_Markdown_MessageFileParser --&gt; App_Markdown_FrontMatterParser
+  App_Microblog_MessageFactory --&gt; App_Microblog_Markdown_MessageTextToHtmlConverter
+  App_Microblog_Markdown_MessageTextToHtmlConverter --&gt; App_Microblog_Markdown_PlainTextRenderingExtension
+  App_Microblog_Markdown_MessageTextToHtmlConverter --&gt; App_Microblog_Markdown_WebUrlAutolinkExtension
+  class App_Livewire_Admin_MessageIndex entry
+  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
+  class App_Microblog_Storage_MessageFileStorage disk
+  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">PostForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/posts/new</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/posts/{slug}/edit</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/PostForm.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 16 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Livewire_Admin_PostForm[&quot;PostForm&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostsRepository[&quot;PostsRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_Blog_DraftSlug[&quot;DraftSlug&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostGetRepository[&quot;PostGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostWriteRepository[&quot;PostWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostSource[&quot;PostSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Blog_PostSorter[&quot;PostSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
+  App_Blog_Storage_PostFileStorage[&quot;PostFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostFileSerializer[&quot;PostFileSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostFileParser[&quot;PostFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Blog_PostFactory[&quot;PostFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Blog_PostFilter[&quot;PostFilter&lt;br/&gt;&lt;i&gt;Filter&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterSerializer[&quot;FrontMatterSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter[&quot;HighlightedPostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Blog_PostReadTimeCalculator[&quot;PostReadTimeCalculator&lt;br/&gt;&lt;i&gt;Calculator&lt;/i&gt;&quot;]
+  App_Blog_Markdown_FencedCodeHighlightExtension[&quot;FencedCodeHighlightExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
+  App_Livewire_Admin_PostForm --&gt; App_Blog_Repositories_PostsRepository
+  App_Livewire_Admin_PostForm --&gt; App_Blog_DraftSlug
+  App_Blog_Repositories_PostsRepository --&gt; App_Blog_Repositories_PostGetRepository
+  App_Blog_Repositories_PostsRepository --&gt; App_Blog_Repositories_PostWriteRepository
+  App_Blog_Repositories_PostGetRepository --&gt; App_Blog_Repositories_PostSource
+  App_Blog_Repositories_PostGetRepository --&gt; App_Blog_PostSorter
+  App_Blog_Repositories_PostWriteRepository --&gt; App_Blog_Storage_PostFileStorage
+  App_Blog_Repositories_PostWriteRepository --&gt; App_Blog_Markdown_PostFileSerializer
+  App_Blog_Repositories_PostSource --&gt; App_Blog_Storage_PostFileStorage
+  App_Blog_Repositories_PostSource --&gt; App_Blog_Markdown_PostFileParser
+  App_Blog_Repositories_PostSource --&gt; App_Blog_PostFactory
+  App_Blog_Repositories_PostSource --&gt; App_Blog_PostFilter
+  App_Blog_Storage_PostFileStorage --&gt; App_Blog_DraftSlug
+  App_Blog_Markdown_PostFileSerializer --&gt; App_Markdown_FrontMatterSerializer
+  App_Blog_Markdown_PostFileParser --&gt; App_Markdown_FrontMatterParser
+  App_Blog_Markdown_PostFileParser --&gt; App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter
+  App_Blog_Markdown_PostFileParser --&gt; App_Blog_PostReadTimeCalculator
+  App_Blog_PostFilter --&gt; App_Blog_DraftSlug
+  App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter --&gt; App_Blog_Markdown_FencedCodeHighlightExtension
+  class App_Livewire_Admin_PostForm entry
+  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
+  class App_Blog_Storage_PostFileStorage disk
+  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">PostIndex</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/PostIndex.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 16 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Livewire_Admin_PostIndex[&quot;PostIndex&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostsRepository[&quot;PostsRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostGetRepository[&quot;PostGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostWriteRepository[&quot;PostWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostSource[&quot;PostSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Blog_PostSorter[&quot;PostSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
+  App_Blog_Storage_PostFileStorage[&quot;PostFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostFileSerializer[&quot;PostFileSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostFileParser[&quot;PostFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Blog_PostFactory[&quot;PostFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Blog_PostFilter[&quot;PostFilter&lt;br/&gt;&lt;i&gt;Filter&lt;/i&gt;&quot;]
+  App_Blog_DraftSlug[&quot;DraftSlug&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterSerializer[&quot;FrontMatterSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter[&quot;HighlightedPostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Blog_PostReadTimeCalculator[&quot;PostReadTimeCalculator&lt;br/&gt;&lt;i&gt;Calculator&lt;/i&gt;&quot;]
+  App_Blog_Markdown_FencedCodeHighlightExtension[&quot;FencedCodeHighlightExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
+  App_Livewire_Admin_PostIndex --&gt; App_Blog_Repositories_PostsRepository
+  App_Blog_Repositories_PostsRepository --&gt; App_Blog_Repositories_PostGetRepository
+  App_Blog_Repositories_PostsRepository --&gt; App_Blog_Repositories_PostWriteRepository
+  App_Blog_Repositories_PostGetRepository --&gt; App_Blog_Repositories_PostSource
+  App_Blog_Repositories_PostGetRepository --&gt; App_Blog_PostSorter
+  App_Blog_Repositories_PostWriteRepository --&gt; App_Blog_Storage_PostFileStorage
+  App_Blog_Repositories_PostWriteRepository --&gt; App_Blog_Markdown_PostFileSerializer
+  App_Blog_Repositories_PostSource --&gt; App_Blog_Storage_PostFileStorage
+  App_Blog_Repositories_PostSource --&gt; App_Blog_Markdown_PostFileParser
+  App_Blog_Repositories_PostSource --&gt; App_Blog_PostFactory
+  App_Blog_Repositories_PostSource --&gt; App_Blog_PostFilter
+  App_Blog_Storage_PostFileStorage --&gt; App_Blog_DraftSlug
+  App_Blog_Markdown_PostFileSerializer --&gt; App_Markdown_FrontMatterSerializer
+  App_Blog_Markdown_PostFileParser --&gt; App_Markdown_FrontMatterParser
+  App_Blog_Markdown_PostFileParser --&gt; App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter
+  App_Blog_Markdown_PostFileParser --&gt; App_Blog_PostReadTimeCalculator
+  App_Blog_PostFilter --&gt; App_Blog_DraftSlug
+  App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter --&gt; App_Blog_Markdown_FencedCodeHighlightExtension
+  class App_Livewire_Admin_PostIndex entry
+  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
+  class App_Blog_Storage_PostFileStorage disk
+  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">ScratchpadForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/scratchpad/edit</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/ScratchpadForm.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 4 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Livewire_Admin_ScratchpadForm[&quot;ScratchpadForm&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
+  App_Scratchpad_Repositories_ScratchpadRepository[&quot;ScratchpadRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_Scratchpad_Repositories_ScratchpadGetRepository[&quot;ScratchpadGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Scratchpad_Repositories_ScratchpadWriteRepository[&quot;ScratchpadWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_Scratchpad_Storage_ScratchpadFileStorage[&quot;ScratchpadFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Livewire_Admin_ScratchpadForm --&gt; App_Scratchpad_Repositories_ScratchpadRepository
+  App_Scratchpad_Repositories_ScratchpadRepository --&gt; App_Scratchpad_Repositories_ScratchpadGetRepository
+  App_Scratchpad_Repositories_ScratchpadRepository --&gt; App_Scratchpad_Repositories_ScratchpadWriteRepository
+  App_Scratchpad_Repositories_ScratchpadGetRepository --&gt; App_Scratchpad_Storage_ScratchpadFileStorage
+  App_Scratchpad_Repositories_ScratchpadWriteRepository --&gt; App_Scratchpad_Storage_ScratchpadFileStorage
+  class App_Livewire_Admin_ScratchpadForm entry
+  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
+  class App_Scratchpad_Storage_ScratchpadFileStorage disk
+  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div></div>
+      </section>
+
+      <section class="space-y-5">
+        <h2 class="lbl text-slate-400">Scheduled</h2>
+        <h3 class="font-serif text-2xl tracking-tight text-slate-900 -mt-3">Scheduled entry points</h3>
+<p class="text-slate-600 leading-relaxed max-w-3xl">No request involved — the scheduler invokes the command.</p>
+<div class="grid gap-3"><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">CheckComposerVulnerabilitiesCommand</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">schedule: hourly</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Console/Commands/CheckComposerVulnerabilitiesCommand.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 13 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Console_Commands_CheckComposerVulnerabilitiesCommand[&quot;CheckComposerVulnerabilitiesCommand&lt;br/&gt;&lt;i&gt;Console entry point&lt;/i&gt;&quot;]
+  App_Security_VulnerabilityCheck[&quot;VulnerabilityCheck&lt;br/&gt;&lt;i&gt;Domain service&lt;/i&gt;&quot;]
+  App_Security_Repositories_VulnerabilitySource[&quot;VulnerabilitySource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Security_Repositories_MuteStateRepository[&quot;MuteStateRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_Security_MuteWindow[&quot;MuteWindow&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Security_VulnerabilityNotifier[&quot;VulnerabilityNotifier&lt;br/&gt;&lt;i&gt;Notifier&lt;/i&gt;&quot;]
+  App_Security_Audit_ComposerAudit[&quot;ComposerAudit&lt;br/&gt;&lt;i&gt;Process adapter&lt;/i&gt;&quot;]
+  App_Security_Audit_VulnerabilityParser[&quot;VulnerabilityParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Security_VulnerabilityFactory[&quot;VulnerabilityFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Security_Repositories_MuteStateGetRepository[&quot;MuteStateGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Security_Repositories_MuteStateWriteRepository[&quot;MuteStateWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_Security_Storage_MuteFileStorage[&quot;MuteFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Security_Json_MuteStateParser[&quot;MuteStateParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Security_Json_MuteStateSerializer[&quot;MuteStateSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Console_Commands_CheckComposerVulnerabilitiesCommand --&gt; App_Security_VulnerabilityCheck
+  App_Security_VulnerabilityCheck --&gt; App_Security_Repositories_VulnerabilitySource
+  App_Security_VulnerabilityCheck --&gt; App_Security_Repositories_MuteStateRepository
+  App_Security_VulnerabilityCheck --&gt; App_Security_MuteWindow
+  App_Security_VulnerabilityCheck --&gt; App_Security_VulnerabilityNotifier
+  App_Security_Repositories_VulnerabilitySource --&gt; App_Security_Audit_ComposerAudit
+  App_Security_Repositories_VulnerabilitySource --&gt; App_Security_Audit_VulnerabilityParser
+  App_Security_Repositories_VulnerabilitySource --&gt; App_Security_VulnerabilityFactory
+  App_Security_Repositories_MuteStateRepository --&gt; App_Security_Repositories_MuteStateGetRepository
+  App_Security_Repositories_MuteStateRepository --&gt; App_Security_Repositories_MuteStateWriteRepository
+  App_Security_Repositories_MuteStateGetRepository --&gt; App_Security_Storage_MuteFileStorage
+  App_Security_Repositories_MuteStateGetRepository --&gt; App_Security_Json_MuteStateParser
+  App_Security_Repositories_MuteStateWriteRepository --&gt; App_Security_Storage_MuteFileStorage
+  App_Security_Repositories_MuteStateWriteRepository --&gt; App_Security_Json_MuteStateSerializer
+  class App_Console_Commands_CheckComposerVulnerabilitiesCommand entry
+  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
+  class App_Security_Storage_MuteFileStorage disk
+  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div></div>
+      </section>
+
+      <footer class="border-t border-slate-200 pt-6 text-xs text-slate-400 leading-relaxed space-y-1">
+        <p>Generated from <code class="font-mono">app/</code> and <code class="font-mono">routes/</code> by <code class="font-mono">documentation/architecture/generate.php</code>. Do not hand-edit — re-run the script instead.</p>
+        <p>Related: <a class="underline underline-offset-2 decoration-slate-300 hover:text-slate-600" href="../decisions/index.html">Architecture Decision Records</a> · <code class="font-mono">documentation/features/</code> · <code class="font-mono">documentation/leesmij/</code></p>
+      </footer>
+    </main>
+  </body>
+</html>

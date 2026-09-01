@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Overview · cedriekvos blog architecture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose", flowchart: { curve: "basis", useMaxWidth: true } });
+    </script>
+    <style>
+      .lbl { font-size: .625rem; letter-spacing: .12em; text-transform: uppercase; }
+      html { scroll-behavior: smooth; }
+      .mermaid { display: flex; justify-content: center; }
+      .mermaid svg { max-width: 100%; height: auto; }
+    </style>
+  </head>
+  <body class="bg-stone-50 text-slate-900 font-sans antialiased">
+    <main class="max-w-5xl mx-auto px-6 py-12 sm:py-16 space-y-14">
+
+      <nav class="flex flex-wrap items-center gap-1 text-xs font-medium -mx-1"><span class="px-2.5 py-1 rounded bg-slate-900 text-white">Overview</span><a href="modules.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Module map</a><a href="anatomy.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Domain anatomy</a><a href="flows.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Flow traces</a><a href="dependencies.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Dependency graph</a></nav>
+
+      <header class="space-y-4">
+        <div class="flex items-baseline justify-between flex-wrap gap-2">
+          <h1 class="font-serif text-4xl tracking-tight">Architecture</h1>
+          <span class="font-mono text-xs text-slate-400">2026-08-26 · app/ @ fd1d235</span>
+        </div>
+        <p class="text-slate-600 leading-relaxed max-w-3xl">A map of this codebase for reading rather than browsing — what the pieces are, how one domain is shaped, what happens on a request, and what depends on what. Every page is generated from the source.</p>
+      </header>
+
+      <section class="space-y-5">
+        <h2 class="lbl text-slate-400">At a glance</h2>
+        <h3 class="font-serif text-2xl tracking-tight text-slate-900 -mt-3">A flat-file Laravel application</h3>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3"><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="font-serif text-3xl tracking-tight">78</div><div class="lbl text-slate-400 mt-1">classes in app/</div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="font-serif text-3xl tracking-tight">5</div><div class="lbl text-slate-400 mt-1">bounded domains</div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="font-serif text-3xl tracking-tight">11</div><div class="lbl text-slate-400 mt-1">entry points</div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="font-serif text-3xl tracking-tight">6</div><div class="lbl text-slate-400 mt-1">runtime packages</div></div></div>
+<p class="text-slate-600 leading-relaxed max-w-3xl">There is no content database. Every post, message, bio and scratchpad note is a Markdown file on disk, read and written through a per-domain repository. The 5 bounded domains are <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\About</code>, <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Blog</code>, <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Microblog</code>, <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Scratchpad</code>, <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Security</code>; they share one kernel, <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Markdown</code>, and each exposes a single repository facade to the layer above.</p>
+<p class="text-slate-600 leading-relaxed max-w-3xl">The whole thing runs on 6 runtime packages: <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">laravel/framework</code> · <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">laravel/tinker</code> · <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">league/commonmark</code> · <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">livewire/livewire</code> · <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">symfony/yaml</code> · <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">tempest/highlight</code>.</p>
+<div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart TD
+  subgraph band_delivery[&quot;Delivery layer&quot;]
+    Console[&quot;&lt;b&gt;Console&lt;/b&gt;&lt;br/&gt;1 class&quot;]
+    Http[&quot;&lt;b&gt;Http&lt;/b&gt;&lt;br/&gt;6 classes&quot;]
+    Livewire[&quot;&lt;b&gt;Livewire&lt;/b&gt;&lt;br/&gt;6 classes&quot;]
+    Mail[&quot;&lt;b&gt;Mail&lt;/b&gt;&lt;br/&gt;1 class&quot;]
+  end
+  subgraph band_domain[&quot;Bounded domains&quot;]
+    About[&quot;&lt;b&gt;About&lt;/b&gt;&lt;br/&gt;8 classes&quot;]
+    Blog[&quot;&lt;b&gt;Blog&lt;/b&gt;&lt;br/&gt;16 classes&quot;]
+    Microblog[&quot;&lt;b&gt;Microblog&lt;/b&gt;&lt;br/&gt;13 classes&quot;]
+    Scratchpad[&quot;&lt;b&gt;Scratchpad&lt;/b&gt;&lt;br/&gt;5 classes&quot;]
+    Security[&quot;&lt;b&gt;Security&lt;/b&gt;&lt;br/&gt;15 classes&quot;]
+  end
+  subgraph band_kernel[&quot;Shared kernel&quot;]
+    Markdown[&quot;&lt;b&gt;Markdown&lt;/b&gt;&lt;br/&gt;4 classes&quot;]
+  end
+  About --&gt; Blog
+  Blog --&gt; Markdown
+  Console --&gt; Security
+  Http --&gt; About
+  Http --&gt; Blog
+  Http --&gt; Microblog
+  Livewire --&gt; About
+  Livewire --&gt; Microblog
+  Livewire --&gt; Blog
+  Livewire --&gt; Scratchpad
+  Mail --&gt; Security
+  Microblog --&gt; Markdown
+  Security --&gt; Mail
+  class Console bandDelivery
+  class Http bandDelivery
+  class Livewire bandDelivery
+  class Mail bandDelivery
+  class About bandDomain
+  class Blog bandDomain
+  class Microblog bandDomain
+  class Scratchpad bandDomain
+  class Security bandDomain
+  class Markdown bandKernel
+  classDef bandDomain fill:#ffffff,stroke:#0f172a,stroke-width:1.5px,color:#0f172a
+  classDef bandKernel fill:#ecfdf5,stroke:#059669,stroke-width:1.5px,color:#064e3b
+  classDef bandDelivery fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px,color:#1e3a8a
+  classDef bandPlatform fill:#f8fafc,stroke:#94a3b8,stroke-width:1.5px,color:#475569</pre></div>
+      </section>
+
+      <section class="space-y-5">
+        <h2 class="lbl text-slate-400">Where to go</h2>
+        <h3 class="font-serif text-2xl tracking-tight text-slate-900 -mt-3">Four views, four questions</h3>
+<div class="grid sm:grid-cols-2 gap-3"><a href="modules.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition"><h3 class="font-serif text-lg text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4">Module map</h3><p class="text-sm font-medium text-slate-900 mt-1.5">What are the pieces, and which one is allowed to know about which?</p><p class="text-sm text-slate-600 mt-1 leading-relaxed">Start here. Domains, the shared kernel, the delivery layer, and every arrow that crosses a boundary.</p></a><a href="anatomy.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition"><h3 class="font-serif text-lg text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4">Domain anatomy</h3><p class="text-sm font-medium text-slate-900 mt-1.5">Once I understand one domain, do I understand them all?</p><p class="text-sm text-slate-600 mt-1 leading-relaxed">Mostly yes — the same value-object → repository → storage slice repeats. The interesting part is the slots each domain leaves empty.</p></a><a href="flows.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition"><h3 class="font-serif text-lg text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4">Flow traces</h3><p class="text-sm font-medium text-slate-900 mt-1.5">What actually happens when someone hits a URL?</p><p class="text-sm text-slate-600 mt-1 leading-relaxed">Every route and scheduled command, traced through the objects the container wires up behind it.</p></a><a href="dependencies.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition"><h3 class="font-serif text-lg text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4">Dependency graph</h3><p class="text-sm font-medium text-slate-900 mt-1.5">What breaks if I change this class or drop this package?</p><p class="text-sm text-slate-600 mt-1 leading-relaxed">Class-level fan-in and fan-out, plus the blast radius of each composer package.</p></a></div>
+      </section>
+
+      <footer class="border-t border-slate-200 pt-6 text-xs text-slate-400 leading-relaxed space-y-1">
+        <p>Generated from <code class="font-mono">app/</code> and <code class="font-mono">routes/</code> by <code class="font-mono">documentation/architecture/generate.php</code>. Do not hand-edit — re-run the script instead.</p>
+        <p>Related: <a class="underline underline-offset-2 decoration-slate-300 hover:text-slate-600" href="../decisions/index.html">Architecture Decision Records</a> · <code class="font-mono">documentation/features/</code> · <code class="font-mono">documentation/leesmij/</code></p>
+      </footer>
+    </main>
+  </body>
+</html>
