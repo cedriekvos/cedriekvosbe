@@ -70,18 +70,23 @@ With Sail:
 ./vendor/bin/sail composer setup
 ```
 
+The container is itself an `artisan serve` on port 80, so `composer dev` would
+otherwise start a second, unreachable server. `AppServiceProvider` drops that one
+process in the `local` environment; the queue listener, log tail and Vite still run.
+
 The public site is at `/`, the admin at `/admin` behind login.
 
 ## Everyday commands
 
-| Command             | What it does                                          |
-| ------------------- | ----------------------------------------------------- |
-| `composer dev`      | Dev server, queue listener, log tail and Vite together |
-| `composer test`     | Clear config, then run the suite                       |
-| `composer qa`       | The full gate — see below                              |
-| `composer qa:fast`  | Parallel subset for the inner loop, no mutation run    |
-| `composer fix-qa`   | Apply Rector and Pint fixes                            |
-| `composer phpmd`    | Clean-code ruleset (run `phpmd:install` once first)    |
+| Command                | What it does                                              |
+| ---------------------- | --------------------------------------------------------- |
+| `composer dev`         | Queue listener, log tail and Vite; a server outside `local`  |
+| `php artisan dev:list` | Show which dev processes `composer dev` will start          |
+| `composer test`        | Clear config, then run the suite                            |
+| `composer qa`          | The full gate — see below                                   |
+| `composer qa:fast`     | Parallel subset for the inner loop, no mutation run         |
+| `composer fix-qa`      | Apply Rector and Pint fixes                                 |
+| `composer phpmd`       | Clean-code ruleset (run `phpmd:install` once first)         |
 
 ## Testing
 
