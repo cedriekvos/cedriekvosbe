@@ -38,6 +38,34 @@ return [
             'report' => false,
         ],
 
+        'posts' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/content/posts'),
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'meta' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/content/meta'),
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'security' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/security'),
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'microblog' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/content/microblog'),
+            'throw' => false,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
