@@ -8,22 +8,29 @@
     "require": {
         "php": "8.4.*",
         "laravel/framework": "^13.8",
-        "laravel/tinker": "^3.0"
+        "laravel/tinker": "^3.0",
+        "league/commonmark": "^2.6",
+        "livewire/livewire": "^4.2",
+        "symfony/yaml": "^8.1.0",
+        "tempest/highlight": "^2.27"
     },
     "require-dev": {
         "driftingly/rector-laravel": "^2",
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3",
+        "laravel/boost": "^2",
+        "laravel/breeze": "^2.4",
         "laravel/pail": "^1.2.5",
         "laravel/pao": "^1.0.6",
         "laravel/pint": "^1.27",
-        "laravel/sail": "^1",
+        "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
-        "pestphp/pest": "^4",
-        "pestphp/pest-plugin-laravel": "^4",
-        "pestphp/pest-plugin-type-coverage": "^4",
-        "phpunit/phpunit": "^12.5.12",
+        "pestphp/pest": "^5.0",
+        "pestphp/pest-plugin-browser": "^5.0",
+        "pestphp/pest-plugin-laravel": "^5.0",
+        "pestphp/pest-plugin-type-coverage": "^5.0",
+        "phpunit/phpunit": "^13.3.1",
         "rector/rector": "^2"
     },
     "autoload": {
@@ -74,22 +81,46 @@
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
         ],
         "qa": [
+            "Composer\\Config::disableProcessTimeout",
             "composer validate",
+            "./vendor/bin/rector process --dry-run --clear-cache",
+            "./vendor/bin/pint --test --cache-file=/dev/null",
+            "./vendor/bin/phpstan clear-result-cache",
+            "./vendor/bin/phpstan analyse",
+            "./vendor/bin/pest --testsuite=Architecture",
+            "./vendor/bin/pest --testsuite=Feature",
+            "./vendor/bin/pest --testsuite=Unit",
+            "./vendor/bin/pest --exclude-testsuite=Browser --coverage --min=100",
+            "./vendor/bin/pest --exclude-testsuite=Browser --type-coverage --min=100",
+            "./vendor/bin/pest --exclude-testsuite=Browser --mutate --min=100 --no-cache",
+            "npm run build",
+            "./vendor/bin/pest --testsuite=Browser",
+            "echo QA passed"
+        ],
+        "qa:fast": [
+            "Composer\\Config::disableProcessTimeout",
+            "composer validate",
+            "npm run build",
             "./vendor/bin/rector process --dry-run",
             "./vendor/bin/pint --test",
             "./vendor/bin/phpstan analyse",
-            "./vendor/bin/pest --filter architecture",
-            "./vendor/bin/pest --filter feature",
-            "./vendor/bin/pest --filter unit",
-            "./vendor/bin/pest --coverage --min=100",
-            "./vendor/bin/pest --type-coverage --min=100",
-            "./vendor/bin/pest --mutate --min=100",
-            "echo QA passed"
+            "./vendor/bin/pest --parallel --tia",
+            "./vendor/bin/pest --parallel --exclude-testsuite=Browser --coverage --min=100",
+            "./vendor/bin/pest --parallel --exclude-testsuite=Browser --type-coverage --min=100",
+            "echo QA '(fast)' passed"
         ],
         "fix-qa": [
             "./vendor/bin/rector process",
             "./vendor/bin/pint",
             "echo QA fixed"
+        ],
+        "phpmd:install": [
+            "curl -sSLf -o bin/phpmd.phar https://github.com/phpmd/phpmd/releases/download/2.15.0/phpmd.phar",
+            "chmod +x bin/phpmd.phar",
+            "echo PHPMD installed"
+        ],
+        "phpmd": [
+            "@php bin/phpmd.phar app text cleancode"
         ]
     },
     "extra": {
