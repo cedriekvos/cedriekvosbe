@@ -1,0 +1,44 @@
+# Pack flow definition — who is in the pack and who hands off to whom.
+#
+# Every agent named under `edges` needs a matching agents/<name>.prompt file.
+# Verdicts map to targets; the special target DONE completes the task.
+#
+# This flow is the feature pipeline transferred from .claude/skills/feature-*
+# and .claude/agents/feature-reviewer.md: spec → (optional) architecture
+# decision → red tests → implementation → independent review, looping back to
+# whichever stage can actually fix what's wrong instead of always to the coder.
+
+pack:
+  name: feature-pipeline   # shown in the dispatcher TUI
+  max_loops: 4             # matches feature-loop's old MAX_ROUNDS default
+
+# How the pack pings you when it needs input, finishes a task, or halts:
+#   bell      ring the terminal (default)
+#   desktop   bell + an OSC 9 notification your terminal turns into a real
+#             desktop notification — only while you are attached
+#   <command> any shell command, run with PACK_EVENT (needs_input, done or
+#             halted), PACK_NAME, PACK_TITLE, PACK_BODY and PACK_TASK in env
+# notify: desktop
+# notify: 'curl -s -d "$PACK_TITLE: $PACK_BODY" ntfy.sh/my-pack-topic'
+
+notify: desktop
+
+flow:
+  entry: feature-specifier   # tasks filed with `pack run` land here
+  edges:
+    feature-specifier:
+      ready: feature-to-pest           # no cross-cutting decision needed
+      needs_decision: feature-architect # spec raises a technical question
+    feature-architect:
+      decided: feature-to-pest         # ADR recorded (or none was needed)
+    feature-to-pest:
+      done: feature-development        # red feature tests written
+      needs_decision: feature-architect # precondition storage/format undecided
+      blocked: feature-specifier       # spec leaves an interface undefined
+    feature-development:
+      done: feature-reviewer           # composer qa green, ready for review
+      needs_decision: feature-architect # feature needs an ADR that doesn't exist
+      needs_spec: feature-specifier    # requirement genuinely under-specified
+    feature-reviewer:
+      approve: DONE                    # reviewer approves → task complete
+      reject: feature-development      # reviewer rejects → back with remarks

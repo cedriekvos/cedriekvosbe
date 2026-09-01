@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+# pack — a wolfpack of claude agents. Thin CLI: `setup` (shell/package work)
+# lives here; everything stateful delegates to bin/dispatcher.py.
+set -euo pipefail
+
+PACK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export PACK_DIR
+
+usage() {
+  cat <<EOF
+pack $(cat "$PACK_DIR/version" 2>/dev/null || echo '?') — a wolfpack of claude agents
+
+usage: pack/bin/pack <command>
+
+  setup            install/check dependencies inside this container
+  up               start the pack (tmux: overview + one window per agent)
+  run "<task>"     file a task for the pack
+  attach           attach to the session (Ctrl-b n: next window, Ctrl-b d: detach)
+  status           one-shot state/queue summary
+  reset            clear pending queue + state (keeps the runs/ archive)
+  down             kill the tmux session
+  version          print pack version
+EOF
+}
+
+have() { command -v "$1" >/dev/null 2>&1; }
+
+as_root() {
+  if [ "$(id -u)" = 0 ]; then "$@"
+  elif have sudo; then sudo "$@"
+  else return 1
+  fi
+}
+
+pkg_install() {
+  if have apk; then as_root apk add --no-cache "$@"
+  elif have apt-get; then as_root sh -c "apt-get update -qq && apt-get install -y -qq $*"
+  elif have dnf; then as_root dnf install -y "$@"
+  else return 1
+  fi
+}
+
+setup() {
+  local ok=1
+  echo "pack setup — checking dependencies in this container"
+
+  if have tmux; then echo "  ok tmux"
+  else
+    echo "  .. installing tmux"
+    pkg_install tmux >/dev/null && echo "  ok tmux" \
+      || { ok=0; echo "  MISSING tmux — add it to your image (alpine: apk add tmux)"; }
+  fi
+
+  if have python3; then echo "  ok python3"
+  else
+    echo "  .. installing python3"
+    pkg_install python3 >/dev/null && echo "  ok python3" \
+      || { ok=0; echo "  MISSING python3 — add it to your image (alpine: apk add python3)"; }
+  fi
+
+  if have python3 && python3 -c 'import yaml' 2>/dev/null; then echo "  ok PyYAML"
+  else
+    echo "  .. installing PyYAML"
+    if pkg_install py3-yaml >/dev/null 2>&1 \
+       || pkg_install python3-yaml >/dev/null 2>&1 \
+       || python3 -m pip install --quiet --user PyYAML 2>/dev/null \
+       || python3 -m pip install --quiet --user --break-system-packages PyYAML 2>/dev/null; then
+      echo "  ok PyYAML"
+    else
+      ok=0; echo "  MISSING PyYAML — add it to your image (alpine: apk add py3-yaml)"
+    fi
+  fi
+
+  if have claude; then
+    echo "  ok claude ($(claude --version 2>/dev/null | head -1))"
+  else
+    echo "  .. installing claude (native installer)"
+    if curl -fsSL https://claude.ai/install.sh | bash >/dev/null 2>&1 && have claude; then
+      echo "  ok claude"
+    elif [ -x "$HOME/.local/bin/claude" ]; then
+      echo "  ok claude — installed to ~/.local/bin; make sure it is on your PATH"
+    elif have npm && npm install -g @anthropic-ai/claude-code >/dev/null 2>&1; then
+      echo "  ok claude (via npm)"
+    else
+      ok=0; echo "  MISSING claude — see https://docs.anthropic.com/en/docs/claude-code"
+    fi
+  fi
+
+  if [ -n "${ANTHROPIC_API_KEY:-}" ]; then
+    echo "  ok auth: ANTHROPIC_API_KEY is set (API billing)"
+  elif [ -f "$HOME/.claude/.credentials.json" ] || [ -f "$HOME/.claude.json" ]; then
+    echo "  ok auth: existing claude login found in \$HOME"
+  else
+    echo "  !! auth: no login found — run 'claude' once to log in, and persist it by"
+    echo "     mounting a volume over \$HOME (or \$HOME/.claude) in your compose file:"
+    echo "         volumes:"
+    echo "           - claude-home:\$HOME"
+  fi
+
+  if [ "$ok" = 1 ]; then echo "setup complete"
+  else echo "setup incomplete — fix the MISSING items above"; exit 1
+  fi
+}
+
+cmd="${1:-help}"
+[ $# -gt 0 ] && shift
+
+case "$cmd" in
+  setup)            setup ;;
+  run)              exec python3 "$PACK_DIR/bin/dispatcher.py" submit "$@" ;;
+  up|status|reset)  exec python3 "$PACK_DIR/bin/dispatcher.py" "$cmd" "$@" ;;
+  attach)           exec tmux attach -t pack ;;
+  down)             tmux kill-session -t pack 2>/dev/null \
+                      && echo "pack session killed" \
+                      || echo "pack: no session running" ;;
+  version)          cat "$PACK_DIR/version" ;;
+  help|-h|--help)   usage ;;
+  *)                usage; exit 1 ;;
+esac
