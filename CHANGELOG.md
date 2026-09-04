@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-09-04
+
+### Fixed
+
+- Two stale notes in the Pest test helpers claimed the scratchpad domain did not
+  exist and the about-me storage interface was unsettled. Both had shipped in
+  1.0.0; the helpers now describe the repositories they actually seed through.
+
 ## [1.0.0] - 2026-09-01
 
 First tagged release. Content lives as Markdown files on disk; SQLite backs only
@@ -33,5 +41,6 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.0.0...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.0.1...HEAD
+[1.0.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/cedriekvos/cedriekvosbe/releases/tag/1.0.0
