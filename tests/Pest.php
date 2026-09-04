@@ -154,11 +154,9 @@ function wordsOfBody(int $wordCount): string
 }
 
 /**
- * Configure the homepage about-me section's singleton content.
- *
- * NOTE: the about-me storage interface is not yet specified — admin editing was
- * deferred when the feature was written. This helper assumes a singleton
- * `AboutRepository`; update it once the real interface is settled.
+ * Configure the homepage about-me section's singleton content, through the same
+ * `AboutRepository` the admin form saves with, so a scenario seeds it exactly as
+ * the editor would. Persisted as about.yaml on the (faked) `meta` disk.
  */
 function configureAboutMe(string $heading = '', string $bio = ''): void
 {
@@ -175,11 +173,9 @@ function storedAbout(): About
 }
 
 /**
- * Configure the admin scratchpad's singleton content.
- *
- * NOTE: App\Scratchpad does not exist yet — this helper assumes a singleton
- * `ScratchpadRepository` mirroring `AboutRepository`, stored (like about.yaml)
- * on the already-faked `meta` disk. Update it once the real interface is settled.
+ * Configure the admin scratchpad's singleton content, through the same
+ * `ScratchpadRepository` the admin form saves with. Persisted as scratchpad.md on
+ * the (faked) `meta` disk, alongside the about-me content.
  */
 function configureScratchpad(string $content = ''): void
 {
