@@ -134,23 +134,26 @@ body {
     fill: var(--t-hi);
 }
 
+/* ── Header icon hover ──────────────────────────────────── */
+.icon-hover-scale {
+    transition: transform 0.15s;
+}
+
+.icon-hover-scale:hover {
+    transform: scale(1.1);
+}
+
 /* ── Theme toggle ───────────────────────────────────────── */
 .theme-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     color: var(--t-muted);
-    border: 1px solid var(--t-line);
+    border: none;
     padding: 0.3rem;
     border-radius: 4px;
     cursor: pointer;
     background: transparent;
-    transition: color 0.15s, border-color 0.15s;
-}
-
-.theme-toggle:hover {
-    color: var(--t-fg);
-    border-color: var(--t-muted);
 }
 
 .theme-icon {

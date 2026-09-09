@@ -7,27 +7,39 @@ Feature: Theme switcher dropdown
     Given I am a visitor of the site
 
   # Theme switcher 01
-  Scenario Outline: The closed switcher shows only the icon for the active mode
+  Scenario Outline: The closed switcher always shows the auto icon, regardless of the active mode
     Given I have switched the site theme to "<mode>"
     When I navigate to "/"
-    Then the theme switcher button should show the icon for "<label>"
+    Then the theme switcher button should show the auto icon
     And the theme switcher button should not show a visible text label
 
     Examples:
-      | mode  | label |
-      | light | Light |
-      | dark  | Dark  |
-      | auto  | Auto  |
+      | mode  |
+      | light |
+      | dark  |
+      | auto  |
 
   # Theme switcher 01b
   Scenario: The closed switcher icon is the same size as the GitHub icon
     When I navigate to "/"
     Then the theme switcher button's icon should be the same size as the header's GitHub icon
 
+  # Theme switcher 01c
+  Scenario: The closed switcher button has no visible border
+    When I navigate to "/"
+    Then the theme switcher button should have no visible border
+
+  # Theme switcher 01d
+  Scenario: Hovering the closed switcher button scales it up, the same way as the GitHub icon
+    When I navigate to "/"
+    Then hovering the theme switcher button should apply the same scale-up hover effect as the header's GitHub icon
+    And hovering the theme switcher button should not change its icon color
+
   # Theme switcher 02
-  Scenario: Opening the switcher lists all three modes in a fixed order
+  Scenario: Opening the switcher lists all three modes in a fixed order, without icons
     When I open the theme switcher menu
     Then the theme switcher menu should show the options "Light", "Dark", "Auto" in that order, ignoring the checkmark on whichever option is active
+    And none of the theme switcher menu options should show an icon
 
   # Theme switcher 03
   Scenario Outline: The active mode shows a visible checkmark inside the open menu
@@ -43,13 +55,13 @@ Feature: Theme switcher dropdown
       | auto  | Auto  |
 
   # Theme switcher 04
-  Scenario Outline: Selecting a mode from the menu applies it and closes the menu
+  Scenario Outline: Selecting a mode from the menu applies it and closes the menu, without changing the closed button's icon
     Given I have switched the site theme to "<from>"
     And I have opened the theme switcher menu
     When I select "<to>" from the theme switcher menu
     Then the site theme should be "<to>"
     And the theme switcher menu should be closed
-    And the theme switcher button should show the icon for "<to>"
+    And the theme switcher button should show the auto icon
 
     Examples:
       | from  | to    |
@@ -58,10 +70,11 @@ Feature: Theme switcher dropdown
       | auto  | light |
 
   # Theme switcher 05
-  Scenario: The chosen mode is remembered on the next visit
+  Scenario: The chosen mode is remembered on the next visit, even though the button icon never reflects it
     Given I have switched the site theme to "dark"
     When I navigate to "/" again
-    Then the theme switcher button should show the icon for "Dark"
+    Then the site theme should be "dark"
+    And the theme switcher button should show the auto icon
 
   # Theme switcher 06
   Scenario: Clicking outside the open menu closes it without changing the theme

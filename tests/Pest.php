@@ -506,13 +506,11 @@ function themeModeLabel(string $mode): string
 }
 
 /**
- * A CSS selector for the inline SVG icon a theme switcher control (the
- * closed button or a menu option) renders for a given mode
- * (documentation/leesmij/navigation/theme_switcher.md, task 015's swap from
- * Unicode glyphs to SVG icons matching the header's GitHub icon). Each
- * control's icon carries a `data-mode` attribute identifying which mode it
- * represents, mirroring the existing `[role="option"][data-mode="..."]`
- * convention used for menu options themselves.
+ * A CSS selector for an inline SVG icon carrying the given mode's
+ * `data-mode` attribute (documentation/leesmij/navigation/theme_switcher.md).
+ * Since task 016 only the closed button still renders an icon, and it always
+ * renders the "auto" one regardless of the active mode; menu options no
+ * longer carry icons at all.
  */
 function themeModeIconSelector(string $mode): string
 {

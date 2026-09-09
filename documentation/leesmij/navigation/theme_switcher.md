@@ -86,3 +86,38 @@ Net als bij de GitHub-link (zie [[header_github_link]]) blijft deze wijziging be
 (`components/layouts/app.blade.php`). De admin-layout past het thema wel toe, maar heeft geen zichtbare
 schakelaar voor de beheerder — dat blijft ongewijzigd, omdat er geen wens is geuit om daar alsnog een switcher toe
 te voegen.
+
+## Task 016: knop wordt icoon-statisch en randloos, menu wordt icoonloos
+
+Na task 013/015 (zie hierboven) bleek de knop die per actieve modus van icoon wisselt in de praktijk toch verwarrend:
+een bezoeker zag bij het openen van de pagina steeds een ander icoon (☀, ◐ of ◑) afhankelijk van de eerder gekozen
+modus, terwijl het doel van de knop niet is om de huidige modus te *tonen* maar om het thema-menu te *openen*. Die
+twee functies liepen door elkaar. Vandaar de keuze om de knop te ontkoppelen van de actieve modus: hij toont voortaan
+altijd hetzelfde icoon (◑, het "auto"-symbool, dat toch al het meest neutrale van de drie is) en wisselt niet meer
+wanneer een andere modus gekozen wordt (scenario's 01, 04 en 05). Welke modus daadwerkelijk actief is, blijft af te
+lezen aan het vinkje zodra het menu geopend wordt (scenario 03) — dat vinkje blijft dus de enige plek waar de actieve
+modus zichtbaar is, in plaats van zowel op de knop als in het menu zoals voorheen.
+
+### Icoon-alleen knop, zonder rand
+
+Naast het statisch worden van het icoon verliest de gesloten knop ook zijn rand (scenario 01c). Met een vaste
+grootte gelijk aan het GitHub-icoon (scenario 01b, ongewijzigd) en zonder wisselend icoon oogde een randje rond de
+knop overbodig: de twee knoppen in de header (GitHub-link en thema-knop) staan er als iconen naast elkaar, en de
+GitHub-link heeft nooit een rand gehad. Het randloos maken van de thema-knop maakt de twee visueel consistent.
+
+### Hover-effect gelijk aan de GitHub-link
+
+Naast het icoon (scenario 01b, al bestaand) krijgt de knop nu ook hetzelfde hover-gedrag als de GitHub-link:
+een lichte vergroting (scale-110) in plaats van de kleurverandering die de knop tot nu toe had. De twee knoppen
+staan naast elkaar in de header en gedroegen zich tot nu toe verschillend bij hover — de ene werd groter, de andere
+veranderde van kleur — wat inconsistent aanvoelde nu ze qua grootte en positie al een paar vormen. De
+kleurverandering-hover verdwijnt volledig; hij wordt niet gecombineerd met de vergroting, om verwarrend dubbel
+hover-gedrag te voorkomen (scenario 01d).
+
+### Iconen verdwijnen uit het menu, vinkje blijft
+
+In het geopende menu verdwijnen de iconen (☀ Light, ◐ Dark, ◑ Auto) naast elke optie; de opties tonen voortaan alleen
+platte tekst "Light", "Dark", "Auto" (scenario 02). Dit is een bewuste versimpeling: nu de knop zelf geen wisselend
+icoon meer toont, voegt het herhalen van diezelfde icoontjes in het menu weinig toe en maakt het de labels drukker
+dan nodig. Het vinkje bij de actieve optie (scenario 03) blijft echter staan — dat is geen icoon per modus maar een
+los signaal "dit is de huidige keuze", en blijft nodig omdat de knop dat niet meer laat zien.

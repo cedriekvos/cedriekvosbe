@@ -6,11 +6,11 @@
 // stored theme or menu state, so there is no HTTP-observable half of this
 // feature. All scenarios are browser tests.
 
-// theme_switcher.feature — Scenario Outline: The closed switcher shows only the icon for the active mode
-it('shows only the icon for the active mode on the closed switcher button', function (string $mode) {
+// theme_switcher.feature — Scenario Outline: The closed switcher always shows the auto icon, regardless of the active mode
+it('always shows the auto icon on the closed switcher button, regardless of the active mode', function (string $mode) {
     $page = switchSiteThemeTo(visit('/'), $mode);
 
-    $page->assertPresent('#theme-toggle '.themeModeIconSelector($mode));
+    $page->assertPresent('#theme-toggle '.themeModeIconSelector('auto'));
     expect(trim((string) $page->text('#theme-toggle')))->toBe('');
 })->with([
     'light' => ['light'],
@@ -29,8 +29,35 @@ it("shows the closed switcher's icon at the same size as the header's GitHub ico
     expect($toggleIconWidth)->toBe($githubIconWidth);
 });
 
-// theme_switcher.feature — Scenario: Opening the switcher lists all three modes in a fixed order
-it('lists light, dark, then auto when the switcher menu is opened', function () {
+// theme_switcher.feature — Scenario: The closed switcher button has no visible border
+it('shows no visible border on the closed switcher button', function () {
+    $page = visit('/');
+
+    $borderWidth = $page->script("parseFloat(getComputedStyle(document.querySelector('#theme-toggle')).borderTopWidth)");
+
+    expect($borderWidth)->toBe(0);
+});
+
+// theme_switcher.feature — Scenario: Hovering the closed switcher button scales it up, the same way as the GitHub icon
+it('scales up on hover like the GitHub icon, without changing its icon color', function () {
+    $page = visit('/');
+
+    $toggleColorBefore = $page->script("getComputedStyle(document.querySelector('#theme-toggle')).color");
+
+    $page->hover('#theme-toggle');
+    $toggleTransform = $page->script("getComputedStyle(document.querySelector('#theme-toggle')).transform");
+    $toggleColorAfter = $page->script("getComputedStyle(document.querySelector('#theme-toggle')).color");
+
+    $page->hover('a[aria-label="GitHub"]');
+    $githubTransform = $page->script("getComputedStyle(document.querySelector('a[aria-label=\"GitHub\"]')).transform");
+
+    expect($toggleTransform)->not->toBe('none');
+    expect($toggleTransform)->toBe($githubTransform);
+    expect($toggleColorAfter)->toBe($toggleColorBefore);
+});
+
+// theme_switcher.feature — Scenario: Opening the switcher lists all three modes in a fixed order, without icons
+it('lists light, dark, then auto without icons when the switcher menu is opened', function () {
     $page = visit('/')->click('#theme-toggle');
 
     $labels = $page->script(
@@ -49,6 +76,8 @@ it('lists light, dark, then auto when the switcher menu is opened', function () 
         themeModeLabel('dark'),
         themeModeLabel('auto'),
     ]);
+
+    $page->assertNotPresent('#theme-menu [role="option"] svg');
 });
 
 // theme_switcher.feature — Scenario Outline: The active mode shows a visible checkmark inside the open menu
@@ -74,8 +103,8 @@ it('shows a checkmark and aria-checked only on the active mode inside the open m
     'auto' => ['auto'],
 ]);
 
-// theme_switcher.feature — Scenario Outline: Selecting a mode from the menu applies it and closes the menu
-it('applies the selected mode, closes the menu, and shows only its icon', function (string $from, string $to) {
+// theme_switcher.feature — Scenario Outline: Selecting a mode from the menu applies it and closes the menu, without changing the closed button's icon
+it('applies the selected mode, closes the menu, and keeps showing the auto icon', function (string $from, string $to) {
     $page = switchSiteThemeTo(visit('/'), $from);
     $page->click('#theme-toggle');
 
@@ -83,20 +112,21 @@ it('applies the selected mode, closes the menu, and shows only its icon', functi
 
     $page->assertScript("localStorage.getItem('theme')", $to);
     $page->assertAttribute('#theme-toggle', 'aria-expanded', 'false');
-    $page->assertPresent('#theme-toggle '.themeModeIconSelector($to));
+    $page->assertPresent('#theme-toggle '.themeModeIconSelector('auto'));
 })->with([
     'light to dark' => ['light', 'dark'],
     'dark to auto' => ['dark', 'auto'],
     'auto to light' => ['auto', 'light'],
 ]);
 
-// theme_switcher.feature — Scenario: The chosen mode is remembered on the next visit
-it('remembers the chosen mode as its icon on the next visit', function () {
+// theme_switcher.feature — Scenario: The chosen mode is remembered on the next visit, even though the button icon never reflects it
+it('remembers the chosen mode as the persisted theme, while the button keeps showing the auto icon', function () {
     $page = switchSiteThemeTo(visit('/'), 'dark');
 
     $page->navigate('/');
 
-    $page->assertPresent('#theme-toggle '.themeModeIconSelector('dark'));
+    $page->assertScript("localStorage.getItem('theme')", 'dark');
+    $page->assertPresent('#theme-toggle '.themeModeIconSelector('auto'));
 });
 
 // theme_switcher.feature — Scenario: Clicking outside the open menu closes it without changing the theme
