@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-09-09
+
+Both changes are to the agent pack in `pack/` — the multi-agent pipeline that
+drives a feature from spec to reviewed implementation. The site itself is
+unchanged.
+
+### Fixed
+
+- The pack handed the same work to two agents. Its Stop hook looked for an
+  agent's handoff only in `queue/pending/`, but the dispatcher moves it to
+  `runs/<task>/` the moment it routes it, so an agent that stopped inside that
+  window was told its handoff was missing and wrote a second one. A handoff now
+  counts as filed whether it is still queued or was just archived for the
+  round. Pack version 5.
+
+### Changed
+
+- Every delivery message carries `loop <n>/<max>`, not only rejections, so an
+  agent can tell when a `reject` would halt the pack rather than come back
+  round to it. `HANDOFF.md` drops the "overwrite your own pending file" escape
+  hatch that a second delivery hid behind.
+- The agent prompts now match what the agents are actually allowed to do.
+  `tests/Browser/` counts as an acceptance suite alongside `tests/Feature/`,
+  both of them and `tests/Architecture/` are off-limits to
+  `feature-development`, and each prompt's tool list spells commands both as
+  `vendor/bin/...` and `./vendor/bin/...` so an unattended agent never stalls
+  on a permission prompt.
+
 ## [1.1.0] - 2026-09-09
 
 ### Changed
@@ -55,7 +83,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.1.0...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.1.1...HEAD
+[1.1.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.1.0...1.1.1
 [1.1.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.0.1...1.1.0
 [1.0.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/cedriekvos/cedriekvosbe/releases/tag/1.0.0
