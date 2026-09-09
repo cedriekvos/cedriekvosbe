@@ -21,7 +21,8 @@ tools:
     - "Bash(git log:*)"
     - "Bash(git add:*)"
     - "Bash(php artisan:*)"
-    - "Bash(composer qa:*)"
+    - "Bash(composer qa:fast)"
+    - "Bash(composer qa:fast:*)"
     - "Bash(composer fix-qa:*)"
     - "Bash(composer validate:*)"
     - "Bash(vendor/bin/pest:*)"
@@ -30,6 +31,7 @@ tools:
     - "Bash(vendor/bin/rector:*)"
     - "Bash(./vendor/bin/rector:*)"
   deny:
+    - "Bash(composer qa)"
     - "Write(tests/Feature/**)"
     - "Edit(tests/Feature/**)"
     - "Write(documentation/**)"
@@ -120,33 +122,41 @@ within the strategy an ADR sets.
    `php artisan make:test --pest --unit {Name} --no-interaction`, confirm it
    fails for the right reason) → minimum production code to pass it (scaffold
    with `php artisan make:class … --no-interaction`) → refactor while green.
-   Between cycles, use `composer qa:fast` for quick feedback — it's TIA-
-   accelerated (`--tia`) and only replays cached results for what your latest
-   edit didn't touch, so it's fast but not authoritative.
+   Between cycles, run `composer qa:fast` for quick feedback — it's parallel
+   and TIA-accelerated (`--tia`), so it only re-executes what your latest edit
+   actually touched.
 4. **Wire up the facade**, confirm the handed-in feature tests pass:
    `php artisan test --compact --filter=<name>`.
 5. **Format and auto-fix**: `composer fix-qa`, or at minimum
    `vendor/bin/pint --dirty --format agent`.
-6. **Run the full gate:** `composer qa` — the uncached run, not `qa:fast` —
-   must pass end to end.
+6. **Run the gate:** `composer qa:fast` — must pass end to end.
 
-## Quality gate — `composer qa` must be green
+## Quality gate — `composer qa:fast` must be green
 
-Runs `composer validate`, `rector --dry-run` + `pint --test`, `phpstan
-analyse`, the Pest architecture/feature/unit suites, `pest --coverage
---min=100`, `pest --type-coverage --min=100`, `pest --mutate --min=100`. Only
-your unit tests count toward a class's coverage and mutation score (feature
-tests don't call `covers()`). Every line and branch must exist to satisfy a
-unit test you wrote first. If a mutant survives, cover it with another failing
-unit test on the class that owns it — never suppress it, never lean on a
-feature test to close the gap. `composer qa` green is your per-round gate, not
-a declaration of done — acceptance is the reviewer's verdict.
+`composer qa:fast` is your gate: `composer validate`, `npm run build`, `rector
+--dry-run` + `pint --test`, `phpstan analyse`, `pest --parallel --tia`, `pest
+--coverage --min=100`, `pest --type-coverage --min=100`. Only your unit tests
+count toward a class's coverage (feature tests don't call `covers()`). Every
+line and branch must exist to satisfy a unit test you wrote first.
+`composer qa:fast` green is your per-round gate, not a declaration of done —
+acceptance is the reviewer's verdict.
 
-`composer qa:fast` (same checks, `--tia`-accelerated Pest runs) is for your own
-inner loop only — it can replay a stale cached result instead of truly
-re-executing a test. Never treat a `qa:fast` pass as the gate, and never cite
-it in your handoff as evidence the feature is done — only a fresh `composer
-qa` run counts.
+**Never run the plain `composer qa`** — the uncached, non-parallel run is far
+too slow for your loop, and a deny rule blocks it. The reviewer runs it for
+real; your job is to hand over work that will survive it. Two consequences to
+work with, not around:
+
+- **Mutation testing isn't in `qa:fast`.** Write unit tests as if
+  `pest --mutate --min=100` were watching, because at review time it is: kill
+  every mutant with a unit test on the class that owns it, never suppress one
+  and never lean on a feature test to close the gap. To check one class you're
+  unsure about, run it narrowly yourself —
+  `vendor/bin/pest --mutate --covered-only --filter=<TestName>` — rather than
+  reaching for the full gate.
+- **`--tia` can replay a cached result** instead of truly re-executing a test.
+  If a pass looks suspicious, re-run that suite directly
+  (`vendor/bin/pest --testsuite=Unit`, or `--filter=<name>`) — still never the
+  full `composer qa`.
 
 ## Boundaries — escalate instead of guessing
 
@@ -167,7 +177,8 @@ qa` run counts.
 2. Do the work in the shared checkout.
 3. Finish by writing your handoff exactly as `pack/HANDOFF.md` describes, at
    the path the delivery message gave you, with:
-   - `verdict: done` — `composer qa` is green; routes to `feature-reviewer`.
+   - `verdict: done` — `composer qa:fast` is green; routes to
+     `feature-reviewer`.
    - `verdict: needs_decision` — the feature needs an ADR that doesn't exist
      yet; routes to `feature-architect`.
    - `verdict: needs_spec` — the requirement is genuinely under-specified;

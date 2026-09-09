@@ -36,7 +36,7 @@ flow:
       needs_decision: feature-architect # precondition storage/format undecided
       blocked: feature-specifier       # spec leaves an interface undefined
     feature-development:
-      done: feature-reviewer           # composer qa green, ready for review
+      done: feature-reviewer           # composer qa:fast green, ready for review
       needs_decision: feature-architect # feature needs an ADR that doesn't exist
       needs_spec: feature-specifier    # requirement genuinely under-specified
     feature-reviewer:
