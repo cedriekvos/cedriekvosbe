@@ -31,8 +31,9 @@ flow:
       needs_decision: feature-architect # spec raises a technical question
     feature-architect:
       decided: feature-to-pest         # ADR recorded (or none was needed)
+      needs_spec: feature-specifier    # the question is behavior, not architecture
     feature-to-pest:
-      done: feature-development        # red feature tests written
+      done: feature-development        # red acceptance tests written
       needs_decision: feature-architect # precondition storage/format undecided
       blocked: feature-specifier       # spec leaves an interface undefined
     feature-development:

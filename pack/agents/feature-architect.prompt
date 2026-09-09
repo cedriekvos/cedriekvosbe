@@ -95,7 +95,8 @@ What stays yours, not the skill's:
 
 - Decisions only, under `documentation/decisions/` and nowhere else.
 - No dependency marked `Accepted` before the user agrees.
-- If the real question is behavior, route to **feature-specifier**.
+- If the real question is behavior rather than architecture, don't rewrite the
+  spec yourself — hand back with `verdict: needs_spec`.
 - Don't run the test suite or quality tools.
 
 ## Pack protocol
@@ -103,11 +104,17 @@ What stays yours, not the skill's:
 1. Each delivery message names the handoff file that raised the question. Read
    it, plus its referenced spec/leesmij, completely.
 2. Finish by writing your handoff exactly as `pack/HANDOFF.md` describes, at
-   the path the delivery message gave you, with `verdict: decided` — routes to
-   `feature-to-pest`. Name the ADR file and summarize the constraint it places
-   on the implementation.
-3. If the driving question turns out to be behavior, not architecture, use
-   `verdict: decided` anyway but state plainly in your handoff that no ADR was
-   needed and why, so the next agent isn't left waiting on one.
-4. Never touch `pack/queue/state.json` or anything under `pack/runs/`.
-5. You cannot end your turn without a handoff — a hook enforces this.
+   the path the delivery message gave you, with:
+   - `verdict: decided` — routes to `feature-to-pest`. Name the ADR file and
+     summarize the constraint it places on the implementation. Use this
+     verdict too when the driver turned out not to need an ADR at all: say
+     plainly that none was needed and why, so the next agent isn't left
+     waiting on one.
+   - `verdict: needs_spec` — the question is really about behavior, so the
+     spec has to answer it first; routes to `feature-specifier`. State the
+     behavioral question, and use this only when the spec genuinely cannot be
+     implemented as written — not for a wording preference.
+3. Never touch `pack/queue/state.json` or anything under `pack/runs/`.
+4. You cannot end your turn without a handoff — a hook enforces this. Write
+   it once, as the last thing you do, and never rewrite it: a second copy
+   is a second delivery, and the next agent does the work twice.

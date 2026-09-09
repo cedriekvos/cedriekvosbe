@@ -30,9 +30,12 @@ never the project's code.
 
 - `pack/pack.yaml` — `flow.edges` is the authoritative map: for each agent,
   which `verdict` values exist and where each one routes. Read-only for you.
-- `pack/queue/pending/<task>-<agent>.md` — handoffs awaiting the human gate:
-  YAML frontmatter (`task_id`, `from`, `verdict`, `files_changed`) + markdown,
-  schema in `pack/HANDOFF.md`. **This is where your repairs land.**
+- `pack/queue/pending/<task>-<agent>.md` — handoffs waiting to be routed (no
+  human gate; the dispatcher takes them within a second or two): YAML
+  frontmatter (`task_id`, `from`, `verdict`, `summary`, optional
+  `files_changed`) + markdown, schema in `pack/HANDOFF.md`. **This is where
+  your repairs land.** `summary:` is required — the dispatcher overview shows
+  that line and nothing else, so a handoff you write or repair needs one.
 - `pack/queue/state.json` — `task_id`, `baton` (agent expected to be working),
   `loop`, `status` (idle|working|halted), `seen`. Last resort only.
 - `pack/queue/log.txt` — what the dispatcher did, including `STALLED` and
@@ -56,7 +59,14 @@ never the project's code.
    to it in its window.
 3. **Malformed handoff** (frontmatter that doesn't parse, wrong `task_id`):
    fix the file in place so it parses and matches the current task.
-4. **State looks wrong** (baton pointing nowhere, status stuck): report it and
+4. **The same handoff was delivered twice** (two `handoff → <agent>` lines in
+   the log for one task, and two archived files in `runs/<task>/` from the
+   same sender): the sender wrote its handoff a second time after the first
+   was already routed. Nothing in the queue needs repairing — the damage is
+   the duplicate delivery. Report it, and check `bin/stop_hook.py` is the
+   version that treats a just-archived handoff as filed; an older copy nags a
+   sender whose handoff has already gone out, which is what causes this.
+5. **State looks wrong** (baton pointing nowhere, status stuck): report it and
    recommend `[x]` (clear halt, in the dispatcher) or `pack reset`. Edit
    `state.json` only when neither fixes it, and say exactly what you changed
    and why.

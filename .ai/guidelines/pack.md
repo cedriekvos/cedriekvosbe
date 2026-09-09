@@ -11,7 +11,8 @@ work to each other through `pack/queue/` (the message bus); a dispatcher
 This project's flow (`pack/pack.yaml`): `feature-specifier` (Gherkin spec +
 Dutch `leesmij`) → optionally `feature-architect` (an ADR, only for a
 genuine cross-cutting technical decision) → `feature-to-pest` (red Pest
-feature tests) → `feature-development` (`app/` code, test-first, until
+acceptance tests — `tests/Feature/`, `tests/Browser/`, or both) →
+`feature-development` (`app/` code, test-first, until
 `composer qa` is green) → `feature-reviewer` (independent, read-only review)
 → done, or back to whichever stage can actually fix what's wrong.
 
