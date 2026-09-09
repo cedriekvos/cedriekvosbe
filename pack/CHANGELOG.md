@@ -1,5 +1,23 @@
 # Changelog
 
+## 5 — 2026-09-09
+
+The pack stops handing the same work to two agents.
+
+- **A handoff is never delivered twice.** The Stop hook used to look for the
+  handoff only in `queue/pending/`, but the dispatcher moves it to
+  `runs/<task>/` the moment it routes it — so an agent that stopped in that
+  window was told its handoff was missing, wrote it again, and the next agent
+  got the same work twice. A handoff now counts as filed whether it is still
+  queued or has just been archived for this round
+- **`HANDOFF.md` drops the "overwrite your own pending file" escape hatch.**
+  One handoff per turn, written last, never rewritten — a rewrite is a second
+  delivery. A blocker found afterwards goes in the agent's window, for you to
+  decide on
+- **Every delivery message carries `loop <n>/<max>`**, not just rejections, so
+  an agent can see when a `reject` would halt the pack rather than come back
+  round to it
+
 ## 4 — 2026-08-18
 
 The pack routes itself. The dispatcher is a screen you watch, not a gate you

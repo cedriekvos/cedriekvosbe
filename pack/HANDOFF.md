@@ -65,11 +65,17 @@ needs_decision`) are almost certainly different. Check `pack.yaml`.
 - Write `summary:` on every handoff. The human watching the dispatcher sees
   only that line, not your Summary section — so make it say what changed, not
   "task complete". One sentence, no markdown, no file list.
-- One handoff per turn, and write it in a single pass: the dispatcher collects
-  it about a second after your last write. If you must revise it, overwrite
-  your own pending file — but assume it has already gone out.
+- One handoff per turn, written in a single pass as the last thing you do: the
+  dispatcher collects it about a second later, with nobody in between. Once
+  written it is gone — do not rewrite it, not even identically. A rewritten
+  file is routed a second time, and the next agent is handed the same work
+  twice.
+- If something blocks you *after* you have written it, don't file a correction;
+  say it in your window and let the human decide.
 - Never edit `pack/queue/state.json`, other agents' pending files, or anything
   under `pack/runs/`.
 - Blocked? Write the handoff anyway and explain the blocker in **Summary**.
   Never just stop — the Stop hook will not let you end your turn without a
   handoff file.
+- Your delivery message carries `loop <n>/<max>`. On the last loop a `reject`
+  halts the pack for the human instead of going round again.

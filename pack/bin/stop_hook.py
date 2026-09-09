@@ -6,6 +6,19 @@ PACK_AGENT and PACK_DIR being set in the agent's environment (pack up does this)
 Exit 2 blocks the stop and feeds stderr back to the agent as instructions.
 After MAX_NAGS blocked attempts we let the agent stop and log the stall, so a
 confused agent cannot burn tokens forever.
+
+A handoff counts as written whether it is still in queue/pending/ or was just
+archived to runs/<task>/. Both must be checked: the dispatcher moves the file
+out of pending/ the moment it routes it, and only saves the new baton at the
+end of its tick — so between those two points a sender that stops would
+otherwise be told its handoff is missing and dutifully write it a second time,
+which the dispatcher then routes as a duplicate delivery.
+
+"Just archived" has to mean this round, not any round: on a rejection loop the
+agent's earlier handoff for the same task is sitting in runs/ already, and
+must not excuse it from filing a new one. The archive names files
+<task>-<seq>-<agent>.md and state.seq is the last sequence handed out, so the
+agent is off the hook only if a handoff of its own carries that current seq.
 """
 
 import json
@@ -15,6 +28,26 @@ from datetime import datetime
 from pathlib import Path
 
 MAX_NAGS = 3
+
+
+def archived_seq(path):
+    """The <seq> out of a runs/ filename like 015-04-feature-to-pest.md."""
+    parts = path.name.split("-")
+    if len(parts) < 3 or not parts[1].isdigit():
+        return -1
+    return int(parts[1])
+
+
+def handoff_exists(pack, agent, state):
+    """True if this agent filed a handoff for this round — queued or just routed."""
+    pending = pack / "queue" / "pending"
+    if pending.exists() and list(pending.glob(f"*-{agent}.md")):
+        return True
+    run_dir = pack / "runs" / str(state.get("task_id") or "")
+    if not run_dir.exists():
+        return False
+    seq = state.get("seq") or 0
+    return any(archived_seq(p) >= seq for p in run_dir.glob(f"*-{agent}.md"))
 
 
 def main():
@@ -39,9 +72,9 @@ def main():
     if state.get("baton") != agent or state.get("status") != "working":
         return 0
 
-    pending = pack / "queue" / "pending"
-    if pending.exists() and list(pending.glob(f"*-{agent}.md")):
-        return 0  # handoff written — free to stop
+    task = state.get("task_id") or "current"
+    if handoff_exists(pack, agent, state):
+        return 0  # handoff written (queued or just routed) — free to stop
 
     nag_file = pack / "queue" / f".attempts_{agent}"
     nags = 0
@@ -58,7 +91,6 @@ def main():
         return 0
     nag_file.write_text(str(nags + 1))
 
-    task = state.get("task_id") or "current"
     print(
         f"You are pack agent '{agent}' and hold the baton for task {task}, but no "
         f"handoff file exists. Before stopping you MUST write your handoff to "

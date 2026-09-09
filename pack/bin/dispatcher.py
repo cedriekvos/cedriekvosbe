@@ -227,17 +227,18 @@ def deliver(cfg, state, target, archived, meta, kind):
         send_line(target, "/clear")
         time.sleep(1.5)
         state["seen"][target] = task
+    loop = f"loop {state['loop']}/{cfg['max_loops']}"
     if kind == "task":
-        msg = (f"New task {task}. Read {rel(archived)} and carry it out. When finished, "
-               f"write your handoff to {pending_path} following {handoff_doc}.")
+        msg = (f"New task {task} ({loop}). Read {rel(archived)} and carry it out. When "
+               f"finished, write your handoff to {pending_path} following {handoff_doc}.")
     elif kind == "reject":
-        msg = (f"Your work on task {task} was rejected (loop {state['loop']}/{cfg['max_loops']}). "
+        msg = (f"Your work on task {task} was rejected ({loop}). "
                f"Read {rel(archived)}, address every remark, then write a fresh handoff to "
                f"{pending_path} following {handoff_doc}.")
     else:
-        msg = (f"Handoff from {meta.get('from')} for task {task}. Read {rel(archived)} and do "
-               f"your part. When finished, write your handoff to {pending_path} "
-               f"following {handoff_doc}.")
+        msg = (f"Handoff from {meta.get('from')} for task {task} ({loop}). Read "
+               f"{rel(archived)} and do your part. When finished, write your handoff to "
+               f"{pending_path} following {handoff_doc}.")
     send_line(target, msg)
     clear_attempts(target)
     state["baton"] = target
