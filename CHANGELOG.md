@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-09
+
+### Changed
+
+- The theme switcher button no longer mirrors the active mode. It always shows
+  the auto icon, so it reads as "open the theme menu" instead of doubling as a
+  mode indicator; the checkmark in the open menu is now the only place the
+  active mode is shown. The button also drops its border and its colour-change
+  hover in favour of the scale-up hover the GitHub link already used, and the
+  per-mode icons are gone from the menu options, leaving plain labels.
+- Livewire updated to 4.4.4, a routine patch with no security impact. This
+  project was never affected by CVE-2026-81887 (DOM-based XSS, fixed in 4.3.4),
+  having been on 4.4.3 already.
+
 ## [1.0.1] - 2026-09-04
 
 ### Fixed
@@ -41,6 +55,7 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.0.1...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.1.0...HEAD
+[1.1.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.0.1...1.1.0
 [1.0.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/cedriekvos/cedriekvosbe/releases/tag/1.0.0
