@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-09-10
+
+The hourly Composer vulnerability alert now ships as its own package. What it
+does is unchanged; where it lives, and the name of one setting, are not.
+
+### Added
+
+- `.ai/rules/`, shared rules for agents and contributors, starting with one
+  Pest trap: in an arch chain, `ignoring()` only applies to the last
+  expectation.
+
+### Changed
+
+- The alert moved out of the app into `cedriekvos/laravel-composer-audit`,
+  installed from its GitHub repository at `^1.0`. The package registers the
+  `security:check-vulnerabilities` command, its hourly schedule and its own
+  storage disk itself, and still mutes each advisory for 48 hours after it is
+  reported. ADR 0008 records the move and supersedes ADR 0001.
+- **The recipient setting is renamed.** Set
+  `LARAVEL_COMPOSER_AUDIT_ALERT_RECIPIENT` instead of `SECURITY_ALERT_RECIPIENT`
+  when deploying: under the old name the check still runs but sends nothing.
+  The mute state moves from `storage/app/private/security` to
+  `storage/app/private/laravel-composer-audit`, so the first run after deploying
+  reports every open advisory once more.
+
+### Removed
+
+- `App\Security`, its console command, mailable, mail view, config file,
+  `security` disk, tests, Gherkin spec and Dutch `leesmij`. They live in the
+  package now, which carries its own tests and quality gate.
+
 ## [1.1.1] - 2026-09-09
 
 Both changes are to the agent pack in `pack/` — the multi-agent pipeline that
@@ -83,7 +114,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.1.1...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.2.0...HEAD
+[1.2.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.1.1...1.2.0
 [1.1.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.1.0...1.1.1
 [1.1.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.0.1...1.1.0
 [1.0.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.0.0...1.0.1
