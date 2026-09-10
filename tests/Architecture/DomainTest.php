@@ -11,11 +11,9 @@ $domains = [
     'App\Markdown',
     'App\Microblog',
     'App\Scratchpad',
-    'App\Security',
 ];
 
 $delivery = [
-    'App\Console',
     'App\Http',
     'App\Livewire',
     'App\Models',
@@ -34,7 +32,6 @@ $allowed = [
     'App\Markdown' => [],
     'App\Microblog' => ['App\Markdown'],
     'App\Scratchpad' => [],
-    'App\Security' => [],
 ];
 
 arch('domain classes are final, readonly and strictly typed')
@@ -45,9 +42,6 @@ arch('domain classes are final, readonly and strictly typed')
 
 arch('domains do not know about the delivery layer')
     ->expect($domains)
-    // App\Mail is deliberately absent from this list: App\Security\VulnerabilityNotifier
-    // sends App\Mail\ComposerVulnerabilityAlert, the one upward crossing the module map
-    // records. Every other delivery module stays out of the domains.
     ->not->toUse($delivery);
 
 arch('domains do not know about requests, responses or the database')
@@ -75,5 +69,4 @@ arch('only storage classes touch the filesystem')
         'App\Blog\Storage',
         'App\Microblog\Storage',
         'App\Scratchpad\Storage',
-        'App\Security\Storage',
     ]);

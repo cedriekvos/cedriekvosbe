@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "78cf568790999644ec64dc5feb7cb390",
+    "content-hash": "1ede263af48439cbaf3637bc38dc6995",
     "packages": [
         {
             "name": "brick/math",
@@ -133,6 +133,94 @@
                 }
             ],
             "time": "2024-02-09T16:56:22+00:00"
+        },
+        {
+            "name": "cedriekvos/laravel-composer-audit",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cedriekvos/laravel-composer-audit.git",
+                "reference": "4530556d639d8a0732cf06ad8d3f9604d48c8672"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cedriekvos/laravel-composer-audit/zipball/4530556d639d8a0732cf06ad8d3f9604d48c8672",
+                "reference": "4530556d639d8a0732cf06ad8d3f9604d48c8672",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^13.8",
+                "illuminate/contracts": "^13.8",
+                "illuminate/filesystem": "^13.8",
+                "illuminate/mail": "^13.8",
+                "illuminate/support": "^13.8",
+                "php": "8.4.*"
+            },
+            "require-dev": {
+                "driftingly/rector-laravel": "^2",
+                "larastan/larastan": "^3",
+                "laravel/pint": "^1.27",
+                "orchestra/testbench": "^11.2",
+                "pestphp/pest": "^5.0",
+                "pestphp/pest-plugin-laravel": "^5.0",
+                "pestphp/pest-plugin-type-coverage": "^5.0",
+                "rector/rector": "^2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "CedriekVos\\LaravelComposerAudit\\LaravelComposerAuditServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "CedriekVos\\LaravelComposerAudit\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "CedriekVos\\LaravelComposerAudit\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/pest"
+                ],
+                "qa": [
+                    "Composer\\Config::disableProcessTimeout",
+                    "composer validate",
+                    "vendor/bin/rector process --dry-run --clear-cache",
+                    "vendor/bin/pint --test --cache-file=/dev/null",
+                    "vendor/bin/phpstan clear-result-cache",
+                    "vendor/bin/phpstan analyse",
+                    "vendor/bin/pest --coverage --min=100",
+                    "vendor/bin/pest --type-coverage --min=100",
+                    "vendor/bin/pest --mutate --min=100 --no-cache",
+                    "echo QA passed"
+                ],
+                "fix-qa": [
+                    "vendor/bin/rector process",
+                    "vendor/bin/pint",
+                    "echo QA fixed"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Audit installed Composer packages on a schedule and email the maintainer about newly reported vulnerabilities.",
+            "keywords": [
+                "audit",
+                "composer",
+                "laravel",
+                "security",
+                "vulnerabilities"
+            ],
+            "support": {
+                "source": "https://github.com/cedriekvos/laravel-composer-audit/tree/1.0.0"
+            },
+            "time": "2026-09-10T09:53:15+00:00"
         },
         {
             "name": "dflydev/dot-access-data",

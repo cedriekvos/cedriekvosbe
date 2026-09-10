@@ -10,7 +10,6 @@ $repositories = [
     'App\Blog\Repositories',
     'App\Microblog\Repositories',
     'App\Scratchpad\Repositories',
-    'App\Security\Repositories',
 ];
 
 $storage = [
@@ -18,7 +17,6 @@ $storage = [
     'App\Blog\Storage',
     'App\Microblog\Storage',
     'App\Scratchpad\Storage',
-    'App\Security\Storage',
 ];
 
 arch('repositories are suffixed Repository')
@@ -29,7 +27,6 @@ arch('repositories are suffixed Repository')
     ->ignoring([
         'App\Blog\Repositories\PostSource',
         'App\Microblog\Repositories\MessageSource',
-        'App\Security\Repositories\VulnerabilitySource',
     ]);
 
 arch('file storage is suffixed FileStorage')

@@ -5,8 +5,15 @@
     "description": "The skeleton application for the Laravel framework.",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/cedriekvos/laravel-composer-audit"
+        }
+    ],
     "require": {
         "php": "8.4.*",
+        "cedriekvos/laravel-composer-audit": "^1.0",
         "laravel/framework": "^13.8",
         "laravel/tinker": "^3.0",
         "league/commonmark": "^2.6",

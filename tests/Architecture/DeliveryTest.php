@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Console\Command;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Mail\Mailable;
 use Illuminate\View\Component;
 use Livewire\Component as LivewireComponent;
 
@@ -31,19 +29,6 @@ arch('livewire components extend the framework component and render a view')
     ->expect('App\Livewire')
     ->toExtend(LivewireComponent::class)
     ->toHaveMethod('render');
-
-arch('console commands are final, strictly typed and suffixed')
-    ->expect('App\Console\Commands')
-    ->toBeFinal()
-    ->toUseStrictTypes()
-    ->toHaveSuffix('Command')
-    ->toExtend(Command::class);
-
-arch('mailables are final, strictly typed and extend Mailable')
-    ->expect('App\Mail')
-    ->toBeFinal()
-    ->toUseStrictTypes()
-    ->toExtend(Mailable::class);
 
 arch('view components extend the framework component')
     ->expect('App\View\Components')

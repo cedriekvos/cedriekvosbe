@@ -52,13 +52,6 @@ return [
             'report' => false,
         ],
 
-        'security' => [
-            'driver' => 'local',
-            'root' => storage_path('app/private/security'),
-            'throw' => false,
-            'report' => false,
-        ],
-
         'microblog' => [
             'driver' => 'local',
             'root' => storage_path('app/private/content/microblog'),

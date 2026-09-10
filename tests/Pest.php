@@ -26,9 +26,6 @@ use App\Scratchpad\Repositories\ScratchpadRepository;
 use App\Scratchpad\Scratchpad;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
@@ -388,89 +385,6 @@ function renderedMessageInAdminList(string $body): string
     postMessage($body);
 
     return Livewire::test(MessageIndex::class)->html();
-}
-
-/**
- * Isolate the composer vulnerability alert for each test: a faked `security` disk
- * for the 48h mute state (ADR 0001), faked mail, a frozen clock so the mute window
- * is deterministic, and a configured recipient (the feature's Background step).
- */
-function usesFakeVulnerabilityCheck(string $recipient = 'security@example.test'): void
-{
-    beforeEach(function () use ($recipient) {
-        Storage::fake('security');
-        Mail::fake();
-        Carbon::setTestNow(Carbon::create(2026, 6, 9, 12, 0, 0));
-        config(['security.alert_recipient' => $recipient]);
-    });
-}
-
-/**
- * Fake `composer audit --format=json` so the check sees exactly these vulnerabilities.
- * Mirrors Composer's JSON shape: advisories keyed by package, the public advisory id
- * exposed both as `advisoryId` and as a GitHub source `remoteId`.
- *
- * @param  array<int, array{package: string, advisory: string, title?: string, severity?: string}>  $vulnerabilities
- */
-function fakeComposerAudit(array $vulnerabilities): void
-{
-    $advisories = [];
-
-    foreach ($vulnerabilities as $vulnerability) {
-        $advisories[$vulnerability['package']][] = [
-            'advisoryId' => $vulnerability['advisory'],
-            'packageName' => $vulnerability['package'],
-            'title' => $vulnerability['title'] ?? 'Vulnerability in '.$vulnerability['package'],
-            'severity' => $vulnerability['severity'] ?? 'high',
-            'sources' => [['name' => 'GitHub', 'remoteId' => $vulnerability['advisory']]],
-        ];
-    }
-
-    Process::fake([
-        '*' => Process::result(output: (string) json_encode(['advisories' => $advisories === [] ? [] : $advisories])),
-    ]);
-}
-
-/**
- * Run the scheduled vulnerability check once at the current (test) clock.
- */
-function runVulnerabilityCheck(): void
-{
-    Artisan::call('security:check-vulnerabilities');
-}
-
-/**
- * Establish that `$advisory` in `$package` was already reported `$hoursAgo` hours ago,
- * by running a real check at that moment with the vulnerability present. This writes
- * the real mute state to the faked `security` disk; the seeding mail is then discarded
- * so the run under test counts on its own.
- */
-function reportVulnerability(string $package, string $advisory, int $hoursAgo): void
-{
-    $now = Carbon::now();
-
-    Carbon::setTestNow($now->copy()->subHours($hoursAgo));
-    fakeComposerAudit([['package' => $package, 'advisory' => $advisory]]);
-    runVulnerabilityCheck();
-
-    Carbon::setTestNow($now);
-    Mail::fake();
-}
-
-/**
- * Run a check at `$hoursAgo` hours ago against an empty audit, so a previously
- * reported vulnerability is seen as resolved and its mute state is pruned.
- */
-function reportVulnerabilityResolved(int $hoursAgo): void
-{
-    $now = Carbon::now();
-
-    Carbon::setTestNow($now->copy()->subHours($hoursAgo));
-    fakeComposerAudit([]);
-    runVulnerabilityCheck();
-
-    Carbon::setTestNow($now);
-    Mail::fake();
 }
 
 /**

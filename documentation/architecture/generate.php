@@ -21,7 +21,6 @@ const BANDS = [
     'Microblog' => 'domain',
     'About' => 'domain',
     'Scratchpad' => 'domain',
-    'Security' => 'domain',
     'Markdown' => 'kernel',
     'Http' => 'delivery',
     'Livewire' => 'delivery',

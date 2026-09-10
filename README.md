@@ -20,7 +20,6 @@ editor account, sessions, cache and queue — never the content.
 | Blog               | `posts`     | `storage/app/private/content/posts`      |
 | Microblog          | `microblog` | `storage/app/private/content/microblog`  |
 | About & Scratchpad | `meta`      | `storage/app/private/content/meta`       |
-| Vulnerability mutes| `security`  | `storage/app/private/security`           |
 
 Slugs and ids address files on disk, so the routes constrain them to the shapes the admin
 forms can produce — a path separator or a dot never reaches storage.
@@ -30,12 +29,12 @@ forms can produce — a path separator or a dot never reaches storage.
 The `App\` namespace is arranged in three bands, and `tests/Architecture` fails the build
 when the boundaries are crossed:
 
-- **Delivery** — `Console`, `Http`, `Livewire`, `Mail`, `View`. The only layer that knows
-  about requests. Entry points stay thin: resolve a domain collaborator, hand back a view,
-  a redirect or an exit code.
-- **Bounded domains** — `About`, `Blog`, `Microblog`, `Scratchpad`, `Security`.
-  Self-contained, file-backed, and unaware of HTTP. Each is built from the same roles:
-  a model, a Markdown codec, `Repositories/`, and `Storage/`.
+- **Delivery** — `Http`, `Livewire`, `View`. The only layer that knows about requests.
+  Entry points stay thin: resolve a domain collaborator, hand back a view, a redirect or
+  an exit code.
+- **Bounded domains** — `About`, `Blog`, `Microblog`, `Scratchpad`. Self-contained,
+  file-backed, and unaware of HTTP. Each is built from the same roles: a model, a Markdown
+  codec, `Repositories/`, and `Storage/`.
 - **Shared kernel** — `Markdown`. The front matter codec and Markdown-to-HTML conversion
   every content domain builds on.
 
@@ -106,18 +105,6 @@ vendor/bin/pest --testsuite=Unit                 # one suite
 `composer qa` is the merge gate. Beyond Rector, Pint and PHPStan it holds three hard
 thresholds — **100% code coverage, 100% type coverage and a 100% mutation score** — then
 builds the frontend and runs the browser suite last.
-
-## Security alerts
-
-`CheckComposerVulnerabilitiesCommand` runs hourly (`routes/console.php`), audits the
-installed Composer packages and emails new advisories. Set the recipient with:
-
-```dotenv
-SECURITY_ALERT_RECIPIENT=you@example.com
-```
-
-Leave it empty and the check still runs, but sends nothing. Advisories can be muted for a
-window; that state is JSON on the `security` disk.
 
 ## Repository layout
 

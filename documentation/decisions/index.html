@@ -17,7 +17,7 @@
       <header class="space-y-5">
         <div class="flex items-baseline justify-between flex-wrap gap-2">
           <h1 class="font-serif text-4xl tracking-tight">Architecture Decision Records</h1>
-          <span class="font-mono text-xs text-slate-400">cedriekvos/blog · 7 decisions</span>
+          <span class="font-mono text-xs text-slate-400">cedriekvos/blog · 8 decisions</span>
         </div>
         <p class="text-slate-600 leading-relaxed max-w-2xl">
           The project’s cross-cutting <strong class="font-semibold text-slate-900">technical</strong> decisions, one per page.
@@ -39,7 +39,7 @@
           <div class="flex items-baseline gap-3 flex-wrap">
             <span class="font-mono text-sm text-slate-400">0001</span>
             <h3 class="font-serif text-lg leading-snug text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4 flex-1 min-w-[16rem]">App\Security: a file-based operational domain, no new dependency</h3>
-            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Accepted</span>
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-200 text-slate-600">Superseded by 0008</span>
             <span class="font-mono text-[11px] text-slate-400">2026-06-09</span>
           </div>
           <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">The project’s first operational domain, how it runs the audit, and where the 48-hour mute state lives.</p>
@@ -97,6 +97,15 @@
             <span class="font-mono text-[11px] text-slate-400">2026-08-04</span>
           </div>
           <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">Where the duplicated front-matter mechanics go, and everything that stays behind.</p>
+        </a>
+        <a href="0008-vulnerability-alert-package-from-github.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
+          <div class="flex items-baseline gap-3 flex-wrap">
+            <span class="font-mono text-sm text-slate-400">0008</span>
+            <h3 class="font-serif text-lg leading-snug text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4 flex-1 min-w-[16rem]">The vulnerability alert lives in its own package, installed from GitHub</h3>
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Accepted</span>
+            <span class="font-mono text-[11px] text-slate-400">2026-09-10</span>
+          </div>
+          <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">The alert is a separate package installed from GitHub; nothing of it remains in this repository.</p>
         </a>
         </div>
       </section>
