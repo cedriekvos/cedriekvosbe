@@ -3,6 +3,7 @@
 use App\Http\Controllers\Blog\Frontend\BlogRedirectController;
 use App\Http\Controllers\Blog\Frontend\IndexController;
 use App\Http\Controllers\Blog\Frontend\ShowController;
+use App\Http\Controllers\Pages\Frontend\ShowController as PageShowController;
 use App\Livewire\Admin\AboutForm;
 use App\Livewire\Admin\MessageForm;
 use App\Livewire\Admin\MessageIndex;
@@ -32,3 +33,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// Pages are reachable at a root-level slug, so this must be registered after
+// every other route (including auth.php's) or it would shadow /login, /admin,
+// /blog, etc. instead of the other way around.
+Route::get('/{slug}', PageShowController::class)->where('slug', '[a-z0-9\-]+');
