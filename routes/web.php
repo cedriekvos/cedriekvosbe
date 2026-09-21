@@ -7,6 +7,8 @@ use App\Http\Controllers\Pages\Frontend\ShowController as PageShowController;
 use App\Livewire\Admin\AboutForm;
 use App\Livewire\Admin\MessageForm;
 use App\Livewire\Admin\MessageIndex;
+use App\Livewire\Admin\PageForm;
+use App\Livewire\Admin\PageIndex;
 use App\Livewire\Admin\PostForm;
 use App\Livewire\Admin\PostIndex;
 use App\Livewire\Admin\ScratchpadForm;
@@ -25,6 +27,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', PostIndex::class)->name('posts.index');
     Route::get('/posts/new', PostForm::class)->name('posts.create');
     Route::get('/posts/{slug}/edit', PostForm::class)->name('posts.edit')->where('slug', '[a-z0-9\-]+');
+    Route::get('/pages', PageIndex::class)->name('pages.index');
+    Route::get('/pages/new', PageForm::class)->name('pages.create');
+    Route::get('/pages/{slug}/edit', PageForm::class)->name('pages.edit')->where('slug', '[a-z0-9\-]+');
     Route::get('/about/edit', AboutForm::class)->name('about.edit');
     Route::get('/scratchpad/edit', ScratchpadForm::class)->name('scratchpad.edit');
     Route::get('/messages', MessageIndex::class)->name('messages.index');

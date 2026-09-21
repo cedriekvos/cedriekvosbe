@@ -34,6 +34,7 @@
             </a>
             <nav class="hidden md:flex items-center gap-4 font-mono text-xs">
                 <a href="{{ route('admin.posts.index') }}" class="text-muted hover:text-fg">[posts]</a>
+                <a href="{{ route('admin.pages.index') }}" class="text-muted hover:text-fg">[pages]</a>
                 <a href="{{ route('admin.messages.index') }}" class="text-muted hover:text-fg">[messages]</a>
                 <a href="{{ route('admin.about.edit') }}" class="text-muted hover:text-fg">[about]</a>
                 <a href="{{ route('admin.scratchpad.edit') }}" class="text-muted hover:text-fg">[scratchpad]</a>
@@ -48,6 +49,7 @@
         </div>
         <nav id="mobile-menu" class="hidden md:hidden flex-col gap-3 px-6 pt-4 pb-6 font-mono text-xs" style="border-top: 1px solid var(--t-line);">
             <a href="{{ route('admin.posts.index') }}" class="text-muted hover:text-fg">[posts]</a>
+            <a href="{{ route('admin.pages.index') }}" class="text-muted hover:text-fg">[pages]</a>
             <a href="{{ route('admin.messages.index') }}" class="text-muted hover:text-fg">[messages]</a>
             <a href="{{ route('admin.about.edit') }}" class="text-muted hover:text-fg">[about]</a>
             <a href="{{ route('admin.scratchpad.edit') }}" class="text-muted hover:text-fg">[scratchpad]</a>
