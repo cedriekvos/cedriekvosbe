@@ -46,19 +46,25 @@ was, key decisions you made, how to verify the work, known gotchas.
 **`pack.yaml`'s `flow.edges.<your-agent-name>` is the only authoritative list
 of verdicts you may use.** Look yourself up there before writing your handoff
 — do not guess, and do not copy a verdict name from another agent's handoff
-or from the example below. A verdict with no matching edge is not rejected
-loudly: the dispatcher just leaves your handoff sitting in the queue, which
-looks like the pipeline hung.
+or from the example below. A verdict with no matching edge is an error: it
+halts the whole pack until the human repairs your handoff.
+
+A verdict whose edge points at `HALT` is how you ask for the human on
+purpose. It stops the pack; once the human has dealt with it, they hand the
+task back to you with a note. Use it only for what no agent in the pack can
+do. A blocker that no agent can clear should never be passed to another
+agent, or the task circles between agents until someone notices.
 
 The table below is illustrative only, for a generic `coder`/`qa` pack — this
 repo's actual agents and verdicts (e.g. `feature-specifier: ready |
 needs_decision`) are almost certainly different. Check `pack.yaml`.
 
-| agent | verdict   | meaning                                        |
-|-------|-----------|------------------------------------------------|
-| coder | `done`    | work complete, ready for review                |
-| qa    | `approve` | ship it — the task is finished                 |
-| qa    | `reject`  | remarks must be addressed; bounces back        |
+| agent | verdict       | meaning                                        |
+|-------|---------------|------------------------------------------------|
+| coder | `done`        | work complete, ready for review                |
+| coder | `needs_human` | only the human can clear it; halts the pack    |
+| qa    | `approve`     | ship it — the task is finished                 |
+| qa    | `reject`      | remarks must be addressed; bounces back        |
 
 ## Rules
 
@@ -74,7 +80,8 @@ needs_decision`) are almost certainly different. Check `pack.yaml`.
   say it in your window and let the human decide.
 - Never edit `pack/queue/state.json`, other agents' pending files, or anything
   under `pack/runs/`.
-- Blocked? Write the handoff anyway and explain the blocker in **Summary**.
+- Blocked? Write the handoff anyway and explain the blocker in **Summary** —
+  with the verdict that routes to `HALT`, if only the human can clear it.
   Never just stop — the Stop hook will not let you end your turn without a
   handoff file.
 - Your delivery message carries `loop <n>/<max>`. On the last loop a `reject`

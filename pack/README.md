@@ -49,7 +49,9 @@ pack installs itself into it.
 - **Bounded loops.** After `max_loops` rejections on one task the pack halts
   and waits for you. So does a verdict with no edge in `pack.yaml` — with
   nobody at a gate, an unroutable handoff stops the pack instead of sitting
-  unnoticed in the queue.
+  unnoticed in the queue — and a verdict routed to `HALT`, the one way an
+  agent can hand a job to you instead of to another agent that cannot do it
+  either.
 - **A medic on call.** When the pack jams — an invalid verdict, a stalled
   agent, a mangled handoff — press **m** in the dispatcher: the medic (its own
   claude window, outside the flow) reads the queue, the log, and the agent
@@ -160,7 +162,7 @@ pack:
 | value | what happens |
 |---|---|
 | `bell` (default) | rings the terminal — your terminal or tmux decides what that means |
-| `desktop` | the bell, plus OSC 9 **and** OSC 777 escapes — iTerm2, WezTerm and Windows Terminal read the first, foot and urxvt the second, and each ignores the other (`pack up` enables tmux's `allow-passthrough` so they get out of the pane) |
+| `desktop` | the bell, plus OSC 9 **and** OSC 777 escapes — iTerm2, WezTerm and Windows Terminal read the first, foot and urxvt the second, and each ignores the other (`pack up` sets tmux's `allow-passthrough` on the dispatcher window so they get out of the pane) |
 | any other string | run as a shell command |
 
 `desktop` only reaches you **while you are attached** — the escapes travel down
@@ -200,7 +202,7 @@ where the pack would run — inside the container, inside tmux — then click aw
 so the window loses focus:
 
 ```sh
-tmux set -g allow-passthrough on
+tmux set -w allow-passthrough all
 sleep 3
 printf '\033Ptmux;\033\033]9;pack test\007\033\\'                      # OSC 9
 printf '\033Ptmux;\033\033]777;notify;pack;test\007\033\\'             # OSC 777
@@ -212,7 +214,7 @@ On Wayland this needs a notification daemon running (mako, dunst, swaync) —
 ## Configuring the flow
 
 `pack.yaml` defines the pack. Verdicts in an agent's handoff select the edge;
-`DONE` completes the task:
+`DONE` completes the task, and `HALT` stops the pack for you:
 
 ```yaml
 flow:
@@ -220,10 +222,18 @@ flow:
   edges:
     coder:
       done: qa
+      needs_human: HALT
     qa:
       approve: DONE
       reject: coder
 ```
+
+Give an agent a `HALT` verdict wherever it can hit a wall no agent in the pack
+can clear, such as a file every agent's tools refuse, and tell it in its
+`.prompt` when to use it. Without one, it passes the problem to whichever edge
+comes closest, and the task circles between agents. The banner names the agent
+and its handoff. Do what the handoff asks, then press **x**: the task goes back
+to that agent with a note, archived in `runs/<task>/` like any other handoff.
 
 Add an agent by dropping `agents/<name>.prompt` and wiring it into `edges`.
 For example a planner in front: `entry: planner` and `planner: { done: coder }`.
@@ -288,14 +298,20 @@ that project's stack, and run `pack/bin/pack setup` inside its container.
   Stop hook lets it stop and logs `STALLED` (visible in the dispatcher).
   Press **m** to send the medic, attach to the agent's window and talk to it,
   or `pack reset`.
-- **HALTED in the dispatcher** — either `max_loops` rejections on one task, or
-  a verdict with no edge in `pack.yaml`. The banner says which. For a bad
-  verdict, press **m** and the medic will match it to one of the sender's
-  valid verdicts; for a loop limit, review `runs/<task>/` and re-scope. Press
-  **x** to clear the halt — a repaired handoff still in the queue is retried.
-- **No notifications** — `notify: desktop` only works while attached, and only
-  in terminals that understand OSC 9. For a detached or remote pack use a
-  command (see [Notifications](#notifications)); test it by hand first, in the
-  container, with `PACK_TITLE` and `PACK_BODY` set.
+- **HALTED in the dispatcher** — `max_loops` rejections on one task, a
+  verdict with no edge in `pack.yaml`, or an agent asking for you with a
+  verdict routed to `HALT`. The banner says which. For a bad verdict, press
+  **m** and the medic will match it to one of the sender's valid verdicts; for
+  a loop limit, review `runs/<task>/` and re-scope; for an agent asking for
+  you, do what its handoff asks. Press **x** to clear the halt — a repaired
+  handoff still in the queue is retried, and an agent that asked for you gets
+  the task back.
+- **No notifications** — `notify:` defaults to `bell`; `desktop` is opt-in. It
+  then needs tmux 3.3+ for `allow-passthrough` (the dispatcher logs it if the
+  option is missing), a terminal that speaks OSC 9 or OSC 777, an attached
+  session, and — on most terminals — the window not to be focused. For a
+  detached or remote pack use a command instead (see
+  [Notifications](#notifications)); test it by hand first, in the container,
+  with `PACK_TITLE` and `PACK_BODY` set.
 - **State looks wrong** — `pack reset` clears `queue/`; the `runs/` archive
   is never touched.

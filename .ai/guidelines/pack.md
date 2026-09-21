@@ -14,7 +14,9 @@ genuine cross-cutting technical decision) → `feature-to-pest` (red Pest
 acceptance tests — `tests/Feature/`, `tests/Browser/`, or both) →
 `feature-development` (`app/` code, test-first, until
 `composer qa` is green) → `feature-reviewer` (independent, read-only review)
-→ done, or back to whichever stage can actually fix what's wrong.
+→ done, or back to whichever stage can actually fix what's wrong — or, when
+no stage can (e.g. a `tests/Architecture/` change), a verdict routed to
+`HALT` stops the pack for the human, and `[x]` hands the task back.
 
 - Start a run with `pack/bin/pack run "<task description>"`; watch it with
   `pack/bin/pack attach`.
@@ -28,5 +30,9 @@ acceptance tests — `tests/Feature/`, `tests/Browser/`, or both) →
   `deny` in sync with what the prompt actually asks the agent to do — a tool
   that's neither allowed nor denied falls back to an interactive permission
   prompt, which stalls an agent running unattended in its tmux window.
+- An agent that can hit a wall no agent in the pack may clear — a path every
+  agent's tools deny — needs a verdict routed to `HALT` in `pack.yaml`, and
+  its prompt must say when to use it. Without one it hands the job to the
+  closest edge, and the task circles between agents with no files changing.
 - `pack/queue/` and `pack/runs/` are gitignored runtime state, not source —
   don't hand-edit them outside the medic's own playbook.

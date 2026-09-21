@@ -1,7 +1,8 @@
 # Pack flow definition — who is in the pack and who hands off to whom.
 #
 # Every agent named under `edges` needs a matching agents/<name>.prompt file.
-# Verdicts map to targets; the special target DONE completes the task.
+# Verdicts map to targets; the special target DONE completes the task, and
+# HALT stops the pack for the human, who hands the task back with [x].
 #
 # This flow is the feature pipeline transferred from .claude/skills/feature-*
 # and .claude/agents/feature-reviewer.md: spec → (optional) architecture
@@ -40,6 +41,7 @@ flow:
       done: feature-reviewer           # composer qa:fast green, ready for review
       needs_decision: feature-architect # feature needs an ADR that doesn't exist
       needs_spec: feature-specifier    # requirement genuinely under-specified
+      needs_human: HALT                # a change no agent may make, e.g. tests/Architecture
     feature-reviewer:
       approve: DONE                    # reviewer approves → task complete
       reject: feature-development      # reviewer rejects → back with remarks

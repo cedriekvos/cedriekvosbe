@@ -1,5 +1,23 @@
 # Changelog
 
+## 6 — 2026-09-21
+
+An agent can stop the pack and ask you, instead of passing a job it cannot do
+to another agent that cannot do it either.
+
+- **`HALT` is an edge target**, next to `DONE`. A verdict routed to it, such as
+  `needs_human: HALT`, archives the handoff and halts the pack, naming the
+  agent, its summary and the handoff to read. Before this, an agent facing a
+  change no agent could make used the closest edge it had, and the task went
+  round the loop with no files changing
+- **`[x]` hands the task back.** After a `HALT`, clearing the halt gives the
+  task back to the agent that asked, with a note archived in `runs/<task>/`,
+  instead of dropping the task. Other halts clear as before
+- **The halt banner wraps over four lines** instead of cutting the reason off
+  after two
+- `HANDOFF.md` no longer says that a verdict with no edge sits quietly in the
+  queue. Since version 4 it halts the pack
+
 ## 5 — 2026-09-09
 
 The pack stops handing the same work to two agents.

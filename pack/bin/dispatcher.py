@@ -47,6 +47,7 @@ LOCK_FILE = QUEUE / ".lock"
 LOG_FILE = QUEUE / "log.txt"
 SESSION = "pack"
 DONE = "DONE"
+HALT = "HALT"    # edge target: stop for the human, then [x] hands the task back
 HUMAN = "human"
 MEDIC = "medic"  # on-call repair agent — outside the flow, summoned from the TUI
 SETTLE = 1.5     # seconds a handoff must sit untouched before it is routed
@@ -300,9 +301,12 @@ def notify(cfg, state, event, title, body, key):
         log(f"notify command failed: {exc}")
 
 
-def halt(cfg, state, reason):
-    """Stop the pack and say why — the overview holds this until [x] clears it."""
-    state.update(status="halted", baton=None, halt_reason=reason)
+def halt(cfg, state, reason, baton=None):
+    """Stop the pack and say why — the overview holds this until [x] clears it.
+
+    `baton` is the agent [x] hands the task back to; None means [x] drops it.
+    """
+    state.update(status="halted", baton=baton, halt_reason=reason)
     log(f"HALTED — {reason}")
     notify(cfg, state, "halted", "pack halted", reason, reason)
 
@@ -342,6 +346,12 @@ def route(cfg, state, path, meta, body):
                (state["summaries"].get(frm) or {}).get("text") or "no summary given", task)
         state.update(status="idle", baton=None, task_id=None, loop=1)
         return
+    if target == HALT:
+        # archived, not left queued, so [x] cannot route the same ask twice
+        halt(cfg, state, f"{frm} needs you on task {state['task_id']}: "
+                    f"{state['summaries'][frm]['text']} — see {rel(archived)}, then [x] "
+                    f"hands the task back to {frm}", baton=frm)
+        return
     if kind == "reject":
         if state["loop"] >= cfg["max_loops"]:
             halt(cfg, state, f"task {state['task_id']} hit max_loops ({cfg['max_loops']}) — "
@@ -349,6 +359,35 @@ def route(cfg, state, path, meta, body):
             return
         state["loop"] += 1
     deliver(cfg, state, target, archived, meta, kind)
+
+
+def hand_back(cfg, state):
+    """[x] after a HALT verdict: give the task back to the agent that asked.
+
+    The note is archived like any handoff, so the audit trail shows where the
+    human stepped in — and it moves `seq` on, so the Stop hook stops counting
+    the agent's halting handoff as this round's. Caller holds the lock.
+    """
+    task, agent = state["task_id"], state["baton"]
+    asked = RUNS / task / f"{task}-{state['seq']:02d}-{agent}.md"
+    state["seq"] += 1
+    note = RUNS / task / f"{task}-{state['seq']:02d}-{HUMAN}.md"
+    note.write_text(
+        "---\n"
+        f'task_id: "{task}"\n'
+        f"from: {HUMAN}\n"
+        "verdict: resume\n"
+        "summary: Handed back after the human dealt with the blocker.\n"
+        "---\n\n"
+        "## Summary\n\n"
+        f"The human has dealt with what you asked for in {rel(asked)} and "
+        "cleared the halt.\n\n"
+        "## Context for the next agent\n\n"
+        "Check the working tree rather than assuming it was done exactly as "
+        "asked, then carry on and hand off with whichever verdict fits now. "
+        "If it is still blocked, say precisely what is missing.\n"
+    )
+    deliver(cfg, state, agent, note, {"from": HUMAN}, "handoff")
 
 
 def medic_available():
@@ -484,6 +523,11 @@ class TUI:
                     if any(not p.stem.endswith(f"-{HUMAN}") for p in self.pending_files()):
                         state.update(status="working", halt_reason=None)
                         log("halt cleared — retrying the queued handoff")
+                    elif state["baton"]:
+                        state["halt_reason"] = None
+                        log(f"halt cleared — task {state['task_id']} handed back "
+                            f"to {state['baton']}")
+                        hand_back(self.cfg, state)
                     else:
                         state.update(status="idle", task_id=None, baton=None, loop=1,
                                      halt_reason=None)
@@ -541,7 +585,7 @@ class TUI:
             out.append("    answer in that window — Ctrl-b n cycles through them")
         elif state["status"] == "halted":
             out.append("  ✖ HALTED — the pack will not route anything until you clear this")
-            for line in self.wrap(state.get("halt_reason") or "see the log below", 66):
+            for line in self.wrap(state.get("halt_reason") or "see the log below", 66, 4):
                 out.append(f"    {line}")
         elif state["status"] == "working":
             out.append(f"  ▸ {state['baton']} is working on task {state['task_id']} …")

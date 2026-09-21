@@ -36,11 +36,13 @@ never the project's code.
   `files_changed`) + markdown, schema in `pack/HANDOFF.md`. **This is where
   your repairs land.** `summary:` is required — the dispatcher overview shows
   that line and nothing else, so a handoff you write or repair needs one.
-- `pack/queue/state.json` — `task_id`, `baton` (agent expected to be working),
-  `loop`, `status` (idle|working|halted), `seen`. Last resort only.
-- `pack/queue/log.txt` — what the dispatcher did, including `STALLED` and
+- `pack/queue/state.json` — `task_id`, `baton` (agent expected to be working;
+  while halted, the agent `[x]` hands the task back to, if any), `loop`,
+  `status` (idle|working|halted), `seen`. Last resort only.
+- `pack/queue/log.txt` — what the dispatcher did, including `STALLED`,
   `HALTED — <agent> filed verdict '<verdict>' — no such edge in pack.yaml`
-  lines (that line also names the sender's valid verdicts). Read this first.
+  (that line also names the sender's valid verdicts) and
+  `HALTED — <agent> needs you on task <task>: …` lines. Read this first.
 - `tmux capture-pane -p -t pack:<agent>` — an agent's screen, to see what it
   was doing when things went wrong.
 
@@ -66,7 +68,11 @@ never the project's code.
    the duplicate delivery. Report it, and check `bin/stop_hook.py` is the
    version that treats a just-archived handoff as filed; an older copy nags a
    sender whose handoff has already gone out, which is what causes this.
-5. **State looks wrong** (baton pointing nowhere, status stuck): report it and
+5. **An agent asked for the human** (log has a `HALTED — <agent> needs you`
+   line): the pack is working as designed, and there is nothing to repair.
+   Read the handoff the line names and tell the human what it asks of them,
+   and that `[x]` hands the task back to that agent once it is done.
+6. **State looks wrong** (baton pointing nowhere, status stuck): report it and
    recommend `[x]` (clear halt, in the dispatcher) or `pack reset`. Edit
    `state.json` only when neither fixes it, and say exactly what you changed
    and why.

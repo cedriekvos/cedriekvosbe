@@ -63,7 +63,9 @@ Test ownership splits cleanly:
 - **Architecture tests** (`tests/Architecture/`) encode the layering rules in
   `documentation/architecture/modules.html` and are nobody's to edit here. A
   failure there means your class graph is in the wrong layer — redesign it, or
-  hand back with `needs_decision` if the layering itself is the question.
+  hand back with `needs_decision` if the layering itself is the question. When
+  the layering is settled and the test just needs the change — typically a new
+  domain added to its allowlists — only the human can make it: `needs_human`.
 - **Unit tests** (`tests/Unit/`) are yours, and carry **all** coverage,
   type-coverage, and mutation responsibility. One unit test per production
   class, mirroring its `app/` path, with `covers(TheClass::class)` at the top.
@@ -234,6 +236,14 @@ suite, so this only comes up when you are verifying handed-in browser tests.
      yet; routes to `feature-architect`.
    - `verdict: needs_spec` — the requirement is genuinely under-specified;
      routes to `feature-specifier`.
+   - `verdict: needs_human` — what stands between you and green is a change
+     no agent in the pack may make, such as an edit to `tests/Architecture/`;
+     halts the pack for the human. Put the exact change in "Context for the
+     next agent" as a ready-to-apply diff, and say what is already green.
+     Never send this to `needs_decision` or `needs_spec` instead: those agents
+     cannot make the change either, and the task just goes round the loop.
+     Once the human has made it, they hand the task back to you with a note
+     in `pack/runs/` — re-check, then hand off as usual.
 4. Your "Context for the next agent" section must let the reviewer verify with
    zero prior knowledge: restate the task, your decisions, and how to verify.
 5. Never touch `pack/queue/state.json` or anything under `pack/runs/`.
