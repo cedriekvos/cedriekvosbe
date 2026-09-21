@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-21
+
+Pages: standalone Markdown content, such as an about page or a colophon, served
+at the root of the site instead of under `/blog/`.
+
+### Added
+
+- **Pages** — Markdown files with YAML front matter on a new `pages` disk
+  (`storage/app/private/content/pages`), stored like posts, drafts under a
+  `draft-` slug prefix. A published page is served at `/{slug}` with its body
+  rendered as Markdown; drafts and unknown slugs return 404. An existing route
+  always wins over a page with the same slug, so a page slugged `login` is
+  never reachable.
+- **Admin** — a `[pages]` screen listing every page, drafts labelled, with edit
+  and delete, and one form for creating and editing a page. The form has only a
+  title, slug and body, since a page has no date, excerpt or featured flag. New
+  pages start as drafts.
+- **Agent pack** — an agent can stop the pack and ask for the human. A verdict
+  routed to the new `HALT` edge target halts the pack and names the handoff to
+  read; clearing it with `[x]` hands the task back to the agent that asked.
+  `feature-development` uses it, as `needs_human`, for a change no agent may
+  make, such as one to `tests/Architecture/`, instead of passing the job round
+  the loop. Pack version 6.
+
 ## [1.2.0] - 2026-09-10
 
 The hourly Composer vulnerability alert now ships as its own package. What it
@@ -114,7 +138,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.2.0...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.3.0...HEAD
+[1.3.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.1.1...1.2.0
 [1.1.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.1.0...1.1.1
 [1.1.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.0.1...1.1.0
