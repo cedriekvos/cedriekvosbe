@@ -52,6 +52,13 @@ return [
             'report' => false,
         ],
 
+        'pages' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/content/pages'),
+            'throw' => false,
+            'report' => false,
+        ],
+
         'microblog' => [
             'driver' => 'local',
             'root' => storage_path('app/private/content/microblog'),

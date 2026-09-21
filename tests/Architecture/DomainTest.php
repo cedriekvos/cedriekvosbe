@@ -11,6 +11,7 @@ $domains = [
     'App\Markdown',
     'App\Microblog',
     'App\Scratchpad',
+    'App\Pages',
 ];
 
 $delivery = [
@@ -32,6 +33,7 @@ $allowed = [
     'App\Markdown' => [],
     'App\Microblog' => ['App\Markdown'],
     'App\Scratchpad' => [],
+    'App\Pages' => ['App\Markdown'],
 ];
 
 arch('domain classes are final, readonly and strictly typed')
@@ -69,4 +71,5 @@ arch('only storage classes touch the filesystem')
         'App\Blog\Storage',
         'App\Microblog\Storage',
         'App\Scratchpad\Storage',
+        'App\Pages\Storage',
     ]);

@@ -22,6 +22,16 @@ use App\Microblog\Markdown\WebUrlAutolinkExtension;
 use App\Microblog\Message;
 use App\Microblog\MessageFactory;
 use App\Models\User;
+use App\Pages\DraftSlug as PagesDraftSlug;
+use App\Pages\Markdown\PageFileParser;
+use App\Pages\Markdown\PageMarkdownToHtmlConverter;
+use App\Pages\Page;
+use App\Pages\PageFactory;
+use App\Pages\PageFilter;
+use App\Pages\PageSorter;
+use App\Pages\Repositories\PageGetRepository;
+use App\Pages\Repositories\PageSource;
+use App\Pages\Storage\PageFileStorage;
 use App\Scratchpad\Repositories\ScratchpadRepository;
 use App\Scratchpad\Scratchpad;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -54,6 +64,19 @@ function makePost(
     bool $isDraft = false,
 ): Post {
     return new Post($slug, $title, $date, $excerpt, $body, $content, $readTimeMinutes, $isDraft);
+}
+
+/**
+ * Build a Page DTO with sensible defaults; override only the fields a test cares about.
+ */
+function makePage(
+    string $slug = 'slug',
+    string $title = 'Title',
+    string $body = 'body',
+    string $content = '<p>body</p>',
+    bool $isDraft = false,
+): Page {
+    return new Page($slug, $title, $body, $content, $isDraft);
 }
 
 /**
@@ -102,6 +125,19 @@ function postGetRepository(): PostGetRepository
 }
 
 /**
+ * Build a real PageGetRepository reading from the (faked) `pages` disk.
+ */
+function pageGetRepository(): PageGetRepository
+{
+    $draftSlug = new PagesDraftSlug;
+
+    return new PageGetRepository(
+        new PageSource(new PageFileStorage($draftSlug), new PageFileParser(new FrontMatterParser, new PageMarkdownToHtmlConverter(new CommonMarkCoreExtension, new ExternalLinkExtension)), new PageFactory, new PageFilter($draftSlug)),
+        new PageSorter,
+    );
+}
+
+/**
  * Write a Markdown post onto the `posts` disk. Drafts use a `draft-` slug prefix.
  * The body defaults to `body` when omitted.
  */
@@ -120,6 +156,28 @@ function writePostFile(string $slug, string $title, string $date, ?string $excer
     $body ??= 'body';
 
     Storage::disk('posts')->put($slug.'.md', "---\n{$frontmatter}---\n\n{$body}\n");
+}
+
+/**
+ * Isolate the pages domain's storage for each test so reads and writes never touch
+ * real storage. Mirrors usesFakePostsRepository() for the `pages` disk.
+ */
+function usesFakePagesRepository(): void
+{
+    beforeEach(function () {
+        Storage::fake('pages');
+    });
+}
+
+/**
+ * Write a Markdown page onto the `pages` disk. Drafts use a `draft-` slug prefix,
+ * the same convention as writePostFile(). The body defaults to `body` when omitted.
+ */
+function writePageFile(string $slug, string $title, ?string $body = null): void
+{
+    $body ??= 'body';
+
+    Storage::disk('pages')->put($slug.'.md', "---\ntitle: {$title}\n---\n\n{$body}\n");
 }
 
 /**
