@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Blog\Admin\PreviewController as PostPreviewController;
 use App\Http\Controllers\Blog\Frontend\BlogRedirectController;
 use App\Http\Controllers\Blog\Frontend\IndexController;
 use App\Http\Controllers\Blog\Frontend\ShowController;
@@ -27,6 +28,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', PostIndex::class)->name('posts.index');
     Route::get('/posts/new', PostForm::class)->name('posts.create');
     Route::get('/posts/{slug}/edit', PostForm::class)->name('posts.edit')->where('slug', '[a-z0-9\-]+');
+    Route::get('/posts/{slug}/preview', PostPreviewController::class)->name('posts.preview')->where('slug', '[a-z0-9\-]+');
     Route::get('/pages', PageIndex::class)->name('pages.index');
     Route::get('/pages/new', PageForm::class)->name('pages.create');
     Route::get('/pages/{slug}/edit', PageForm::class)->name('pages.edit')->where('slug', '[a-z0-9\-]+');

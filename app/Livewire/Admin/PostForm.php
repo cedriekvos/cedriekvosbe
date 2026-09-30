@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Blog\DraftSlug;
 use App\Blog\Post;
+use App\Blog\PostPreviewFinder;
 use App\Blog\Repositories\PostsRepository;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -31,7 +32,7 @@ class PostForm extends Component
 
     public bool $isFeatured = false;
 
-    public function mount(PostsRepository $posts, DraftSlug $draftSlug, ?string $slug = null): void
+    public function mount(PostPreviewFinder $postPreviewFinder, DraftSlug $draftSlug, ?string $slug = null): void
     {
         if ($slug === null) {
             $this->date = Carbon::now()->format('Y-m-d');
@@ -39,12 +40,12 @@ class PostForm extends Component
             return;
         }
 
-        $post = $posts->find($slug);
+        $post = $postPreviewFinder->find($slug);
         abort_if(! $post instanceof Post, 404);
 
-        $this->originalSlug = $slug;
+        $this->originalSlug = $post->slug;
         $this->isDraft = $post->is_draft;
-        $this->slug = $draftSlug->strip($slug);
+        $this->slug = $draftSlug->strip($post->slug);
         $this->title = $post->title;
         $this->date = $post->date !== '' ? $post->date : Carbon::now()->format('Y-m-d');
         $this->excerpt = $post->excerpt;
@@ -109,8 +110,10 @@ class PostForm extends Component
 
     #[Layout('components.layouts.admin')]
     #[Title('Edit post — Admin')]
-    public function render(): View
+    public function render(DraftSlug $draftSlug): View
     {
-        return view('livewire.admin.post-form');
+        return view('livewire.admin.post-form', [
+            'previewSlug' => $this->originalSlug === null ? null : $draftSlug->strip($this->originalSlug),
+        ]);
     }
 }

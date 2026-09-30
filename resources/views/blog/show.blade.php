@@ -1,5 +1,9 @@
 <x-layouts.app :title="$post->title ?: 'Post'">
 
+    @isset($isPreview)
+        <p class="font-mono text-xs text-accent mb-8">This is a preview — not visible to visitors until published.</p>
+    @endisset
+
     <nav class="font-mono text-xs text-muted mb-8 flex items-center gap-1.5">
         <a href="/" class="text-accent hover:underline underline-offset-2">~/posts</a>
         <span>/</span>

@@ -67,6 +67,11 @@
             </button>
             <a href="{{ route('admin.posts.index') }}"
                class="font-mono text-xs text-muted hover:text-fg">[cancel]</a>
+            @if ($previewSlug !== null)
+                <a href="{{ route('admin.posts.preview', ['slug' => $previewSlug]) }}"
+                   target="_blank"
+                   class="font-mono text-xs text-accent hover:underline underline-offset-2">[preview]</a>
+            @endif
         </div>
     </form>
 </div>

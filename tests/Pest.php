@@ -491,3 +491,17 @@ function themeModeIconSelector(string $mode): string
         default => throw new InvalidArgumentException("Unknown theme mode [{$mode}]."),
     };
 }
+
+/**
+ * Return the opening `<a>` tags in a rendered admin screen that point at a
+ * preview URL (any href containing `/preview`), so a test can assert the
+ * preview button's target and new-tab behaviour without pinning its label.
+ *
+ * @return list<string>
+ */
+function previewButtonTags(string $html): array
+{
+    preg_match_all('/<a\b[^>]*href="[^"]*\/preview"[^>]*>/i', $html, $matches);
+
+    return $matches[0];
+}
