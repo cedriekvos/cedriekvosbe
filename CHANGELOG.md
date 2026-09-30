@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-09-30
+
+Preview: see a draft post or page as visitors will, before publishing it.
+
+### Added
+
+- **Admin** — a `[preview]` button in the editor of a saved post or page,
+  opening `/admin/posts/{slug}/preview` or `/admin/pages/{slug}/preview` in a
+  new tab. The preview renders the post or page with its public template,
+  marked with a notice that it is not yet visible to visitors, and works for
+  drafts and published content alike. It sits behind the admin login; drafts
+  stay 404 on their public URL, and an unknown or malformed slug is a 404.
+
 ## [1.3.0] - 2026-09-21
 
 Pages: standalone Markdown content, such as an about page or a colophon, served
@@ -138,7 +151,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.3.0...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.4.0...HEAD
+[1.4.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.1.1...1.2.0
 [1.1.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.1.0...1.1.1
