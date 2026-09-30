@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Pages\DraftSlug;
 use App\Pages\Page;
+use App\Pages\PagePreviewFinder;
 use App\Pages\Repositories\PagesRepository;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -24,18 +25,18 @@ class PageForm extends Component
 
     public bool $isDraft = true;
 
-    public function mount(PagesRepository $pages, DraftSlug $draftSlug, ?string $slug = null): void
+    public function mount(PagePreviewFinder $pagePreviewFinder, DraftSlug $draftSlug, ?string $slug = null): void
     {
         if ($slug === null) {
             return;
         }
 
-        $page = $pages->find($slug);
+        $page = $pagePreviewFinder->find($slug);
         abort_if(! $page instanceof Page, 404);
 
-        $this->originalSlug = $slug;
+        $this->originalSlug = $page->slug;
         $this->isDraft = $page->is_draft;
-        $this->slug = $draftSlug->strip($slug);
+        $this->slug = $draftSlug->strip($page->slug);
         $this->title = $page->title;
         $this->body = $page->body;
     }
@@ -91,8 +92,10 @@ class PageForm extends Component
 
     #[Layout('components.layouts.admin')]
     #[Title('Edit page — Admin')]
-    public function render(): View
+    public function render(DraftSlug $draftSlug): View
     {
-        return view('livewire.admin.page-form');
+        return view('livewire.admin.page-form', [
+            'previewSlug' => $this->originalSlug === null ? null : $draftSlug->strip($this->originalSlug),
+        ]);
     }
 }
