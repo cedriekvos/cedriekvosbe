@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-10-04
+
+Two dependencies with open security advisories are updated to patched
+versions. The site itself is unchanged.
+
+### Security
+
+- **league/commonmark** updated from 2.10.0 to 2.10.3, clearing two advisories
+  fixed in 2.10.2: a quadratic-time denial of service in the GFM Table
+  extension (GHSA-3q6v-r5mr-hxv8, high) and a `DisallowedRawHtml` bypass that
+  allowed stored XSS (GHSA-97jj-33gv-5xf9, medium). The site's own Markdown
+  converters load neither extension and escape raw HTML, so posts, pages and
+  messages were not rendered through the affected code.
+- **Laravel** updated from 13.29.0 to 13.34.0, clearing CVE-2026-102279
+  (GHSA-jh5r-qr3c-85q8, low, fixed in 13.30.0): a DOM-based XSS on the debug
+  page, reachable only with `APP_DEBUG=true`.
+
 ## [1.4.0] - 2026-09-30
 
 Preview: see a draft post or page as visitors will, before publishing it.
@@ -151,7 +168,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.4.0...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.4.1...HEAD
+[1.4.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.4.0...1.4.1
 [1.4.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.1.1...1.2.0
