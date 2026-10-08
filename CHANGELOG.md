@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-10-08
+
+The Composer vulnerability alert email now says which application it is about.
+The site itself is unchanged.
+
+### Changed
+
+- **cedriekvos/laravel-composer-audit** updated from 1.0.0 to 1.1.0. The
+  alert's subject is now `[<APP_NAME>] Composer vulnerability alert` instead of
+  `Composer vulnerability alert`, and its body names the `APP_URL` the audit
+  ran for, so alerts from several projects can be told apart. Update any mail
+  filter that matches the old subject exactly, and check that `APP_NAME` and
+  `APP_URL` are set where the site is deployed: with the defaults from
+  `.env.example` the alert reads `[Laravel]` and `http://localhost`. This
+  project does not publish the package's email template, so the app needs no
+  change.
+
 ## [1.4.1] - 2026-10-04
 
 Two dependencies with open security advisories are updated to patched
@@ -168,7 +185,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.4.1...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.5.0...HEAD
+[1.5.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.4.1...1.5.0
 [1.4.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.4.0...1.4.1
 [1.4.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.2.0...1.3.0
