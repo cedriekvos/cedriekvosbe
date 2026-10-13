@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-10-13
+
+The header now links to the LinkedIn profile next to the GitHub one, and a
+divider sets both apart from the theme switcher.
+
+### Added
+
+- **Navigation** — a LinkedIn profile link in the header, directly after the
+  GitHub link and opening in a new tab. It shows the official logo, the black
+  variant in light mode and the white one in dark mode.
+- **Navigation** — a thin vertical divider between the profile links and the
+  theme switcher, in the header's border colour so it follows the theme.
+
+### Changed
+
+- **Agent workflow** — the pipeline that takes a feature from spec to reviewed
+  implementation now runs in a single agent session instead of the autonomous
+  tmux pack. A workflow guideline picks between the full pipeline and a light
+  track for changes that add no visible behaviour; the `feature-specifier`,
+  `feature-architect`, `feature-to-pest` and `feature-development` skills carry
+  each step's conventions, and a read-only `feature-reviewer` subagent does the
+  independent review. The pack in `pack/` is untouched.
+
 ## [1.5.0] - 2026-10-08
 
 The Composer vulnerability alert email now says which application it is about.
@@ -185,7 +208,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.5.0...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.6.0...HEAD
+[1.6.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.5.0...1.6.0
 [1.5.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.4.1...1.5.0
 [1.4.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.4.0...1.4.1
 [1.4.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.3.0...1.4.0
