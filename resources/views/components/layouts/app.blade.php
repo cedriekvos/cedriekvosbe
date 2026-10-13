@@ -61,6 +61,10 @@
                         </defs>
                     </svg>
                 </a>
+                <a href="https://www.linkedin.com/in/cedriekvos" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="inline-flex icon-hover-scale">
+                    <img src="{{ Vite::asset('resources/images/linkedin-black.png') }}" alt="" class="linkedin-logo linkedin-logo-black h-[1.1rem] w-auto shrink-0">
+                    <img src="{{ Vite::asset('resources/images/linkedin-white.png') }}" alt="" class="linkedin-logo linkedin-logo-white h-[1.1rem] w-auto shrink-0">
+                </a>
                 <div class="theme-switcher relative">
                     <button id="theme-toggle" class="theme-toggle icon-hover-scale" type="button" aria-label="Theme" aria-haspopup="listbox" aria-expanded="false">
                         <svg data-mode="auto" viewBox="0 0 24 24" class="theme-icon w-[1.1rem] h-[1.1rem] shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">

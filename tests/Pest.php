@@ -370,6 +370,19 @@ function headerGithubLinkAttributes(string $html): string
 }
 
 /**
+ * The attribute string of the public header's LinkedIn profile link (the `<a>`
+ * pointing at https://www.linkedin.com/in/cedriekvos), so navigation scenarios
+ * can assert its target/rel/aria-label without matching other page links.
+ * Empty when the header carries no such link.
+ */
+function headerLinkedinLinkAttributes(string $html): string
+{
+    preg_match('/<a\b([^>]*\bhref="https:\/\/www\.linkedin\.com\/in\/cedriekvos"[^>]*)>/i', $html, $match);
+
+    return $match[1] ?? '';
+}
+
+/**
  * Read a double-quoted HTML attribute out of an element's attribute string,
  * returning an empty string when the attribute is absent.
  */
