@@ -12,6 +12,10 @@
         "laravel-best-practices",
         "testing-best-practices",
         "livewire-development",
-        "tailwindcss-development"
+        "tailwindcss-development",
+        "feature-architect",
+        "feature-development",
+        "feature-specifier",
+        "feature-to-pest"
     ]
 }
