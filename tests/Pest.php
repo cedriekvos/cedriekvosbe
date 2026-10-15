@@ -357,6 +357,20 @@ function hexToRgb(string $hex): string
 }
 
 /**
+ * JavaScript expression: how opaque the element matching $selector is drawn,
+ * as its fill-opacity (always 1 outside SVG) multiplied by its own opacity and
+ * that of every element above it. Playwright's visibility check, and so
+ * assertVisible(), ignores opacity, so a logo faded out with `opacity: 0`
+ * would otherwise still count as visible.
+ */
+function drawnOpacityScript(string $selector): string
+{
+    $selector = json_encode($selector);
+
+    return "(() => { let el = document.querySelector({$selector}); let opacity = parseFloat(getComputedStyle(el).fillOpacity); for (; el; el = el.parentElement) { opacity *= parseFloat(getComputedStyle(el).opacity); } return opacity; })()";
+}
+
+/**
  * The attribute string of the public header's GitHub profile link (the `<a>`
  * pointing at https://github.com/cedriekvos), so navigation scenarios can
  * assert its target/rel/aria-label/class without matching other page links.

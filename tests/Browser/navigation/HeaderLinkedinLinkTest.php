@@ -19,11 +19,12 @@ function linkedinLogoDisplayedScript(string $variant): string
 }
 
 // header_linkedin_link.feature — Scenario Outline: The LinkedIn link shows the official logo variant that suits the active theme
-it('shows the logo variant that suits the active theme and hides the other', function (string $mode, string $shown, string $hidden) {
+it('shows the logo variant that suits the active theme fully opaque and hides the other', function (string $mode, string $shown, string $hidden) {
     $page = switchSiteThemeTo(visit('/'), $mode);
 
     $page->assertVisible('a[aria-label="LinkedIn"]');
     expect($page->script(linkedinLogoDisplayedScript($shown)))->toBeTrue();
+    expect($page->script(drawnOpacityScript('a[aria-label="LinkedIn"] img[src*="linkedin-'.$shown.'"]')))->toBe(1);
     expect($page->script(linkedinLogoDisplayedScript($hidden)))->toBeFalse();
 })->with([
     'light' => ['light', 'black', 'white'],

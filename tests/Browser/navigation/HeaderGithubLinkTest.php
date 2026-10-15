@@ -6,6 +6,17 @@
 // browser.
 
 // header_github_link.feature — Scenario Outline: The GitHub link is visible in both light and dark mode
+it('shows the header GitHub link with its logo fully opaque in the active theme', function (string $mode) {
+    $page = switchSiteThemeTo(visit('/'), $mode);
+
+    $page->assertVisible('a[aria-label="GitHub"]');
+    expect($page->script(drawnOpacityScript('a[aria-label="GitHub"] svg path')))->toBe(1);
+})->with([
+    'light' => ['light'],
+    'dark' => ['dark'],
+]);
+
+// header_github_link.feature — Scenario Outline: The GitHub link is visible in both light and dark mode
 it('renders the header GitHub icon in visibly different colours between light and dark mode', function () {
     $lightColor = visit('/')->script("getComputedStyle(document.querySelector('a[aria-label=\"GitHub\"] svg')).fill");
     $darkColor = visit('/')->inDarkMode()->script("getComputedStyle(document.querySelector('a[aria-label=\"GitHub\"] svg')).fill");
