@@ -17,7 +17,20 @@ De link toont alleen het GitHub-icoon, zonder zichtbare tekst, om de header comp
 logo- en toggle-elementen. Icoon-only betekent wel dat er een expliciet toegankelijk label ("GitHub") nodig is, zodat
 schermlezers de link kunnen aankondigen — zonder dat label zou de link voor die bezoekers onherkenbaar zijn.
 
-Tot slot moet het icoon in zowel het lichte als het donkere thema goed leesbaar blijven. De site kent al een
-thema-systeem (licht/donker/auto, zie de bestaande `theme-toggle`-knop) waarin overige header-elementen zoals het
-logo automatisch meekleuren via de bestaande kleurtokens. Het GitHub-icoon volgt datzelfde patroon in plaats van een
-eigen vaste kleur te krijgen, zodat het nooit onzichtbaar wordt tegen de achtergrond van een van beide thema's.
+Tot slot moet het icoon in zowel het lichte als het donkere thema goed leesbaar blijven, zodat het nooit onzichtbaar
+wordt tegen de achtergrond van een van beide thema's.
+
+## Puur zwart en wit, net als het LinkedIn-logo
+
+Aanvankelijk kleurde het icoon mee met de tekstkleur van het thema, zoals de overige header-elementen: bijna-zwart
+(#1f2328) in het lichte thema, lichtgrijs (#c9d1d9) in het donkere. Op zichzelf was dat goed leesbaar. Maar sinds de
+LinkedIn-link ernaast staat (zie [[header_linkedin_link]]) valt het verschil op: het officiële LinkedIn-logo is puur
+zwart of puur wit, en daarnaast oogt het GitHub-icoon in het donkere thema grijs en flets. Twee profiellogo's die
+visueel bij elkaar horen, krijgen ook dezelfde kleur.
+
+Het GitHub-icoon krijgt daarom een vaste kleur per thema: puur zwart (#000000) in licht, puur wit (#ffffff) in donker
+— exact de kleuren van de twee LinkedIn-varianten. Omdat de kleur nog steeds per thema wisselt, blijft het contrast
+met de achtergrond gewaarborgd; dat was de reden om het icoon oorspronkelijk te laten meekleuren. De tekstkleur van de
+site zelf verandert niet: lichtgrijze tekst leest op een donkere achtergrond rustiger dan fel wit, en alleen de
+logo's wijken daarvan af. Ook de theme-toggle houdt zijn gedempte kleur, want dat is een bediening van de site en
+geen profiellogo.

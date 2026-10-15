@@ -36,6 +36,6 @@ it("gives the header's GitHub link the accessible name \"GitHub\"", function () 
     expect(htmlAttribute(headerGithubLinkAttributes($html), 'aria-label'))->toBe('GitHub');
 });
 
-// header_github_link.feature — Scenario Outline: The GitHub link is visible in both light and dark mode
-// See tests/Browser/navigation/HeaderGithubLinkTest.php: this scenario is
-// genuinely client-render-dependent (ADR 0005) and is verified there instead.
+// header_github_link.feature — Scenarios 04 and 05 (visible in both themes, logo colour per theme)
+// See tests/Browser/navigation/HeaderGithubLinkTest.php: these scenarios are
+// genuinely client-render-dependent (ADR 0005) and are verified there instead.

@@ -39,3 +39,14 @@ Feature: Header GitHub link
       | mode  |
       | light |
       | dark  |
+
+  # Header GitHub link 05
+  Scenario Outline: The GitHub logo is pure black in light mode and pure white in dark mode
+    Given I have switched the site theme to "<mode>"
+    When I navigate to "/"
+    Then the header's GitHub logo should be drawn in "<colour>"
+
+    Examples:
+      | mode  | colour  |
+      | light | #000000 |
+      | dark  | #ffffff |
