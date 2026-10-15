@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-10-15
+
+The header's GitHub logo now matches the LinkedIn logo in pure black or white,
+and a dependency with an open security advisory is updated to a patched
+version.
+
+### Changed
+
+- **Navigation** — the GitHub logo in the header is pure black in light mode
+  and pure white in dark mode, the same as the LinkedIn logo. It used to take
+  the theme's text colour, near-black `#1f2328` and light grey `#c9d1d9`, which
+  looked washed out next to it. Site text and the theme toggle keep their
+  colours.
+
+### Security
+
+- **symfony/http-foundation** updated from 8.1.6 to 8.1.9, clearing
+  CVE-2026-108082 (PKSA-xmwy-rmx5-m7h4, fixed in 8.1.7): a regular-expression
+  denial of service in `HeaderUtils::split()`. Every incoming request with a
+  `Cache-Control` header is parsed through that method, so any visitor could
+  reach it without logging in. The advisory gives no severity.
+
 ## [1.6.0] - 2026-10-13
 
 The header now links to the LinkedIn profile next to the GitHub one, and a
@@ -208,7 +230,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.6.0...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.0...HEAD
+[1.7.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.6.0...1.7.0
 [1.6.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.5.0...1.6.0
 [1.5.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.4.1...1.5.0
 [1.4.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.4.0...1.4.1
