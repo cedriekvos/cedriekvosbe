@@ -69,6 +69,11 @@ at that step instead of working around it downstream.
   included. The browser child process holds the pipe open after Pest exits, so
   a synchronous Bash call never returns, even under `timeout`. Redirect to a
   log file and poll it.
+- **Record durable rules with Boost's `record-rule`**, never your own memory
+  or notes tool. When you settle a convention or hit a trap the next agent
+  would otherwise rediscover, pass a `glob` (e.g. `app/Http/Controllers/**`),
+  a short `title` and a few-line `note`. Your memory is personal to one
+  machine; only `.ai/rules` is committed and shared with the team.
 - **Leave the work uncommitted** unless the user asks for a commit.
 - **Dutch is for the `leesmij` only.** Specs, ADRs, tests, code and comments
   are English.
