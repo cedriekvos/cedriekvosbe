@@ -41,3 +41,6 @@ Thumbs.db
 !/.claude/skills/adr-authoring/
 !/.claude/skills/git-commit
 !/.claude/skills/improve-codebase-architecture
+!/.claude/skills/codebase-design
+!/.claude/skills/domain-modeling
+!/.claude/skills/grilling
