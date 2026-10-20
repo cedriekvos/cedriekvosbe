@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ADR 0009 · The unhighlighted Markdown converter lives in App\Markdown</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .lbl { font-size: .625rem; letter-spacing: .12em; text-transform: uppercase; }
+      details[open] > summary { margin-bottom: .25rem; }
+      html { scroll-behavior: smooth; }
+    </style>
+  </head>
+  <body class="bg-stone-50 text-slate-900 font-sans antialiased">
+    <main class="max-w-3xl mx-auto px-6 py-12 sm:py-16">
+
+      <nav class="flex items-center justify-between text-xs mb-12">
+        <a href="index.html" class="text-slate-500 hover:text-slate-900 transition">&larr; Architecture Decision Records</a>
+        <span class="font-mono text-slate-400">0009 / 0009</span>
+      </nav>
+
+      <header class="space-y-6">
+        <div class="flex items-center gap-3 flex-wrap">
+          <span class="font-mono text-sm text-slate-400">0009</span>
+          <span class="text-xs font-semibold px-2 py-1 rounded bg-emerald-100 text-emerald-800">Accepted</span>
+          <span class="font-mono text-xs text-slate-400">2026-10-20</span>
+        </div>
+        <h1 class="font-serif text-3xl sm:text-4xl tracking-tight leading-[1.15] text-slate-900">The unhighlighted Markdown converter lives in App\Markdown</h1>
+        <blockquote class="border-l-4 border-slate-900 bg-white rounded-r-lg px-5 py-4 text-[1.0625rem] leading-relaxed text-slate-700 shadow-sm">
+          <strong class="font-semibold text-slate-900">We keep one converter without highlighting in <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Markdown</code>, used by About and Pages, instead of a Blog class that only About calls</strong> — the unhighlighted bio depends on About using a converter without the highlight extension, not on where that converter lives.
+        </blockquote>
+        <dl class="grid sm:grid-cols-[5.5rem_1fr] gap-x-5 gap-y-2 pt-2 border-t border-slate-200 mt-2 pt-5">
+          <dt class="lbl text-slate-400 pt-1 sm:text-right">Driver</dt>
+          <dd class="text-sm leading-relaxed text-slate-600">Architecture review of 2026-10-20</dd>
+          <dt class="lbl text-slate-400 pt-1 sm:text-right">Related</dt>
+          <dd class="text-sm leading-relaxed text-slate-600">Corrects part of point 2 of <a class="text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900 transition" href="0003-post-code-highlighting.html">ADR&nbsp;0003</a>: where the plain converter lives and what it is called. The post-only highlighted converter and the rest of 0003 stand. Decides the question <a class="text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900 transition" href="0007-shared-front-matter-codec.html">ADR&nbsp;0007</a> left open.</dd>
+        </dl>
+      </header>
+
+      <section class="pt-12 space-y-5">
+        <h2 class="font-serif text-2xl tracking-tight text-slate-900">The rule</h2>
+        <ul class="list-disc list-outside pl-5 space-y-3"><li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400">One class in <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Markdown</code> (indicative name <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">ProseMarkdownToHtmlConverter</code>) wraps <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">MarkdownToHtmlConverter</code> with <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">CommonMarkCoreExtension</code> and <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">ExternalLinkExtension</code> only. It never gets <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">FencedCodeHighlightExtension</code>.</li><li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400"><code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\About\AboutFactory</code> and <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Pages\Markdown\PageFileParser</code> depend on it. <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Blog\Markdown\PostMarkdownToHtmlConverter</code> and <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Pages\Markdown\PageMarkdownToHtmlConverter</code> go.</li><li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400">Highlighting stays Blog-only, in <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Blog\Markdown\HighlightedPostMarkdownToHtmlConverter</code>.</li><li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400"><code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\About</code> no longer uses <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Blog</code>, so <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">tests/Architecture/DomainTest.php</code> drops <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Blog</code> from About's allowlist.</li></ul>
+        <div class="rounded-lg bg-slate-900 overflow-hidden"><div class="lbl text-slate-500 px-4 pt-3">php</div><pre class="overflow-x-auto px-4 py-3 text-[13px] leading-relaxed whitespace-pre-wrap break-words"><code class="font-mono text-slate-100">// app/About/AboutFactory.php
+public function __construct(
+    private ProseMarkdownToHtmlConverter $proseMarkdownToHtmlConverter,
+) {}</code></pre></div>
+      </section>
+
+      <section class="pt-12 space-y-5">
+        <h2 class="font-serif text-2xl tracking-tight text-slate-900">Why</h2>
+        <p class="leading-relaxed text-slate-700">ADR&nbsp;0003 kept the plain converter in <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Blog</code> so the About bio would stay unhighlighted by construction. That guarantee comes from About depending on a converter without the highlight extension; the namespace adds nothing to it. In <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Blog</code> the class serves no Blog code. About is its only caller, which makes it the one cross-domain exception in <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">DomainTest</code>, and Pages carries an identical copy because it may not use <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Blog</code>. <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\Markdown</code> is the shared kernel every domain may use, so one class there serves both and the exception goes away.</p>
+      </section>
+
+      <section class="pt-12 space-y-5">
+        <h2 class="font-serif text-2xl tracking-tight text-slate-900">Why not</h2>
+        <div class="overflow-x-auto rounded-lg border border-slate-200 bg-white"><table class="w-full border-collapse min-w-[34rem]"><colgroup><col style="width:40%" /></colgroup><thead><th class="text-left lbl text-slate-500 font-semibold px-4 py-3 border-b border-slate-200">Option</th><th class="text-left lbl text-slate-500 font-semibold px-4 py-3 border-b border-slate-200">Why not</th></thead><tbody><tr class="even:bg-stone-50/60"><td class="align-top px-4 py-3 text-sm leading-relaxed text-slate-700 border-b border-slate-100 font-medium text-slate-900">Keep ADR&nbsp;0003's placement</td><td class="align-top px-4 py-3 text-sm leading-relaxed text-slate-700 border-b border-slate-100">A Blog class that only About calls, an allowlisted dependency of About on Blog, and a copy in Pages that has to change in step with it.</td></tr><tr class="even:bg-stone-50/60"><td class="align-top px-4 py-3 text-sm leading-relaxed text-slate-700 border-b border-slate-100 font-medium text-slate-900">Move it into <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">App\About</code>; Pages keeps its own</td><td class="align-top px-4 py-3 text-sm leading-relaxed text-slate-700 border-b border-slate-100">Removes the exception but keeps two identical classes.</td></tr><tr class="even:bg-stone-50/60"><td class="align-top px-4 py-3 text-sm leading-relaxed text-slate-700 border-b border-slate-100 font-medium text-slate-900">One <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">MarkdownToHtmlConverter</code> with a contextual binding per consumer</td><td class="align-top px-4 py-3 text-sm leading-relaxed text-slate-700 border-b border-slate-100">Already rejected in ADR&nbsp;0003: the extension list disappears from the consumer's constructor.</td></tr></tbody></table></div>
+      </section>
+
+      <section class="pt-12 space-y-5">
+        <h2 class="font-serif text-2xl tracking-tight text-slate-900">Fallout</h2>
+        <ul class="list-disc list-outside pl-5 space-y-3"><li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400">The bio and Pages now render through the same class, so a change to it changes both. A need for them to differ reopens this ADR.</li><li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400">Highlighting the bio or Pages later means a separate converter, as ADR&nbsp;0003 did for posts — never adding the extension to this one.</li><li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400">The plain converter needs no <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">excerpt()</code>: neither consumer calls it, and post excerpts come from the highlighted converter. The exact shape is left to feature-development.</li><li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400">The module map under <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">documentation/architecture/</code> is regenerated with <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">generate.php</code>.</li></ul>
+      </section>
+
+      <nav class="mt-16 pt-6 border-t border-slate-200 flex justify-between gap-6">
+        <a href="0008-vulnerability-alert-package-from-github.html" class="group max-w-[48%] text-left"><span class="lbl text-slate-400 block mb-1">Previous</span><span class="text-sm text-slate-600 group-hover:text-slate-900 transition">0008 · The vulnerability alert lives in its own package, installed from GitHub</span></a>
+        <span></span>
+      </nav>
+
+    </main>
+  </body>
+</html>
