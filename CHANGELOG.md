@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.1] - 2026-10-20
+
+Internal clean-up from an architecture review: the test helpers, the Markdown
+converters and the admin forms are reorganised. The site itself is unchanged.
+
+### Added
+
+- `documentation/refactor.md`, a backlog of the open points from the review,
+  each with its files, the problem, a proposal and what has to be decided
+  first.
+- **ADR 0009** — the converter without code highlighting lives in the shared
+  `App\Markdown` kernel. It corrects one rule of ADR 0003; the About bio still
+  never gets highlighting.
+- **Agent skills** — `codebase-design`, `grilling` and `domain-modeling` from
+  `mattpocock/skills`, which `improve-codebase-architecture` calls. Two new
+  rules in `.ai/rules/` keep ADRs as HTML pages in `documentation/decisions/`
+  and require approval before tests are deleted, where those skills say
+  otherwise.
+
+### Changed
+
+- **Tests** — the shared Pest helpers moved out of `tests/Pest.php` into one
+  file per domain under `tests/Helpers/`, which Pest loads by itself.
+  `Pest.php` now only configures the suites. Browser tests run on their own
+  `BrowserTestCase`, and unit tests no longer migrate a database they never
+  use.
+- **Tests** — acceptance tests read rendered HTML with PHP's HTML5 parser and
+  CSS selectors, through `htmlElement()` and `htmlElements()`, instead of
+  regex helpers. The header-link tests now look only inside `<header>`.
+- **Markdown** — the About bio and Pages render through one converter,
+  `App\Markdown\ProseMarkdownToHtmlConverter`. It replaces a Blog class that
+  only About used and its copy in Pages, so About no longer depends on Blog,
+  and the architecture tests now forbid it.
+- **Admin** — the post and page forms ask the domain whether a slug is taken,
+  instead of applying the `draft-` prefix and checking for a collision
+  themselves.
+- **Agent skills** — `improve-codebase-architecture` updated to the current
+  upstream version.
+- The module map under `documentation/architecture/` is regenerated.
+
 ## [1.7.0] - 2026-10-15
 
 The header's GitHub logo now matches the LinkedIn logo in pure black or white,
@@ -230,7 +270,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.0...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.1...HEAD
+[1.7.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.0...1.7.1
 [1.7.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.6.0...1.7.0
 [1.6.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.5.0...1.6.0
 [1.5.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.4.1...1.5.0
