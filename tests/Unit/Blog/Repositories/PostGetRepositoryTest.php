@@ -54,10 +54,3 @@ it('finds a single post by slug and tags its draft status', function () {
 it('returns null from find when the post is absent', function () {
     expect($this->repository->find('missing'))->toBeNull();
 });
-
-it('reports existence by slug', function () {
-    writePostFile('hello', 'Hello', '2026-01-01');
-
-    expect($this->repository->exists('hello'))->toBeTrue();
-    expect($this->repository->exists('missing'))->toBeFalse();
-});

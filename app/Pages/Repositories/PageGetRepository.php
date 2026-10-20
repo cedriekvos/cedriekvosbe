@@ -34,9 +34,4 @@ final readonly class PageGetRepository
     {
         return $this->pageSource->find($slug);
     }
-
-    public function exists(string $slug): bool
-    {
-        return $this->pageSource->exists($slug);
-    }
 }

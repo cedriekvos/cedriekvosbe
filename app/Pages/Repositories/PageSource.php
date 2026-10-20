@@ -44,11 +44,6 @@ final readonly class PageSource
         return $this->pageFileStorage->exists($slug) ? $this->toPage($slug) : null;
     }
 
-    public function exists(string $slug): bool
-    {
-        return $this->pageFileStorage->exists($slug);
-    }
-
     private function toPage(string $slug): Page
     {
         $data = $this->pageFileParser->parse($this->pageFileStorage->read($slug), $slug);

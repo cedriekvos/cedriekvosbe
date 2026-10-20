@@ -38,9 +38,13 @@ final readonly class PostsRepository
         return $this->postGetRepository->find($slug);
     }
 
-    public function exists(string $slug): bool
+    /**
+     * Whether saving under $baseSlug would collide with another post. Pass the
+     * stored slug of the post being edited as $originalSlug.
+     */
+    public function isSlugTaken(string $baseSlug, bool $isDraft, ?string $originalSlug = null): bool
     {
-        return $this->postGetRepository->exists($slug);
+        return $this->postWriteRepository->isSlugTaken($baseSlug, $isDraft, $originalSlug);
     }
 
     /**

@@ -38,9 +38,13 @@ final readonly class PagesRepository
         return $this->pageGetRepository->find($slug);
     }
 
-    public function exists(string $slug): bool
+    /**
+     * Whether saving under $baseSlug would collide with another page. Pass the
+     * stored slug of the page being edited as $originalSlug.
+     */
+    public function isSlugTaken(string $baseSlug, bool $isDraft, ?string $originalSlug = null): bool
     {
-        return $this->pageGetRepository->exists($slug);
+        return $this->pageWriteRepository->isSlugTaken($baseSlug, $isDraft, $originalSlug);
     }
 
     /**

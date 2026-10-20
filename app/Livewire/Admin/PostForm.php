@@ -78,13 +78,12 @@ class PostForm extends Component
         ];
     }
 
-    public function save(PostsRepository $posts, DraftSlug $draftSlug): mixed
+    public function save(PostsRepository $posts): mixed
     {
         /** @var array{title: string, slug: string, date: string, excerpt?: string|null, body: string, isDraft: bool, isFeatured: bool} $data */
         $data = $this->validate();
 
-        $finalSlug = $draftSlug->apply($data['slug'], $this->isDraft);
-        if ($finalSlug !== $this->originalSlug && $posts->exists($finalSlug)) {
+        if ($posts->isSlugTaken($data['slug'], $this->isDraft, $this->originalSlug)) {
             $this->addError('slug', 'A post with this slug already exists.');
 
             return null;

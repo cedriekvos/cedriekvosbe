@@ -24,6 +24,39 @@ it('prefixes a draft page with draft- and returns the prefixed slug', function (
     expect(Storage::disk('pages')->exists('draft-wip.md'))->toBeTrue();
 });
 
+it('reports a free slug as not taken', function () {
+    expect($this->writer->isSlugTaken('free', isDraft: false))->toBeFalse();
+});
+
+it('reports a slug as taken when another page is stored under it', function () {
+    $this->writer->create(['title' => 'T'], 'body', 'taken', isDraft: false);
+
+    expect($this->writer->isSlugTaken('taken', isDraft: false))->toBeTrue();
+});
+
+it('checks the draft-prefixed slug when the page is a draft', function () {
+    $this->writer->create(['title' => 'T'], 'body', 'shared', isDraft: false);
+
+    expect($this->writer->isSlugTaken('shared', isDraft: true))->toBeFalse();
+
+    $this->writer->create(['title' => 'T'], 'body', 'shared', isDraft: true);
+
+    expect($this->writer->isSlugTaken('shared', isDraft: true))->toBeTrue();
+});
+
+it('does not count the page being edited as taking its own slug', function () {
+    $this->writer->create(['title' => 'T'], 'body', 'mine', isDraft: true);
+
+    expect($this->writer->isSlugTaken('mine', isDraft: true, originalSlug: 'draft-mine'))->toBeFalse();
+});
+
+it('reports a slug as taken when an edit would rename onto another page', function () {
+    $this->writer->create(['title' => 'A'], 'a', 'a', isDraft: false);
+    $this->writer->create(['title' => 'B'], 'b', 'b', isDraft: false);
+
+    expect($this->writer->isSlugTaken('b', isDraft: false, originalSlug: 'a'))->toBeTrue();
+});
+
 it('throws when creating a page whose slug already exists', function () {
     $this->writer->create(['title' => 'First'], 'body', 'dup', isDraft: false);
 

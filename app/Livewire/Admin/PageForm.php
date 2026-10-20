@@ -63,13 +63,12 @@ class PageForm extends Component
         ];
     }
 
-    public function save(PagesRepository $pages, DraftSlug $draftSlug): mixed
+    public function save(PagesRepository $pages): mixed
     {
         /** @var array{title: string, slug: string, body: string, isDraft: bool} $data */
         $data = $this->validate();
 
-        $finalSlug = $draftSlug->apply($data['slug'], $this->isDraft);
-        if ($finalSlug !== $this->originalSlug && $pages->exists($finalSlug)) {
+        if ($pages->isSlugTaken($data['slug'], $this->isDraft, $this->originalSlug)) {
             $this->addError('slug', 'A page with this slug already exists.');
 
             return null;

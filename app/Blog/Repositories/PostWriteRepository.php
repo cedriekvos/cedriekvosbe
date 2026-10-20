@@ -24,7 +24,7 @@ final readonly class PostWriteRepository
     {
         $finalSlug = $this->postFileStorage->getSlugFor($baseSlug, $isDraft);
 
-        if ($this->postFileStorage->exists($finalSlug)) {
+        if ($this->isSlugTaken($baseSlug, $isDraft)) {
             throw new RuntimeException("A post with slug [{$finalSlug}] already exists.");
         }
 
@@ -47,7 +47,7 @@ final readonly class PostWriteRepository
 
         $finalSlug = $this->postFileStorage->getSlugFor($baseSlug, $isDraft);
 
-        if ($finalSlug !== $originalSlug && $this->postFileStorage->exists($finalSlug)) {
+        if ($this->isSlugTaken($baseSlug, $isDraft, $originalSlug)) {
             throw new RuntimeException("A post with slug [{$finalSlug}] already exists.");
         }
 
@@ -58,6 +58,18 @@ final readonly class PostWriteRepository
         }
 
         return $finalSlug;
+    }
+
+    /**
+     * Whether saving under $baseSlug would collide with another post's file. The
+     * draft flag decides the stored slug; $originalSlug is the post being edited,
+     * which may keep its own slug.
+     */
+    public function isSlugTaken(string $baseSlug, bool $isDraft, ?string $originalSlug = null): bool
+    {
+        $finalSlug = $this->postFileStorage->getSlugFor($baseSlug, $isDraft);
+
+        return $finalSlug !== $originalSlug && $this->postFileStorage->exists($finalSlug);
     }
 
     public function delete(string $slug): bool

@@ -44,11 +44,6 @@ final readonly class PostSource
         return $this->postFileStorage->exists($slug) ? $this->toPost($slug) : null;
     }
 
-    public function exists(string $slug): bool
-    {
-        return $this->postFileStorage->exists($slug);
-    }
-
     private function toPost(string $slug): Post
     {
         $data = $this->postFileParser->parse($this->postFileStorage->read($slug), $slug);

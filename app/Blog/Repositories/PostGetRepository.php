@@ -34,9 +34,4 @@ final readonly class PostGetRepository
     {
         return $this->postSource->find($slug);
     }
-
-    public function exists(string $slug): bool
-    {
-        return $this->postSource->exists($slug);
-    }
 }

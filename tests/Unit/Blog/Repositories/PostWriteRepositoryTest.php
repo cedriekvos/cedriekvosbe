@@ -24,6 +24,39 @@ it('prefixes a draft post with draft- and returns the prefixed slug', function (
     expect(Storage::disk('posts')->exists('draft-wip.md'))->toBeTrue();
 });
 
+it('reports a free slug as not taken', function () {
+    expect($this->writer->isSlugTaken('free', isDraft: false))->toBeFalse();
+});
+
+it('reports a slug as taken when another post is stored under it', function () {
+    $this->writer->create(['title' => 'T', 'date' => '2026-01-01'], 'body', 'taken', isDraft: false);
+
+    expect($this->writer->isSlugTaken('taken', isDraft: false))->toBeTrue();
+});
+
+it('checks the draft-prefixed slug when the post is a draft', function () {
+    $this->writer->create(['title' => 'T', 'date' => '2026-01-01'], 'body', 'shared', isDraft: false);
+
+    expect($this->writer->isSlugTaken('shared', isDraft: true))->toBeFalse();
+
+    $this->writer->create(['title' => 'T', 'date' => '2026-01-01'], 'body', 'shared', isDraft: true);
+
+    expect($this->writer->isSlugTaken('shared', isDraft: true))->toBeTrue();
+});
+
+it('does not count the post being edited as taking its own slug', function () {
+    $this->writer->create(['title' => 'T', 'date' => '2026-01-01'], 'body', 'mine', isDraft: true);
+
+    expect($this->writer->isSlugTaken('mine', isDraft: true, originalSlug: 'draft-mine'))->toBeFalse();
+});
+
+it('reports a slug as taken when an edit would rename onto another post', function () {
+    $this->writer->create(['title' => 'A', 'date' => '2026-01-01'], 'a', 'a', isDraft: false);
+    $this->writer->create(['title' => 'B', 'date' => '2026-01-02'], 'b', 'b', isDraft: false);
+
+    expect($this->writer->isSlugTaken('b', isDraft: false, originalSlug: 'a'))->toBeTrue();
+});
+
 it('throws when creating a post whose slug already exists', function () {
     $this->writer->create(['title' => 'First', 'date' => '2026-01-01'], 'body', 'dup', isDraft: false);
 

@@ -66,10 +66,3 @@ it('finds a single page by slug and tags its draft status', function () {
 it('returns null from find when the page is absent', function () {
     expect($this->source->find('missing'))->toBeNull();
 });
-
-it('reports existence by slug', function () {
-    writePageFile('hello', 'Hello');
-
-    expect($this->source->exists('hello'))->toBeTrue();
-    expect($this->source->exists('missing'))->toBeFalse();
-});

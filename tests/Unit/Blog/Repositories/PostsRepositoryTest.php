@@ -58,11 +58,12 @@ it('lists drafts and published posts together with the is_draft flag set', funct
     expect($bySlug['pub']->is_draft)->toBeFalse();
 });
 
-it('reports existence of posts by slug', function () {
+it('reports whether a slug is taken', function () {
     $this->repository->create(['title' => 'Hi', 'date' => '2026-01-01'], 'body', 'hi', isDraft: false);
 
-    expect($this->repository->exists('hi'))->toBeTrue();
-    expect($this->repository->exists('nope'))->toBeFalse();
+    expect($this->repository->isSlugTaken('hi', isDraft: false))->toBeTrue()
+        ->and($this->repository->isSlugTaken('hi', isDraft: false, originalSlug: 'hi'))->toBeFalse()
+        ->and($this->repository->isSlugTaken('nope', isDraft: true))->toBeFalse();
 });
 
 it('removes the underlying file when deleting an existing post', function () {

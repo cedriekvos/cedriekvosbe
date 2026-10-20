@@ -24,7 +24,7 @@ final readonly class PageWriteRepository
     {
         $finalSlug = $this->pageFileStorage->getSlugFor($baseSlug, $isDraft);
 
-        if ($this->pageFileStorage->exists($finalSlug)) {
+        if ($this->isSlugTaken($baseSlug, $isDraft)) {
             throw new RuntimeException("A page with slug [{$finalSlug}] already exists.");
         }
 
@@ -47,7 +47,7 @@ final readonly class PageWriteRepository
 
         $finalSlug = $this->pageFileStorage->getSlugFor($baseSlug, $isDraft);
 
-        if ($finalSlug !== $originalSlug && $this->pageFileStorage->exists($finalSlug)) {
+        if ($this->isSlugTaken($baseSlug, $isDraft, $originalSlug)) {
             throw new RuntimeException("A page with slug [{$finalSlug}] already exists.");
         }
 
@@ -58,6 +58,18 @@ final readonly class PageWriteRepository
         }
 
         return $finalSlug;
+    }
+
+    /**
+     * Whether saving under $baseSlug would collide with another page's file. The
+     * draft flag decides the stored slug; $originalSlug is the page being edited,
+     * which may keep its own slug.
+     */
+    public function isSlugTaken(string $baseSlug, bool $isDraft, ?string $originalSlug = null): bool
+    {
+        $finalSlug = $this->pageFileStorage->getSlugFor($baseSlug, $isDraft);
+
+        return $finalSlug !== $originalSlug && $this->pageFileStorage->exists($finalSlug);
     }
 
     public function delete(string $slug): bool
