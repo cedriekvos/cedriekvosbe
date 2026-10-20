@@ -7,7 +7,7 @@ covers(PostGetRepository::class);
 
 beforeEach(function () {
     Storage::fake('posts');
-    $this->repository = postGetRepository();
+    $this->repository = app(PostGetRepository::class);
 });
 
 it('excludes drafts and returns published posts newest first', function () {

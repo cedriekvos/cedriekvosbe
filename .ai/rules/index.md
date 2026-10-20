@@ -4,4 +4,4 @@ Before planning or editing, find the row whose globs match the file's path and r
 
 | Applies to | Rule file |
 | --- | --- |
-| **/tests/**/Architecture*.php | .ai/rules/tests.md |
+| tests/** | .ai/rules/tests.md |

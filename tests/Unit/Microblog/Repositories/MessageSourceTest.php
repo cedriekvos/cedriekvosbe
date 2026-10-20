@@ -2,6 +2,7 @@
 
 use App\Markdown\FrontMatterParser;
 use App\Microblog\Markdown\MessageFileParser;
+use App\Microblog\MessageFactory;
 use App\Microblog\Repositories\MessageSource;
 use App\Microblog\Storage\MessageFileStorage;
 use Illuminate\Support\Facades\Storage;
@@ -10,7 +11,7 @@ covers(MessageSource::class);
 
 beforeEach(function () {
     Storage::fake('microblog');
-    $this->source = new MessageSource(new MessageFileStorage, new MessageFileParser(new FrontMatterParser), messageFactory());
+    $this->source = new MessageSource(new MessageFileStorage, new MessageFileParser(new FrontMatterParser), app(MessageFactory::class));
 });
 
 it('builds a message from each file', function () {

@@ -6,7 +6,7 @@ use App\Microblog\MessageFactory;
 covers(MessageFactory::class);
 
 beforeEach(function () {
-    $this->factory = messageFactory();
+    $this->factory = app(MessageFactory::class);
 });
 
 it('builds a message from parsed data', function () {

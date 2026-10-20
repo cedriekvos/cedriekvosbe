@@ -2,13 +2,14 @@
 
 use App\Blog\DraftSlug;
 use App\Blog\PostPreviewFinder;
+use App\Blog\Repositories\PostGetRepository;
 use Illuminate\Support\Facades\Storage;
 
 covers(PostPreviewFinder::class);
 
 beforeEach(function () {
     Storage::fake('posts');
-    $this->finder = new PostPreviewFinder(postGetRepository(), new DraftSlug);
+    $this->finder = new PostPreviewFinder(app(PostGetRepository::class), new DraftSlug);
 });
 
 it('finds a published post by its slug', function () {

@@ -2,6 +2,7 @@
 
 use App\Blog\DraftSlug;
 use App\Blog\PostPreviewFinder;
+use App\Blog\Repositories\PostGetRepository;
 use App\Http\Controllers\Blog\Admin\PreviewController;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
@@ -11,7 +12,7 @@ covers(PreviewController::class);
 
 beforeEach(function () {
     Storage::fake('posts');
-    $this->finder = new PostPreviewFinder(postGetRepository(), new DraftSlug);
+    $this->finder = new PostPreviewFinder(app(PostGetRepository::class), new DraftSlug);
 });
 
 it('returns the blog.show view flagged as a preview, drafts included', function () {

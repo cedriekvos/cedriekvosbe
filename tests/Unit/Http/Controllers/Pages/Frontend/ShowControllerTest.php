@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Pages\Frontend\ShowController;
+use App\Pages\Repositories\PageGetRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -14,7 +15,7 @@ beforeEach(function () {
 it('returns the pages.show view with the requested page', function () {
     writePageFile('welcome', 'Welcome');
 
-    $response = (new ShowController)(pageGetRepository(), 'welcome');
+    $response = (new ShowController)(app(PageGetRepository::class), 'welcome');
 
     expect($response)
         ->toBeInstanceOf(View::class)
@@ -23,6 +24,6 @@ it('returns the pages.show view with the requested page', function () {
 });
 
 it('aborts with a 404 when the page does not exist', function () {
-    expect(fn () => (new ShowController)(pageGetRepository(), 'missing'))
+    expect(fn () => (new ShowController)(app(PageGetRepository::class), 'missing'))
         ->toThrow(NotFoundHttpException::class);
 });

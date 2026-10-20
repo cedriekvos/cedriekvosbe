@@ -7,7 +7,7 @@ covers(PageGetRepository::class);
 
 beforeEach(function () {
     Storage::fake('pages');
-    $this->repository = pageGetRepository();
+    $this->repository = app(PageGetRepository::class);
 });
 
 it('excludes drafts and returns published pages sorted by title', function () {

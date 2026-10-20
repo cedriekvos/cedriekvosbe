@@ -2,13 +2,14 @@
 
 use App\Pages\DraftSlug;
 use App\Pages\PagePreviewFinder;
+use App\Pages\Repositories\PageGetRepository;
 use Illuminate\Support\Facades\Storage;
 
 covers(PagePreviewFinder::class);
 
 beforeEach(function () {
     Storage::fake('pages');
-    $this->finder = new PagePreviewFinder(pageGetRepository(), new DraftSlug);
+    $this->finder = new PagePreviewFinder(app(PageGetRepository::class), new DraftSlug);
 });
 
 it('finds a published page by its slug', function () {

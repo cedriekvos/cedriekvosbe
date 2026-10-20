@@ -14,7 +14,8 @@ tools:
     - "Edit(tests/Feature/**)"
     - "Write(tests/Browser/**)"
     - "Edit(tests/Browser/**)"
-    - "Edit(tests/Pest.php)"
+    - "Write(tests/Helpers/**)"
+    - "Edit(tests/Helpers/**)"
     - "Bash(ls:*)"
     - "Bash(mkdir:*)"
     - "Bash(git status:*)"
@@ -101,12 +102,18 @@ differ.
 
 ## Setup helpers
 
-- Reuse existing `tests/Pest.php` helpers wherever a step fits
-  (`writePostFile()`, `usesFakePostsRepository()`, `makePost()`,
-  `actingAs(...)`, `Storage::fake()`, `RefreshDatabase`).
-- Add a new helper to `tests/Pest.php` for a recurring step with no existing
-  match, mirroring existing style (named, typed parameters, PHPDoc). The
-  helper may reference not-yet-existing production code — that's the red.
+- Reuse existing helpers from `tests/Helpers/` wherever a step fits
+  (`writePostFile()`, `usesFakePostsRepository()`, `signsInAsEditor()`,
+  `actingAs(...)`, `Storage::fake()`). There is one file per domain
+  (`Blog.php`, `Pages.php`, `Microblog.php`, `AboutMe.php`, `Scratchpad.php`),
+  plus `Auth.php` for signing in, `Html.php` for reading rendered HTML and
+  `Browser.php` for browser-test plumbing. `RefreshDatabase` already applies
+  to Feature and Browser.
+- Add a new helper to the matching `tests/Helpers/` file for a recurring step
+  with no existing match, mirroring existing style (named, typed parameters,
+  PHPDoc). Start a new file only for a new domain; Pest loads the directory
+  by itself. `tests/Pest.php` holds suite configuration only. The helper may
+  reference not-yet-existing production code — that's the red.
 - A precondition helper that **seeds data binds to how that data is stored**
   (file-backed vs database). That choice is **feature-architect**'s — read the
   relevant ADR under `documentation/decisions/` first; if undecided, **stop

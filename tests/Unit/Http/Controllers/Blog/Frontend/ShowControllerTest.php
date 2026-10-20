@@ -1,5 +1,6 @@
 <?php
 
+use App\Blog\Repositories\PostGetRepository;
 use App\Http\Controllers\Blog\Frontend\ShowController;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +15,7 @@ beforeEach(function () {
 it('returns the blog.show view with the requested post', function () {
     writePostFile('welcome', 'Welcome', '2026-05-01');
 
-    $response = (new ShowController)(postGetRepository(), 'welcome');
+    $response = (new ShowController)(app(PostGetRepository::class), 'welcome');
 
     expect($response)
         ->toBeInstanceOf(View::class)
@@ -23,6 +24,6 @@ it('returns the blog.show view with the requested post', function () {
 });
 
 it('aborts with a 404 when the post does not exist', function () {
-    expect(fn () => (new ShowController)(postGetRepository(), 'missing'))
+    expect(fn () => (new ShowController)(app(PostGetRepository::class), 'missing'))
         ->toThrow(NotFoundHttpException::class);
 });

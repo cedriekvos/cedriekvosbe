@@ -1,6 +1,6 @@
 ---
 name: feature-to-pest
-description: "Use this skill whenever a Gherkin .feature spec is turned into Pest acceptance tests — step 3 of this project's full pipeline. Trigger when writing or updating tests under tests/Feature/ or tests/Browser/ from a spec under documentation/features/, or when a spec changed and its acceptance tests must follow. Covers: red-first authoring (write, don't run, never soften), where the test file goes, the Gherkin→Pest mapping (Scenario, Scenario Outline, Background, data tables, Examples), choosing between an HTTP feature test, a Livewire component test and a Pest 4 browser test, reusing and adding tests/Pest.php helpers, traceability comments, and deterministic assertions. Does NOT cover unit tests or production code (feature-development), the spec itself (feature-specifier), or general test-design guidance (testing-best-practices, which this skill builds on)."
+description: "Use this skill whenever a Gherkin .feature spec is turned into Pest acceptance tests — step 3 of this project's full pipeline. Trigger when writing or updating tests under tests/Feature/ or tests/Browser/ from a spec under documentation/features/, or when a spec changed and its acceptance tests must follow. Covers: red-first authoring (write, don't run, never soften), where the test file goes, the Gherkin→Pest mapping (Scenario, Scenario Outline, Background, data tables, Examples), choosing between an HTTP feature test, a Livewire component test and a Pest 4 browser test, reusing and adding tests/Helpers/ helpers, traceability comments, and deterministic assertions. Does NOT cover unit tests or production code (feature-development), the spec itself (feature-specifier), or general test-design guidance (testing-best-practices, which this skill builds on)."
 metadata:
   author: cedriekvos
 ---
@@ -71,12 +71,18 @@ differ.
 
 ## Setup helpers
 
-- Reuse existing `tests/Pest.php` helpers wherever a step fits
-  (`writePostFile()`, `usesFakePostsRepository()`, `makePost()`,
-  `actingAs(...)`, `Storage::fake()`, `RefreshDatabase`).
-- Add a new helper to `tests/Pest.php` for a recurring step with no existing
-  match, mirroring existing style (named, typed parameters, PHPDoc). The
-  helper may reference not-yet-existing production code — that's the red.
+- Reuse existing helpers from `tests/Helpers/` wherever a step fits
+  (`writePostFile()`, `usesFakePostsRepository()`, `signsInAsEditor()`,
+  `actingAs(...)`, `Storage::fake()`). There is one file per domain
+  (`Blog.php`, `Pages.php`, `Microblog.php`, `AboutMe.php`, `Scratchpad.php`),
+  plus `Auth.php` for signing in, `Html.php` for reading rendered HTML and
+  `Browser.php` for browser-test plumbing. `RefreshDatabase` already applies
+  to Feature and Browser.
+- Add a new helper to the matching `tests/Helpers/` file for a recurring step
+  with no existing match, mirroring existing style (named, typed parameters,
+  PHPDoc). Start a new file only for a new domain; Pest loads the directory
+  by itself. `tests/Pest.php` holds suite configuration only. The helper may
+  reference not-yet-existing production code — that's the red.
 - A precondition helper that **seeds data binds to how that data is stored**
   (file-backed vs database). That choice belongs to the **feature-architect**
   skill — read the relevant ADR under `documentation/decisions/` first; if

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Pages\Admin\PreviewController;
 use App\Pages\DraftSlug;
 use App\Pages\PagePreviewFinder;
+use App\Pages\Repositories\PageGetRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -11,7 +12,7 @@ covers(PreviewController::class);
 
 beforeEach(function () {
     Storage::fake('pages');
-    $this->finder = new PagePreviewFinder(pageGetRepository(), new DraftSlug);
+    $this->finder = new PagePreviewFinder(app(PageGetRepository::class), new DraftSlug);
 });
 
 it('returns the pages.show view flagged as a preview, drafts included', function () {

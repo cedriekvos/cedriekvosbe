@@ -2,6 +2,7 @@
 
 use App\Markdown\FrontMatterParser;
 use App\Microblog\Markdown\MessageFileParser;
+use App\Microblog\MessageFactory;
 use App\Microblog\MessageSorter;
 use App\Microblog\Repositories\MessageGetRepository;
 use App\Microblog\Repositories\MessageSource;
@@ -13,7 +14,7 @@ covers(MessageGetRepository::class);
 beforeEach(function () {
     Storage::fake('microblog');
     $this->repository = new MessageGetRepository(
-        new MessageSource(new MessageFileStorage, new MessageFileParser(new FrontMatterParser), messageFactory()),
+        new MessageSource(new MessageFileStorage, new MessageFileParser(new FrontMatterParser), app(MessageFactory::class)),
         new MessageSorter,
     );
 });
