@@ -8,7 +8,7 @@ it('shows a header link to the LinkedIn profile on every public page', function 
 
     $html = (string) $this->get($page)->assertSuccessful()->getContent();
 
-    expect(headerLinkedinLinkAttributes($html))->not->toBe('');
+    expect(htmlElements($html, 'header a[href="https://www.linkedin.com/in/cedriekvos"]'))->not->toBeEmpty();
 })->with([
     'homepage' => ['/'],
     'post detail page' => ['/blog/welcome'],
@@ -18,7 +18,7 @@ it('shows a header link to the LinkedIn profile on every public page', function 
 it('places the header LinkedIn link directly after the GitHub link and keeps the GitHub target', function () {
     $html = (string) $this->get('/')->assertSuccessful()->getContent();
 
-    expect(htmlAttribute(headerGithubLinkAttributes($html), 'href'))->toBe('https://github.com/cedriekvos');
+    expect(htmlElements($html, 'header a[href="https://github.com/cedriekvos"]'))->not->toBeEmpty();
 
     expect($html)->toMatch(
         '/<a\b[^>]*\bhref="https:\/\/github\.com\/cedriekvos"[^>]*>.*?<\/a>\s*<a\b[^>]*\bhref="https:\/\/www\.linkedin\.com\/in\/cedriekvos"/is'
@@ -29,11 +29,11 @@ it('places the header LinkedIn link directly after the GitHub link and keeps the
 it("opens the header's LinkedIn link in a new tab carrying noopener and noreferrer", function () {
     $html = (string) $this->get('/')->assertSuccessful()->getContent();
 
-    $attributes = headerLinkedinLinkAttributes($html);
+    $link = htmlElement($html, 'header a[href="https://www.linkedin.com/in/cedriekvos"]');
 
-    expect(htmlAttribute($attributes, 'target'))->toBe('_blank');
+    expect($link->getAttribute('target'))->toBe('_blank');
 
-    $rel = explode(' ', htmlAttribute($attributes, 'rel'));
+    $rel = explode(' ', (string) $link->getAttribute('rel'));
 
     foreach (['noopener', 'noreferrer'] as $expectedRel) {
         expect($rel)->toContain($expectedRel);
@@ -44,7 +44,7 @@ it("opens the header's LinkedIn link in a new tab carrying noopener and noreferr
 it("gives the header's LinkedIn link the accessible name \"LinkedIn\"", function () {
     $html = (string) $this->get('/')->assertSuccessful()->getContent();
 
-    expect(htmlAttribute(headerLinkedinLinkAttributes($html), 'aria-label'))->toBe('LinkedIn');
+    expect(htmlElement($html, 'header a[href="https://www.linkedin.com/in/cedriekvos"]')->getAttribute('aria-label'))->toBe('LinkedIn');
 });
 
 // header_linkedin_link.feature — Scenarios 05 and 06 (theme-dependent logo variant, logo images load)

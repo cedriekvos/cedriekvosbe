@@ -8,7 +8,7 @@ it('shows a header link to the GitHub profile on every public page', function (s
 
     $html = (string) $this->get($page)->assertSuccessful()->getContent();
 
-    expect(headerGithubLinkAttributes($html))->not->toBe('');
+    expect(htmlElements($html, 'header a[href="https://github.com/cedriekvos"]'))->not->toBeEmpty();
 })->with([
     'homepage' => ['/'],
     'post detail page' => ['/blog/welcome'],
@@ -18,11 +18,11 @@ it('shows a header link to the GitHub profile on every public page', function (s
 it("opens the header's GitHub link in a new tab carrying noopener and noreferrer", function () {
     $html = (string) $this->get('/')->assertSuccessful()->getContent();
 
-    $attributes = headerGithubLinkAttributes($html);
+    $link = htmlElement($html, 'header a[href="https://github.com/cedriekvos"]');
 
-    expect(htmlAttribute($attributes, 'target'))->toBe('_blank');
+    expect($link->getAttribute('target'))->toBe('_blank');
 
-    $rel = explode(' ', htmlAttribute($attributes, 'rel'));
+    $rel = explode(' ', (string) $link->getAttribute('rel'));
 
     foreach (['noopener', 'noreferrer'] as $expectedRel) {
         expect($rel)->toContain($expectedRel);
@@ -33,7 +33,7 @@ it("opens the header's GitHub link in a new tab carrying noopener and noreferrer
 it("gives the header's GitHub link the accessible name \"GitHub\"", function () {
     $html = (string) $this->get('/')->assertSuccessful()->getContent();
 
-    expect(htmlAttribute(headerGithubLinkAttributes($html), 'aria-label'))->toBe('GitHub');
+    expect(htmlElement($html, 'header a[href="https://github.com/cedriekvos"]')->getAttribute('aria-label'))->toBe('GitHub');
 });
 
 // header_github_link.feature — Scenarios 04 and 05 (visible in both themes, logo colour per theme)

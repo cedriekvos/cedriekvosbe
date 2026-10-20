@@ -54,6 +54,17 @@ function writePostFile(string $slug, string $title, string $date, ?string $excer
 }
 
 /**
+ * The markup of one post's card on the homepage — the `<a href="/blog/{slug}">`
+ * element that wraps it — so badge assertions can target a single post without
+ * matching markup that happens to appear elsewhere on the page. Fails the test
+ * when the page has no card for the slug.
+ */
+function postCardHtml(string $body, string $slug): string
+{
+    return htmlElementHtml(htmlElement($body, 'a[href="/blog/'.$slug.'"]'));
+}
+
+/**
  * Build a Markdown post body of exactly $wordCount space-separated words, for
  * read-time calculation tests.
  */

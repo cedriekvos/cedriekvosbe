@@ -12,23 +12,23 @@ signsInAsEditor();
 it('offers no preview button on the post list', function () {
     app(PostsRepository::class)->create(['title' => 'Welcome', 'date' => '2026-05-01'], 'body', 'welcome', isDraft: true);
 
-    expect(previewButtonTags(Livewire::test(PostIndex::class)->html()))->toBeEmpty();
+    expect(htmlElements(Livewire::test(PostIndex::class)->html(), 'a[href$="/preview"]'))->toBeEmpty();
 });
 
 // post_preview.feature — Scenario Outline: A preview button is offered in the editor of a saved post
 it('offers a new-tab preview button on the post editor', function (bool $isDraft) {
     app(PostsRepository::class)->create(['title' => 'Welcome', 'date' => '2026-05-01'], 'body', 'welcome', isDraft: $isDraft);
 
-    $tags = previewButtonTags(Livewire::test(PostForm::class, ['slug' => 'welcome'])->html());
+    $buttons = htmlElements(Livewire::test(PostForm::class, ['slug' => 'welcome'])->html(), 'a[href$="/preview"]');
 
-    expect($tags)->toHaveCount(1)
-        ->and($tags[0])->toContain('href="'.url('/admin/posts/welcome/preview').'"')
-        ->and($tags[0])->toContain('target="_blank"');
+    expect($buttons)->toHaveCount(1)
+        ->and($buttons[0]->getAttribute('href'))->toBe(url('/admin/posts/welcome/preview'))
+        ->and($buttons[0]->getAttribute('target'))->toBe('_blank');
 })->with(['draft' => true, 'published' => false]);
 
 // post_preview.feature — Scenario: The post creation form has no preview button
 it('offers no preview button on the new post form', function () {
-    expect(previewButtonTags(Livewire::test(PostForm::class)->html()))->toBeEmpty();
+    expect(htmlElements(Livewire::test(PostForm::class)->html(), 'a[href$="/preview"]'))->toBeEmpty();
 });
 
 // post_preview.feature — Scenario Outline: Previewing a post shows it as visitors would see it

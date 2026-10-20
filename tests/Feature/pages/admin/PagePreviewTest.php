@@ -12,23 +12,23 @@ signsInAsEditor();
 it('offers no preview button on the page list', function () {
     app(PagesRepository::class)->create(['title' => 'About'], 'body', 'about', isDraft: true);
 
-    expect(previewButtonTags(Livewire::test(PageIndex::class)->html()))->toBeEmpty();
+    expect(htmlElements(Livewire::test(PageIndex::class)->html(), 'a[href$="/preview"]'))->toBeEmpty();
 });
 
 // page_preview.feature — Scenario Outline: A preview button is offered in the editor of a saved page
 it('offers a new-tab preview button on the page editor', function (bool $isDraft) {
     app(PagesRepository::class)->create(['title' => 'About'], 'body', 'about', isDraft: $isDraft);
 
-    $tags = previewButtonTags(Livewire::test(PageForm::class, ['slug' => 'about'])->html());
+    $buttons = htmlElements(Livewire::test(PageForm::class, ['slug' => 'about'])->html(), 'a[href$="/preview"]');
 
-    expect($tags)->toHaveCount(1)
-        ->and($tags[0])->toContain('href="'.url('/admin/pages/about/preview').'"')
-        ->and($tags[0])->toContain('target="_blank"');
+    expect($buttons)->toHaveCount(1)
+        ->and($buttons[0]->getAttribute('href'))->toBe(url('/admin/pages/about/preview'))
+        ->and($buttons[0]->getAttribute('target'))->toBe('_blank');
 })->with(['draft' => true, 'published' => false]);
 
 // page_preview.feature — Scenario: The page creation form has no preview button
 it('offers no preview button on the new page form', function () {
-    expect(previewButtonTags(Livewire::test(PageForm::class)->html()))->toBeEmpty();
+    expect(htmlElements(Livewire::test(PageForm::class)->html(), 'a[href$="/preview"]'))->toBeEmpty();
 });
 
 // page_preview.feature — Scenario Outline: Previewing a page shows it as visitors would see it

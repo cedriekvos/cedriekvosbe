@@ -83,6 +83,10 @@ differ.
   PHPDoc). Start a new file only for a new domain; Pest loads the directory
   by itself. `tests/Pest.php` holds suite configuration only. The helper may
   reference not-yet-existing production code — that's the red.
+- Read rendered HTML through `Html.php`: select elements with a CSS selector
+  via `htmlElement()` (first match, fails the test when there is none) or
+  `htmlElements()`, then assert on `getAttribute()` or `htmlElementText()`.
+  Don't add a helper that matches markup with a regex.
 - A precondition helper that **seeds data binds to how that data is stored**
   (file-backed vs database). That choice belongs to the **feature-architect**
   skill — read the relevant ADR under `documentation/decisions/` first; if

@@ -6,12 +6,42 @@ use Illuminate\Support\Str;
 
 /**
  * Parse HTML — a whole response or any fragment of one — with PHP's HTML5
- * parser, the way a browser would, so the helpers below query it with CSS
- * selectors instead of matching markup with regexes.
+ * parser, the way a browser would, so scenarios query it with CSS selectors
+ * instead of matching markup with regexes.
  */
 function htmlDocument(string $html): HTMLDocument
 {
     return HTMLDocument::createFromString($html, LIBXML_NOERROR, 'UTF-8');
+}
+
+/**
+ * Every element in $html matching a CSS selector, in document order.
+ *
+ * @return list<Element>
+ */
+function htmlElements(string $html, string $selector): array
+{
+    return iterator_to_array(htmlDocument($html)->querySelectorAll($selector));
+}
+
+/**
+ * The first element in $html matching a CSS selector. Fails the test when
+ * nothing matches, so a scenario can read the element's attributes straight away.
+ */
+function htmlElement(string $html, string $selector): Element
+{
+    $element = htmlDocument($html)->querySelector($selector);
+    expect($element)->not->toBeNull("No element matches [{$selector}].");
+
+    return $element;
+}
+
+/**
+ * The markup of a parsed element, re-serialized from the parsed document.
+ */
+function htmlElementHtml(Element $element): string
+{
+    return $element->ownerDocument->saveHtml($element);
 }
 
 /**
@@ -21,22 +51,6 @@ function htmlDocument(string $html): HTMLDocument
 function htmlElementText(Element $element): string
 {
     return Str::of($element->textContent)->replaceMatches('/\s+/', ' ')->trim()->value();
-}
-
-/**
- * An element's attributes as ` name="value"` pairs in source order, values
- * escaped the way Blade escapes them, so the result reads like the attribute
- * string of the element's opening tag.
- */
-function htmlAttributeString(Element $element): string
-{
-    $attributes = '';
-
-    foreach ($element->attributes as $attribute) {
-        $attributes .= ' '.$attribute->name.'="'.e($attribute->value).'"';
-    }
-
-    return $attributes;
 }
 
 /**
@@ -65,16 +79,6 @@ function htmlTextOutsideLinks(string $html): string
 }
 
 /**
- * Read an HTML attribute out of an element's attribute string, parsed the way a
- * browser would (any quoting, entities decoded), returning an empty string when
- * the attribute is absent.
- */
-function htmlAttribute(string $attributes, string $name): string
-{
-    return htmlDocument('<span '.$attributes.'>')->querySelector('span')?->getAttribute($name) ?? '';
-}
-
-/**
  * Parse every `<a>` element in a fragment of HTML, in document order, into the
  * href, visible link text and the attributes the link scenarios assert on.
  *
@@ -82,18 +86,15 @@ function htmlAttribute(string $attributes, string $name): string
  */
 function htmlLinks(string $html): array
 {
-    $links = [];
-
-    foreach (htmlDocument($html)->querySelectorAll('a') as $link) {
-        $links[] = [
+    return array_map(
+        fn (Element $link): array => [
             'href' => $link->getAttribute('href') ?? '',
             'text' => htmlElementText($link),
             'target' => $link->getAttribute('target') ?? '',
             'rel' => $link->getAttribute('rel') ?? '',
-        ];
-    }
-
-    return $links;
+        ],
+        htmlElements($html, 'a'),
+    );
 }
 
 /**
@@ -115,66 +116,4 @@ function homepageSectionHtml(string $html, string $name): string
     expect($end)->not->toBeFalse();
 
     return substr($html, (int) $start, (int) $end - (int) $start);
-}
-
-/**
- * The markup of one post's card on the homepage — the `<a href="/blog/{slug}">`
- * element that wraps it — so badge assertions can target a single post without
- * matching markup that happens to appear elsewhere on the page. Empty when the
- * page has no card for the slug.
- */
-function postCardHtml(string $body, string $slug): string
-{
-    $document = htmlDocument($body);
-    $card = $document->querySelector('a[href="/blog/'.$slug.'"]');
-
-    return $card === null ? '' : $document->saveHtml($card);
-}
-
-/**
- * The attribute string of the first `<a>` pointing exactly at $href, or an empty
- * string when the page carries no such link.
- */
-function htmlLinkAttributes(string $html, string $href): string
-{
-    $link = htmlDocument($html)->querySelector('a[href="'.$href.'"]');
-
-    return $link === null ? '' : htmlAttributeString($link);
-}
-
-/**
- * The attribute string of the public header's GitHub profile link (the `<a>`
- * pointing at https://github.com/cedriekvos), so navigation scenarios can
- * assert its target/rel/aria-label/class without matching other page links.
- * Empty when the header carries no such link.
- */
-function headerGithubLinkAttributes(string $html): string
-{
-    return htmlLinkAttributes($html, 'https://github.com/cedriekvos');
-}
-
-/**
- * The attribute string of the public header's LinkedIn profile link (the `<a>`
- * pointing at https://www.linkedin.com/in/cedriekvos), so navigation scenarios
- * can assert its target/rel/aria-label without matching other page links.
- * Empty when the header carries no such link.
- */
-function headerLinkedinLinkAttributes(string $html): string
-{
-    return htmlLinkAttributes($html, 'https://www.linkedin.com/in/cedriekvos');
-}
-
-/**
- * Return the opening `<a>` tags in a rendered admin screen that point at a
- * preview URL (any href ending in `/preview`), so a test can assert the
- * preview button's target and new-tab behaviour without pinning its label.
- *
- * @return list<string>
- */
-function previewButtonTags(string $html): array
-{
-    return array_map(
-        fn (Element $link): string => '<a'.htmlAttributeString($link).'>',
-        iterator_to_array(htmlDocument($html)->querySelectorAll('a[href$="/preview"]')),
-    );
 }
