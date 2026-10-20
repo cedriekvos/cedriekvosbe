@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Pages\Markdown;
+namespace App\Markdown;
 
-use App\Markdown\MarkdownToHtmlConverter;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
 
 /**
- * Renders page Markdown without code highlighting — pages are static prose,
- * with no fenced code blocks to speak of. Mirrors App\Blog\Markdown\PostMarkdownToHtmlConverter.
+ * Renders Markdown without code highlighting, for prose with no fenced code
+ * blocks to speak of: the about-me bio and pages. Never give it the highlight
+ * extension; posts highlight through their own converter (ADR 0009).
  */
-final readonly class PageMarkdownToHtmlConverter
+final readonly class ProseMarkdownToHtmlConverter
 {
     private MarkdownToHtmlConverter $markdownToHtmlConverter;
 

@@ -24,11 +24,10 @@ $delivery = [
 
 /*
  * What each domain may reach for besides itself. App\Markdown is the shared kernel,
- * so every domain may use it. App\About is the one exception the module map records:
- * AboutFactory renders bios with App\Blog\Markdown\PostMarkdownToHtmlConverter.
+ * so every domain may use it; no domain may use another.
  */
 $allowed = [
-    'App\About' => ['App\Markdown', 'App\Blog'],
+    'App\About' => ['App\Markdown'],
     'App\Blog' => ['App\Markdown'],
     'App\Markdown' => [],
     'App\Microblog' => ['App\Markdown'],

@@ -1,15 +1,15 @@
 <?php
 
-use App\Pages\Markdown\PageMarkdownToHtmlConverter;
+use App\Markdown\ProseMarkdownToHtmlConverter;
 use Illuminate\Support\Facades\Exceptions;
 use League\CommonMark\Exception\UnexpectedEncodingException;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
 
-covers(PageMarkdownToHtmlConverter::class);
+covers(ProseMarkdownToHtmlConverter::class);
 
 beforeEach(function () {
-    $this->renderer = new PageMarkdownToHtmlConverter(
+    $this->renderer = new ProseMarkdownToHtmlConverter(
         new CommonMarkCoreExtension,
         new ExternalLinkExtension,
     );
@@ -21,7 +21,7 @@ it('renders markdown to html', function () {
 
 it('opens external links in a new window when an internal host is configured', function () {
     config(['app.url' => 'https://example.com']);
-    $renderer = new PageMarkdownToHtmlConverter(new CommonMarkCoreExtension, new ExternalLinkExtension);
+    $renderer = new ProseMarkdownToHtmlConverter(new CommonMarkCoreExtension, new ExternalLinkExtension);
 
     $html = $renderer->convert('[external](https://other.com)');
 
@@ -30,7 +30,7 @@ it('opens external links in a new window when an internal host is configured', f
 
 it('does not open internal links in a new window', function () {
     config(['app.url' => 'https://example.com']);
-    $renderer = new PageMarkdownToHtmlConverter(new CommonMarkCoreExtension, new ExternalLinkExtension);
+    $renderer = new ProseMarkdownToHtmlConverter(new CommonMarkCoreExtension, new ExternalLinkExtension);
 
     $html = $renderer->convert('[internal](https://example.com/page)');
 

@@ -1,8 +1,8 @@
 <?php
 
 use App\Markdown\FrontMatterParser;
+use App\Markdown\ProseMarkdownToHtmlConverter;
 use App\Pages\Markdown\PageFileParser;
-use App\Pages\Markdown\PageMarkdownToHtmlConverter;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
 
@@ -11,7 +11,7 @@ covers(PageFileParser::class);
 beforeEach(function () {
     $this->parser = new PageFileParser(
         new FrontMatterParser,
-        new PageMarkdownToHtmlConverter(new CommonMarkCoreExtension, new ExternalLinkExtension),
+        new ProseMarkdownToHtmlConverter(new CommonMarkCoreExtension, new ExternalLinkExtension),
     );
 });
 

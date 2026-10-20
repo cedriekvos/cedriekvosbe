@@ -2,7 +2,7 @@
 
 use App\About\About;
 use App\About\AboutFactory;
-use App\Blog\Markdown\PostMarkdownToHtmlConverter;
+use App\Markdown\ProseMarkdownToHtmlConverter;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
 
@@ -10,7 +10,7 @@ covers(AboutFactory::class);
 
 beforeEach(function () {
     $this->factory = new AboutFactory(
-        new PostMarkdownToHtmlConverter(new CommonMarkCoreExtension, new ExternalLinkExtension),
+        new ProseMarkdownToHtmlConverter(new CommonMarkCoreExtension, new ExternalLinkExtension),
     );
 });
 

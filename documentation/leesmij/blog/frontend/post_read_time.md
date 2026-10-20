@@ -13,7 +13,7 @@ eruit gestript) — niet op de ruwe markdown-brontekst (`$post->body`). Markdown
 image-tags (`![alt](url)`) bevat tekens en woorden die een lezer nooit daadwerkelijk leest; die zouden de leestijd
 kunstmatig opblazen. Een alt-tekst bij een afbeelding is hier het duidelijkste voorbeeld: die kan best lang zijn maar
 draagt niets bij aan de tijd die iemand aan het lezen van de post besteedt, dus telt hij niet mee. Dit sluit aan bij
-hoe `PostMarkdownToHtmlConverter::excerpt()` al werkt: eerst renderen naar HTML, dan tags strippen, dan pas de tekst
+hoe `MarkdownToHtmlConverter::excerpt()` al werkt: eerst renderen naar HTML, dan tags strippen, dan pas de tekst
 gebruiken.
 
 ## Rekenregels

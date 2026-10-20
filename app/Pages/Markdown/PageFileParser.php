@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\Pages\Markdown;
 
 use App\Markdown\FrontMatterParser;
+use App\Markdown\ProseMarkdownToHtmlConverter;
 
 final readonly class PageFileParser
 {
     public function __construct(
         private FrontMatterParser $frontMatterParser,
-        private PageMarkdownToHtmlConverter $pageMarkdownToHtmlConverter,
+        private ProseMarkdownToHtmlConverter $proseMarkdownToHtmlConverter,
     ) {}
 
     /**
@@ -26,7 +27,7 @@ final readonly class PageFileParser
 
         return array_merge($frontmatter, [
             'body' => $body,
-            'content' => $this->pageMarkdownToHtmlConverter->convert($body),
+            'content' => $this->proseMarkdownToHtmlConverter->convert($body),
         ]);
     }
 }

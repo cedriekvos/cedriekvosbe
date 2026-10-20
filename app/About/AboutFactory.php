@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\About;
 
-use App\Blog\Markdown\PostMarkdownToHtmlConverter;
+use App\Markdown\ProseMarkdownToHtmlConverter;
 
 final readonly class AboutFactory
 {
     public function __construct(
-        private PostMarkdownToHtmlConverter $postMarkdownToHtmlConverter,
+        private ProseMarkdownToHtmlConverter $proseMarkdownToHtmlConverter,
     ) {}
 
     /**
@@ -27,7 +27,7 @@ final readonly class AboutFactory
         return new About(
             heading: $heading,
             bio_as_markdown: $bio,
-            bio_as_html: $this->postMarkdownToHtmlConverter->convert($bio),
+            bio_as_html: $this->proseMarkdownToHtmlConverter->convert($bio),
             is_visible: $heading !== '' || $bio !== '',
         );
     }

@@ -8,7 +8,7 @@ use App\About\Repositories\AboutGetRepository;
 use App\About\Repositories\AboutRepository;
 use App\About\Repositories\AboutWriteRepository;
 use App\About\Storage\AboutFileStorage;
-use App\Blog\Markdown\PostMarkdownToHtmlConverter;
+use App\Markdown\ProseMarkdownToHtmlConverter;
 use Illuminate\Support\Facades\Storage;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
@@ -20,7 +20,7 @@ beforeEach(function () {
 
     $storage = new AboutFileStorage;
     $this->repository = new AboutRepository(
-        new AboutGetRepository($storage, new AboutFileParser, new AboutFactory(new PostMarkdownToHtmlConverter(new CommonMarkCoreExtension, new ExternalLinkExtension))),
+        new AboutGetRepository($storage, new AboutFileParser, new AboutFactory(new ProseMarkdownToHtmlConverter(new CommonMarkCoreExtension, new ExternalLinkExtension))),
         new AboutWriteRepository($storage, new AboutFileSerializer),
     );
 });

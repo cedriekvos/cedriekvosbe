@@ -1,9 +1,9 @@
 <?php
 
 use App\Markdown\FrontMatterParser;
+use App\Markdown\ProseMarkdownToHtmlConverter;
 use App\Pages\DraftSlug;
 use App\Pages\Markdown\PageFileParser;
-use App\Pages\Markdown\PageMarkdownToHtmlConverter;
 use App\Pages\PageFactory;
 use App\Pages\PageFilter;
 use App\Pages\Repositories\PageSource;
@@ -19,7 +19,7 @@ beforeEach(function () {
     $draftSlug = new DraftSlug;
     $this->source = new PageSource(
         new PageFileStorage($draftSlug),
-        new PageFileParser(new FrontMatterParser, new PageMarkdownToHtmlConverter(new CommonMarkCoreExtension, new ExternalLinkExtension)),
+        new PageFileParser(new FrontMatterParser, new ProseMarkdownToHtmlConverter(new CommonMarkCoreExtension, new ExternalLinkExtension)),
         new PageFactory,
         new PageFilter($draftSlug),
     );

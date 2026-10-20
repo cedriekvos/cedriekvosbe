@@ -5,7 +5,7 @@ use App\About\AboutFactory;
 use App\About\Markdown\AboutFileParser;
 use App\About\Repositories\AboutGetRepository;
 use App\About\Storage\AboutFileStorage;
-use App\Blog\Markdown\PostMarkdownToHtmlConverter;
+use App\Markdown\ProseMarkdownToHtmlConverter;
 use Illuminate\Support\Facades\Storage;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
@@ -17,7 +17,7 @@ beforeEach(function () {
     $this->repository = new AboutGetRepository(
         new AboutFileStorage,
         new AboutFileParser,
-        new AboutFactory(new PostMarkdownToHtmlConverter(new CommonMarkCoreExtension, new ExternalLinkExtension)),
+        new AboutFactory(new ProseMarkdownToHtmlConverter(new CommonMarkCoreExtension, new ExternalLinkExtension)),
     );
 });
 
