@@ -24,7 +24,7 @@
       <header class="space-y-4">
         <div class="flex items-baseline justify-between flex-wrap gap-2">
           <h1 class="font-serif text-4xl tracking-tight">Flow traces</h1>
-          <span class="font-mono text-xs text-slate-400">2026-09-01 · app/ @ 922ac64</span>
+          <span class="font-mono text-xs text-slate-400">2026-09-30 · app/ @ 1accf1c</span>
         </div>
         <p class="text-slate-600 leading-relaxed max-w-3xl">What actually happens when someone hits a URL. Each trace starts at an entry point and follows constructor and method injection outward — this is the object graph the container builds, not a sketch of it.</p>
       </header>
@@ -33,7 +33,40 @@
         <h2 class="lbl text-slate-400">Public web</h2>
         <h3 class="font-serif text-2xl tracking-tight text-slate-900 -mt-3">Public web entry points</h3>
 <p class="text-slate-600 leading-relaxed max-w-3xl">A visitor hits a URL. The controller is invoked, the container resolves its collaborators, and a Blade view is returned.</p>
-<div class="grid gap-3"><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">AuthenticatedSessionController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /login</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">POST /login</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">POST /logout</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Auth/AuthenticatedSessionController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 0 classes through injection.</p><div class="mt-3"><p class="text-sm text-slate-500 leading-relaxed">Injects nothing — it renders a view or issues a redirect on its own.</p></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">BlogRedirectController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /blog</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Blog/Frontend/BlogRedirectController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 0 classes through injection.</p><div class="mt-3"><p class="text-sm text-slate-500 leading-relaxed">Injects nothing — it renders a view or issues a redirect on its own.</p></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">IndexController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Blog/Frontend/IndexController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 33 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+<div class="grid gap-3"><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">AuthenticatedSessionController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /login</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">POST /login</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">POST /logout</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Auth/AuthenticatedSessionController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 0 classes through injection.</p><div class="mt-3"><p class="text-sm text-slate-500 leading-relaxed">Injects nothing — it renders a view or issues a redirect on its own.</p></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">PreviewController</h4><span class="text-xs text-slate-400">no route found in routes/</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Blog/Admin/PreviewController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 13 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Http_Controllers_Blog_Admin_PreviewController[&quot;PreviewController&lt;br/&gt;&lt;i&gt;HTTP entry point&lt;/i&gt;&quot;]
+  App_Blog_PostPreviewFinder[&quot;PostPreviewFinder&lt;br/&gt;&lt;i&gt;Domain service&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostGetRepository[&quot;PostGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Blog_DraftSlug[&quot;DraftSlug&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Blog_Repositories_PostSource[&quot;PostSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Blog_PostSorter[&quot;PostSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
+  App_Blog_Storage_PostFileStorage[&quot;PostFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Blog_Markdown_PostFileParser[&quot;PostFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Blog_PostFactory[&quot;PostFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Blog_PostFilter[&quot;PostFilter&lt;br/&gt;&lt;i&gt;Filter&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter[&quot;HighlightedPostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Blog_PostReadTimeCalculator[&quot;PostReadTimeCalculator&lt;br/&gt;&lt;i&gt;Calculator&lt;/i&gt;&quot;]
+  App_Blog_Markdown_FencedCodeHighlightExtension[&quot;FencedCodeHighlightExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
+  App_Http_Controllers_Blog_Admin_PreviewController --&gt; App_Blog_PostPreviewFinder
+  App_Blog_PostPreviewFinder --&gt; App_Blog_Repositories_PostGetRepository
+  App_Blog_PostPreviewFinder --&gt; App_Blog_DraftSlug
+  App_Blog_Repositories_PostGetRepository --&gt; App_Blog_Repositories_PostSource
+  App_Blog_Repositories_PostGetRepository --&gt; App_Blog_PostSorter
+  App_Blog_Repositories_PostSource --&gt; App_Blog_Storage_PostFileStorage
+  App_Blog_Repositories_PostSource --&gt; App_Blog_Markdown_PostFileParser
+  App_Blog_Repositories_PostSource --&gt; App_Blog_PostFactory
+  App_Blog_Repositories_PostSource --&gt; App_Blog_PostFilter
+  App_Blog_Storage_PostFileStorage --&gt; App_Blog_DraftSlug
+  App_Blog_Markdown_PostFileParser --&gt; App_Markdown_FrontMatterParser
+  App_Blog_Markdown_PostFileParser --&gt; App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter
+  App_Blog_Markdown_PostFileParser --&gt; App_Blog_PostReadTimeCalculator
+  App_Blog_PostFilter --&gt; App_Blog_DraftSlug
+  App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter --&gt; App_Blog_Markdown_FencedCodeHighlightExtension
+  class App_Http_Controllers_Blog_Admin_PreviewController entry
+  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
+  class App_Blog_Storage_PostFileStorage disk
+  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">BlogRedirectController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /blog</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Blog/Frontend/BlogRedirectController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 0 classes through injection.</p><div class="mt-3"><p class="text-sm text-slate-500 leading-relaxed">Injects nothing — it renders a view or issues a redirect on its own.</p></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">IndexController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Blog/Frontend/IndexController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 33 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
   App_Http_Controllers_Blog_Frontend_IndexController[&quot;IndexController&lt;br/&gt;&lt;i&gt;HTTP entry point&lt;/i&gt;&quot;]
   App_Blog_Repositories_PostGetRepository[&quot;PostGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
   App_About_Repositories_AboutRepository[&quot;AboutRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
@@ -60,7 +93,7 @@
   App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
   App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter[&quot;HighlightedPostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
   App_Blog_PostReadTimeCalculator[&quot;PostReadTimeCalculator&lt;br/&gt;&lt;i&gt;Calculator&lt;/i&gt;&quot;]
-  App_Blog_Markdown_PostMarkdownToHtmlConverter[&quot;PostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Markdown_ProseMarkdownToHtmlConverter[&quot;ProseMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
   App_Microblog_Markdown_MessageFileParser[&quot;MessageFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
   App_Microblog_MessageFactory[&quot;MessageFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
   App_Markdown_FrontMatterSerializer[&quot;FrontMatterSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
@@ -96,7 +129,7 @@
   App_Blog_Markdown_PostFileParser --&gt; App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter
   App_Blog_Markdown_PostFileParser --&gt; App_Blog_PostReadTimeCalculator
   App_Blog_PostFilter --&gt; App_Blog_DraftSlug
-  App_About_AboutFactory --&gt; App_Blog_Markdown_PostMarkdownToHtmlConverter
+  App_About_AboutFactory --&gt; App_Markdown_ProseMarkdownToHtmlConverter
   App_Microblog_Repositories_MessageSource --&gt; App_Microblog_Storage_MessageFileStorage
   App_Microblog_Repositories_MessageSource --&gt; App_Microblog_Markdown_MessageFileParser
   App_Microblog_Repositories_MessageSource --&gt; App_Microblog_MessageFactory
@@ -141,6 +174,61 @@
   class App_Http_Controllers_Blog_Frontend_ShowController entry
   classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
   class App_Blog_Storage_PostFileStorage disk
+  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">PreviewController</h4><span class="text-xs text-slate-400">no route found in routes/</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Pages/Admin/PreviewController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 11 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Http_Controllers_Pages_Admin_PreviewController[&quot;PreviewController&lt;br/&gt;&lt;i&gt;HTTP entry point&lt;/i&gt;&quot;]
+  App_Pages_PagePreviewFinder[&quot;PagePreviewFinder&lt;br/&gt;&lt;i&gt;Domain service&lt;/i&gt;&quot;]
+  App_Pages_Repositories_PageGetRepository[&quot;PageGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Pages_DraftSlug[&quot;DraftSlug&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Pages_Repositories_PageSource[&quot;PageSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Pages_PageSorter[&quot;PageSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
+  App_Pages_Storage_PageFileStorage[&quot;PageFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Pages_Markdown_PageFileParser[&quot;PageFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Pages_PageFactory[&quot;PageFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Pages_PageFilter[&quot;PageFilter&lt;br/&gt;&lt;i&gt;Filter&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Markdown_ProseMarkdownToHtmlConverter[&quot;ProseMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Http_Controllers_Pages_Admin_PreviewController --&gt; App_Pages_PagePreviewFinder
+  App_Pages_PagePreviewFinder --&gt; App_Pages_Repositories_PageGetRepository
+  App_Pages_PagePreviewFinder --&gt; App_Pages_DraftSlug
+  App_Pages_Repositories_PageGetRepository --&gt; App_Pages_Repositories_PageSource
+  App_Pages_Repositories_PageGetRepository --&gt; App_Pages_PageSorter
+  App_Pages_Repositories_PageSource --&gt; App_Pages_Storage_PageFileStorage
+  App_Pages_Repositories_PageSource --&gt; App_Pages_Markdown_PageFileParser
+  App_Pages_Repositories_PageSource --&gt; App_Pages_PageFactory
+  App_Pages_Repositories_PageSource --&gt; App_Pages_PageFilter
+  App_Pages_Storage_PageFileStorage --&gt; App_Pages_DraftSlug
+  App_Pages_Markdown_PageFileParser --&gt; App_Markdown_FrontMatterParser
+  App_Pages_Markdown_PageFileParser --&gt; App_Markdown_ProseMarkdownToHtmlConverter
+  App_Pages_PageFilter --&gt; App_Pages_DraftSlug
+  class App_Http_Controllers_Pages_Admin_PreviewController entry
+  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
+  class App_Pages_Storage_PageFileStorage disk
+  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">ShowController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /blog/{slug}</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Pages/Frontend/ShowController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 10 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Http_Controllers_Pages_Frontend_ShowController[&quot;ShowController&lt;br/&gt;&lt;i&gt;HTTP entry point&lt;/i&gt;&quot;]
+  App_Pages_Repositories_PageGetRepository[&quot;PageGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Pages_Repositories_PageSource[&quot;PageSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Pages_PageSorter[&quot;PageSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
+  App_Pages_Storage_PageFileStorage[&quot;PageFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Pages_Markdown_PageFileParser[&quot;PageFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Pages_PageFactory[&quot;PageFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Pages_PageFilter[&quot;PageFilter&lt;br/&gt;&lt;i&gt;Filter&lt;/i&gt;&quot;]
+  App_Pages_DraftSlug[&quot;DraftSlug&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Markdown_ProseMarkdownToHtmlConverter[&quot;ProseMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Http_Controllers_Pages_Frontend_ShowController --&gt; App_Pages_Repositories_PageGetRepository
+  App_Pages_Repositories_PageGetRepository --&gt; App_Pages_Repositories_PageSource
+  App_Pages_Repositories_PageGetRepository --&gt; App_Pages_PageSorter
+  App_Pages_Repositories_PageSource --&gt; App_Pages_Storage_PageFileStorage
+  App_Pages_Repositories_PageSource --&gt; App_Pages_Markdown_PageFileParser
+  App_Pages_Repositories_PageSource --&gt; App_Pages_PageFactory
+  App_Pages_Repositories_PageSource --&gt; App_Pages_PageFilter
+  App_Pages_Storage_PageFileStorage --&gt; App_Pages_DraftSlug
+  App_Pages_Markdown_PageFileParser --&gt; App_Markdown_FrontMatterParser
+  App_Pages_Markdown_PageFileParser --&gt; App_Markdown_ProseMarkdownToHtmlConverter
+  App_Pages_PageFilter --&gt; App_Pages_DraftSlug
+  class App_Http_Controllers_Pages_Frontend_ShowController entry
+  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
+  class App_Pages_Storage_PageFileStorage disk
   classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div></div>
       </section>
 
@@ -157,7 +245,7 @@
   App_About_Markdown_AboutFileParser[&quot;AboutFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
   App_About_AboutFactory[&quot;AboutFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
   App_About_Markdown_AboutFileSerializer[&quot;AboutFileSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
-  App_Blog_Markdown_PostMarkdownToHtmlConverter[&quot;PostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Markdown_ProseMarkdownToHtmlConverter[&quot;ProseMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
   App_Livewire_Admin_AboutForm --&gt; App_About_Repositories_AboutRepository
   App_About_Repositories_AboutRepository --&gt; App_About_Repositories_AboutGetRepository
   App_About_Repositories_AboutRepository --&gt; App_About_Repositories_AboutWriteRepository
@@ -166,7 +254,7 @@
   App_About_Repositories_AboutGetRepository --&gt; App_About_AboutFactory
   App_About_Repositories_AboutWriteRepository --&gt; App_About_Storage_AboutFileStorage
   App_About_Repositories_AboutWriteRepository --&gt; App_About_Markdown_AboutFileSerializer
-  App_About_AboutFactory --&gt; App_Blog_Markdown_PostMarkdownToHtmlConverter
+  App_About_AboutFactory --&gt; App_Markdown_ProseMarkdownToHtmlConverter
   class App_Livewire_Admin_AboutForm entry
   classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
   class App_About_Storage_AboutFileStorage disk
@@ -240,38 +328,97 @@
   class App_Livewire_Admin_MessageIndex entry
   classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
   class App_Microblog_Storage_MessageFileStorage disk
-  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">PostForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/posts/new</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/posts/{slug}/edit</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/PostForm.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 16 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">PageForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/pages/new</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/pages/{slug}/edit</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/PageForm.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 11 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Livewire_Admin_PageForm[&quot;PageForm&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
+  App_Pages_PagePreviewFinder[&quot;PagePreviewFinder&lt;br/&gt;&lt;i&gt;Domain service&lt;/i&gt;&quot;]
+  App_Pages_DraftSlug[&quot;DraftSlug&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Pages_Repositories_PageGetRepository[&quot;PageGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Pages_Repositories_PageSource[&quot;PageSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Pages_PageSorter[&quot;PageSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
+  App_Pages_Storage_PageFileStorage[&quot;PageFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Pages_Markdown_PageFileParser[&quot;PageFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Pages_PageFactory[&quot;PageFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Pages_PageFilter[&quot;PageFilter&lt;br/&gt;&lt;i&gt;Filter&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Markdown_ProseMarkdownToHtmlConverter[&quot;ProseMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Livewire_Admin_PageForm --&gt; App_Pages_PagePreviewFinder
+  App_Livewire_Admin_PageForm --&gt; App_Pages_DraftSlug
+  App_Pages_PagePreviewFinder --&gt; App_Pages_Repositories_PageGetRepository
+  App_Pages_PagePreviewFinder --&gt; App_Pages_DraftSlug
+  App_Pages_Repositories_PageGetRepository --&gt; App_Pages_Repositories_PageSource
+  App_Pages_Repositories_PageGetRepository --&gt; App_Pages_PageSorter
+  App_Pages_Repositories_PageSource --&gt; App_Pages_Storage_PageFileStorage
+  App_Pages_Repositories_PageSource --&gt; App_Pages_Markdown_PageFileParser
+  App_Pages_Repositories_PageSource --&gt; App_Pages_PageFactory
+  App_Pages_Repositories_PageSource --&gt; App_Pages_PageFilter
+  App_Pages_Storage_PageFileStorage --&gt; App_Pages_DraftSlug
+  App_Pages_Markdown_PageFileParser --&gt; App_Markdown_FrontMatterParser
+  App_Pages_Markdown_PageFileParser --&gt; App_Markdown_ProseMarkdownToHtmlConverter
+  App_Pages_PageFilter --&gt; App_Pages_DraftSlug
+  class App_Livewire_Admin_PageForm entry
+  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
+  class App_Pages_Storage_PageFileStorage disk
+  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">PageIndex</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/pages</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/PageIndex.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 14 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  App_Livewire_Admin_PageIndex[&quot;PageIndex&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
+  App_Pages_Repositories_PagesRepository[&quot;PagesRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_Pages_Repositories_PageGetRepository[&quot;PageGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
+  App_Pages_Repositories_PageWriteRepository[&quot;PageWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
+  App_Pages_Repositories_PageSource[&quot;PageSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
+  App_Pages_PageSorter[&quot;PageSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
+  App_Pages_Storage_PageFileStorage[&quot;PageFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
+  App_Pages_Markdown_PageFileSerializer[&quot;PageFileSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Pages_Markdown_PageFileParser[&quot;PageFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Pages_PageFactory[&quot;PageFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
+  App_Pages_PageFilter[&quot;PageFilter&lt;br/&gt;&lt;i&gt;Filter&lt;/i&gt;&quot;]
+  App_Pages_DraftSlug[&quot;DraftSlug&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterSerializer[&quot;FrontMatterSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
+  App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
+  App_Markdown_ProseMarkdownToHtmlConverter[&quot;ProseMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
+  App_Livewire_Admin_PageIndex --&gt; App_Pages_Repositories_PagesRepository
+  App_Pages_Repositories_PagesRepository --&gt; App_Pages_Repositories_PageGetRepository
+  App_Pages_Repositories_PagesRepository --&gt; App_Pages_Repositories_PageWriteRepository
+  App_Pages_Repositories_PageGetRepository --&gt; App_Pages_Repositories_PageSource
+  App_Pages_Repositories_PageGetRepository --&gt; App_Pages_PageSorter
+  App_Pages_Repositories_PageWriteRepository --&gt; App_Pages_Storage_PageFileStorage
+  App_Pages_Repositories_PageWriteRepository --&gt; App_Pages_Markdown_PageFileSerializer
+  App_Pages_Repositories_PageSource --&gt; App_Pages_Storage_PageFileStorage
+  App_Pages_Repositories_PageSource --&gt; App_Pages_Markdown_PageFileParser
+  App_Pages_Repositories_PageSource --&gt; App_Pages_PageFactory
+  App_Pages_Repositories_PageSource --&gt; App_Pages_PageFilter
+  App_Pages_Storage_PageFileStorage --&gt; App_Pages_DraftSlug
+  App_Pages_Markdown_PageFileSerializer --&gt; App_Markdown_FrontMatterSerializer
+  App_Pages_Markdown_PageFileParser --&gt; App_Markdown_FrontMatterParser
+  App_Pages_Markdown_PageFileParser --&gt; App_Markdown_ProseMarkdownToHtmlConverter
+  App_Pages_PageFilter --&gt; App_Pages_DraftSlug
+  class App_Livewire_Admin_PageIndex entry
+  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
+  class App_Pages_Storage_PageFileStorage disk
+  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">PostForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/posts/new</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/posts/{slug}/edit</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/PostForm.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 13 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
   App_Livewire_Admin_PostForm[&quot;PostForm&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
-  App_Blog_Repositories_PostsRepository[&quot;PostsRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
+  App_Blog_PostPreviewFinder[&quot;PostPreviewFinder&lt;br/&gt;&lt;i&gt;Domain service&lt;/i&gt;&quot;]
   App_Blog_DraftSlug[&quot;DraftSlug&lt;br/&gt;&lt;i&gt;Value object&lt;/i&gt;&quot;]
   App_Blog_Repositories_PostGetRepository[&quot;PostGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
-  App_Blog_Repositories_PostWriteRepository[&quot;PostWriteRepository&lt;br/&gt;&lt;i&gt;Write repository&lt;/i&gt;&quot;]
   App_Blog_Repositories_PostSource[&quot;PostSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
   App_Blog_PostSorter[&quot;PostSorter&lt;br/&gt;&lt;i&gt;Sorter&lt;/i&gt;&quot;]
   App_Blog_Storage_PostFileStorage[&quot;PostFileStorage&lt;br/&gt;&lt;i&gt;File storage&lt;/i&gt;&quot;]
-  App_Blog_Markdown_PostFileSerializer[&quot;PostFileSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
   App_Blog_Markdown_PostFileParser[&quot;PostFileParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
   App_Blog_PostFactory[&quot;PostFactory&lt;br/&gt;&lt;i&gt;Factory&lt;/i&gt;&quot;]
   App_Blog_PostFilter[&quot;PostFilter&lt;br/&gt;&lt;i&gt;Filter&lt;/i&gt;&quot;]
-  App_Markdown_FrontMatterSerializer[&quot;FrontMatterSerializer&lt;br/&gt;&lt;i&gt;Serializer&lt;/i&gt;&quot;]
   App_Markdown_FrontMatterParser[&quot;FrontMatterParser&lt;br/&gt;&lt;i&gt;Parser&lt;/i&gt;&quot;]
   App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter[&quot;HighlightedPostMarkdownToHtmlConverter&lt;br/&gt;&lt;i&gt;Converter&lt;/i&gt;&quot;]
   App_Blog_PostReadTimeCalculator[&quot;PostReadTimeCalculator&lt;br/&gt;&lt;i&gt;Calculator&lt;/i&gt;&quot;]
   App_Blog_Markdown_FencedCodeHighlightExtension[&quot;FencedCodeHighlightExtension&lt;br/&gt;&lt;i&gt;CommonMark extension&lt;/i&gt;&quot;]
-  App_Livewire_Admin_PostForm --&gt; App_Blog_Repositories_PostsRepository
+  App_Livewire_Admin_PostForm --&gt; App_Blog_PostPreviewFinder
   App_Livewire_Admin_PostForm --&gt; App_Blog_DraftSlug
-  App_Blog_Repositories_PostsRepository --&gt; App_Blog_Repositories_PostGetRepository
-  App_Blog_Repositories_PostsRepository --&gt; App_Blog_Repositories_PostWriteRepository
+  App_Blog_PostPreviewFinder --&gt; App_Blog_Repositories_PostGetRepository
+  App_Blog_PostPreviewFinder --&gt; App_Blog_DraftSlug
   App_Blog_Repositories_PostGetRepository --&gt; App_Blog_Repositories_PostSource
   App_Blog_Repositories_PostGetRepository --&gt; App_Blog_PostSorter
-  App_Blog_Repositories_PostWriteRepository --&gt; App_Blog_Storage_PostFileStorage
-  App_Blog_Repositories_PostWriteRepository --&gt; App_Blog_Markdown_PostFileSerializer
   App_Blog_Repositories_PostSource --&gt; App_Blog_Storage_PostFileStorage
   App_Blog_Repositories_PostSource --&gt; App_Blog_Markdown_PostFileParser
   App_Blog_Repositories_PostSource --&gt; App_Blog_PostFactory
   App_Blog_Repositories_PostSource --&gt; App_Blog_PostFilter
   App_Blog_Storage_PostFileStorage --&gt; App_Blog_DraftSlug
-  App_Blog_Markdown_PostFileSerializer --&gt; App_Markdown_FrontMatterSerializer
   App_Blog_Markdown_PostFileParser --&gt; App_Markdown_FrontMatterParser
   App_Blog_Markdown_PostFileParser --&gt; App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter
   App_Blog_Markdown_PostFileParser --&gt; App_Blog_PostReadTimeCalculator
