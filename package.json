@@ -2,6 +2,13 @@
     "$schema": "https://www.schemastore.org/package.json",
     "private": true,
     "type": "module",
+    "devEngines": {
+        "runtime": {
+            "name": "node",
+            "version": "^24",
+            "onFail": "error"
+        }
+    },
     "scripts": {
         "build": "vite build",
         "dev": "vite"
