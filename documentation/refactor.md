@@ -1,7 +1,7 @@
 # Refactor backlog
 
 Open points from the architecture review of 2026-10-20, in the recommended
-order. Review candidates 1–4 are done:
+order. Done so far:
 
 | Candidate | Commits |
 |---|---|
@@ -9,6 +9,7 @@ order. Review candidates 1–4 are done:
 | Rendered HTML read with CSS selectors | `a6aa377`, `b432018` |
 | Prose Markdown converter moved to `App\Markdown` (ADR 0009) | `f1b1d5d`, `7fe9344`, `ddd4526` |
 | Slug-collision rule moved behind the Blog and Pages write repositories | `ddf44c9` |
+| Pages drawn as a bounded domain in the module map | `5a93232` |
 
 ## 1. Unit tests for the Livewire admin components
 
@@ -31,19 +32,7 @@ that need a unit test, or are an exempt part of the delivery layer. If they're
 exempt, record that as a rule in `.ai/rules/` so the next review doesn't raise
 it again. Light track either way.
 
-## 2. Pages is missing from the module map
-
-**Files:** `documentation/architecture/generate.php`
-
-**Problem:** the `BANDS` constant has no `Pages` entry, and the generated
-`modules.html`, `anatomy.html`, `dependencies.html` and `index.html` leave the
-Pages domain out. It appears only in `flows.html`.
-
-**Proposal:** add `'Pages' => 'domain'` to `BANDS`, run
-`php documentation/architecture/generate.php`, and check that Pages shows up
-on every page. Light track.
-
-## 3. The disk-faking test helpers are misnamed
+## 2. The disk-faking test helpers are misnamed
 
 **Files:** `tests/Helpers/{Blog, Pages, Microblog}.php`, plus the 26
 acceptance test files that call them
@@ -60,7 +49,7 @@ about-me section from.
 **Decide first:** the rename edits files in `tests/Feature/` and
 `tests/Browser/`, which CLAUDE.md asks you to approve before they change.
 
-## 4. One shared core for Blog and Pages
+## 3. One shared core for Blog and Pages
 
 **Files:** `app/Blog` and `app/Pages`. The twin modules are `DraftSlug`,
 `{Post,Page}FileStorage`, `{Post,Page}Filter`, `{Post,Page}Source`,
@@ -87,7 +76,7 @@ factory and a sort order.
 - Do point 1 first, so the forms have unit tests before their collaborators
   move.
 
-## 5. Collapse the pass-through repository stack
+## 4. Collapse the pass-through repository stack
 
 **Files:** `app/{About, Blog, Microblog, Pages, Scratchpad}/Repositories/*.php`
 (18 modules) and their unit tests
@@ -103,4 +92,4 @@ modules and their unit tests.
 **Decide first:** this contradicts the house style in
 `.claude/skills/feature-development/SKILL.md`, which says to "re-unify behind
 a logic-free facade". Adopting it means rewriting that section of the skill.
-It pays off mostly together with point 4.
+It pays off mostly together with point 3.
