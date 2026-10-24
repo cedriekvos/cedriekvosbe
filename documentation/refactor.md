@@ -10,29 +10,9 @@ order. Done so far:
 | Prose Markdown converter moved to `App\Markdown` (ADR 0009) | `f1b1d5d`, `7fe9344`, `ddd4526` |
 | Slug-collision rule moved behind the Blog and Pages write repositories | `ddf44c9` |
 | Pages drawn as a bounded domain in the module map | `5a93232` |
+| Unit tests for the Livewire admin components | `0bd1e4f` |
 
-## 1. Unit tests for the Livewire admin components
-
-**Files:** `app/Livewire/Admin/{AboutForm, MessageForm, MessageIndex, PageForm, PageIndex, PostForm, PostIndex, ScratchpadForm}.php`
-
-**Problem:** none of the eight components has a unit test with `covers()`.
-Line coverage still reads 100% because Feature tests exercise them, but
-mutation testing only mutates classes a test covers, so their code is never
-mutation-tested. A forced run on `PostForm` and `PageForm` leaves 18
-mutations untested. The `feature-development` skill asks for one unit test
-per production class.
-
-**Proposal:** add `tests/Unit/Livewire/Admin/{Component}Test.php` with
-`covers()` for each component. Test the component's own logic (validation
-rules, the create and update paths, the 404 on an unknown slug) with
-`Livewire::test()`.
-
-**Decide first:** whether Livewire components count as production classes
-that need a unit test, or are an exempt part of the delivery layer. If they're
-exempt, record that as a rule in `.ai/rules/` so the next review doesn't raise
-it again. Light track either way.
-
-## 2. The disk-faking test helpers are misnamed
+## 1. The disk-faking test helpers are misnamed
 
 **Files:** `tests/Helpers/{Blog, Pages, Microblog}.php`, plus the 26
 acceptance test files that call them
@@ -49,7 +29,7 @@ about-me section from.
 **Decide first:** the rename edits files in `tests/Feature/` and
 `tests/Browser/`, which CLAUDE.md asks you to approve before they change.
 
-## 3. One shared core for Blog and Pages
+## 2. One shared core for Blog and Pages
 
 **Files:** `app/Blog` and `app/Pages`. The twin modules are `DraftSlug`,
 `{Post,Page}FileStorage`, `{Post,Page}Filter`, `{Post,Page}Source`,
@@ -73,10 +53,8 @@ factory and a sort order.
 - `App\Markdown` would reach `Storage`, which `tests/Architecture/DomainTest.php`
   limits to `App\*\Storage`, and `NamingTest.php` lists the storage and
   repository namespaces. Both need changes you approve first.
-- Do point 1 first, so the forms have unit tests before their collaborators
-  move.
 
-## 4. Collapse the pass-through repository stack
+## 3. Collapse the pass-through repository stack
 
 **Files:** `app/{About, Blog, Microblog, Pages, Scratchpad}/Repositories/*.php`
 (18 modules) and their unit tests
@@ -92,4 +70,4 @@ modules and their unit tests.
 **Decide first:** this contradicts the house style in
 `.claude/skills/feature-development/SKILL.md`, which says to "re-unify behind
 a logic-free facade". Adopting it means rewriting that section of the skill.
-It pays off mostly together with point 3.
+It pays off mostly together with point 2.
