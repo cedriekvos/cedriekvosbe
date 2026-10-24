@@ -74,7 +74,11 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@audit:stale-ignores"
+        ],
+        "audit:stale-ignores": [
+            "@php -r '$ignored = array_keys(json_decode(file_get_contents(\"composer.json\"), true)[\"config\"][\"policy\"][\"abandoned\"][\"ignore\"] ?? []); $lock = json_decode(file_get_contents(\"composer.lock\"), true); $abandoned = array_column(array_filter([...$lock[\"packages\"], ...$lock[\"packages-dev\"]], fn (array $package): bool => ($package[\"abandoned\"] ?? false) !== false), \"name\"); $stale = array_diff($ignored, $abandoned); array_walk($stale, fn (string $name) => fwrite(STDERR, $name . \" is no longer an installed abandoned package: remove it from config.policy.abandoned.ignore in composer.json.\" . PHP_EOL)); exit($stale === [] ? 0 : 1);'"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
@@ -90,6 +94,7 @@
         "qa": [
             "Composer\\Config::disableProcessTimeout",
             "composer validate",
+            "@audit:stale-ignores",
             "./vendor/bin/rector process --dry-run --clear-cache",
             "./vendor/bin/pint --test --cache-file=/dev/null",
             "./vendor/bin/phpstan clear-result-cache",
@@ -107,6 +112,7 @@
         "qa:fast": [
             "Composer\\Config::disableProcessTimeout",
             "composer validate",
+            "@audit:stale-ignores",
             "npm run build",
             "./vendor/bin/rector process --dry-run",
             "./vendor/bin/pint --test",
@@ -142,6 +148,13 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "policy": {
+            "abandoned": {
+                "ignore": {
+                    "symplify/rule-doc-generator-contracts": "Dev-only, interfaces only; required by driftingly/rector-laravel, which has no release without it yet."
+                }
+            }
         }
     },
     "minimum-stability": "stable",
