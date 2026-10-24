@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.3] - 2026-10-24
+
+Internal work only: the admin components get unit tests, npm insists on
+Node 24, and the Dutch `leesmij` notes are cut back to their essence. The site
+itself is unchanged.
+
+### Added
+
+- **Tests** — a unit test for each of the eight Livewire components in
+  `app/Livewire/Admin`, so mutation testing now reaches them. Every component
+  scores 100%.
+
+### Changed
+
+- **Build** — `package.json` requires Node 24 through `devEngines.runtime`, so
+  npm stops with `EBADDEVENGINES` before `install`, `ci` and `run` on any other
+  major. Node 24 was only implied by the Sail Dockerfile and the Buddy image;
+  a new Node major now means updating all three together.
+- **Admin** — the post, page and message forms drop the validation rules their
+  typed properties already enforce (`string`, `boolean`, `nullable`, and the
+  `isDraft` and `isFeatured` entries). Saving a post reads `isFeatured` from
+  the property, like `isDraft`. What the forms accept and reject is unchanged.
+- **Documentation** — the module map draws Pages as a bounded domain next to
+  the other four instead of filing `App\Pages` under Platform, so every
+  dependency arrow points downward.
+- **Documentation** — every Dutch `leesmij` is cut back to a short intro and
+  one bullet per decision, from about 9,800 words to 2,900. The
+  `feature-specifier` skill and a new rule in `.ai/rules/leesmij.md` keep new
+  ones that short.
+- `documentation/refactor.md` lists the module map and the admin unit tests
+  under done work.
+
 ## [1.7.2] - 2026-10-24
 
 Maintenance: a Livewire security advisory is cleared, every Composer and npm
@@ -326,7 +358,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.2...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.3...HEAD
+[1.7.3]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.2...1.7.3
 [1.7.2]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.1...1.7.2
 [1.7.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.0...1.7.1
 [1.7.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.6.0...1.7.0
