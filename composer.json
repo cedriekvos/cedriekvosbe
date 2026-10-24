@@ -8,7 +8,13 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/cedriekvos/laravel-composer-audit"
+            "url": "https://github.com/cedriekvos/laravel-composer-audit",
+            "no-api": true,
+            "_comment": [
+                "This entry exists because the package is not on Packagist.",
+                "no-api makes composer update and outdated read its versions from a git clone over HTTPS instead of the GitHub API, whose anonymous limit of 60 requests an hour runs out after a few runs.",
+                "composer update therefore needs git; composer install does not, because it downloads the zip recorded in composer.lock."
+            ]
         }
     ],
     "require": {
