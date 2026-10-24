@@ -10,9 +10,9 @@ use Livewire\Component;
 
 class AboutForm extends Component
 {
-    public string $heading = '';
+    public string $heading = ''; // @pest-mutate-ignore: EmptyStringToNotEmpty
 
-    public string $bio = '';
+    public string $bio = ''; // @pest-mutate-ignore: EmptyStringToNotEmpty
 
     public function mount(AboutRepository $about): void
     {

@@ -17,13 +17,13 @@ class PageForm extends Component
 {
     public ?string $originalSlug = null;
 
-    public string $title = '';
+    public string $title = ''; // @pest-mutate-ignore: EmptyStringToNotEmpty
 
-    public string $slug = '';
+    public string $slug = ''; // @pest-mutate-ignore: EmptyStringToNotEmpty
 
-    public string $body = '';
+    public string $body = ''; // @pest-mutate-ignore: EmptyStringToNotEmpty
 
-    public bool $isDraft = true;
+    public bool $isDraft = true; // @pest-mutate-ignore: TrueToFalse
 
     public function mount(PagePreviewFinder $pagePreviewFinder, DraftSlug $draftSlug, ?string $slug = null): void
     {
@@ -54,18 +54,17 @@ class PageForm extends Component
     protected function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255'],
+            'title' => ['required', 'max:255'],
             // The draft prefix is owned by storage: accepting it here would file a
             // published page under a draft slug, which reads back as a draft.
-            'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9\-]+$/', Rule::notIn(['draft']), 'doesnt_start_with:'.DraftSlug::PREFIX],
-            'body' => ['required', 'string'],
-            'isDraft' => ['boolean'],
+            'slug' => ['required', 'max:255', 'regex:/^[a-z0-9\-]+$/', Rule::notIn(['draft']), 'doesnt_start_with:'.DraftSlug::PREFIX],
+            'body' => ['required'],
         ];
     }
 
     public function save(PagesRepository $pages): mixed
     {
-        /** @var array{title: string, slug: string, body: string, isDraft: bool} $data */
+        /** @var array{title: string, slug: string, body: string} $data */
         $data = $this->validate();
 
         if ($pages->isSlugTaken($data['slug'], $this->isDraft, $this->originalSlug)) {

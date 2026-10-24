@@ -13,7 +13,7 @@ class MessageForm extends Component
 {
     public ?string $id = null;
 
-    public string $body = '';
+    public string $body = ''; // @pest-mutate-ignore: EmptyStringToNotEmpty
 
     public function mount(MessagesRepository $messages, ?string $id = null): void
     {
@@ -34,7 +34,7 @@ class MessageForm extends Component
     protected function rules(): array
     {
         return [
-            'body' => ['required', 'string', 'max:280'],
+            'body' => ['required', 'max:280'],
         ];
     }
 

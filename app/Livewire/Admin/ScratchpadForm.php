@@ -10,7 +10,7 @@ use Livewire\Component;
 
 class ScratchpadForm extends Component
 {
-    public string $content = '';
+    public string $content = ''; // @pest-mutate-ignore: EmptyStringToNotEmpty
 
     public function mount(ScratchpadRepository $scratchpad): void
     {

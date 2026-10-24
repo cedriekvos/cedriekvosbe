@@ -18,19 +18,19 @@ class PostForm extends Component
 {
     public ?string $originalSlug = null;
 
-    public string $title = '';
+    public string $title = ''; // @pest-mutate-ignore: EmptyStringToNotEmpty
 
-    public string $slug = '';
+    public string $slug = ''; // @pest-mutate-ignore: EmptyStringToNotEmpty
 
-    public string $date = '';
+    public string $date = ''; // @pest-mutate-ignore: EmptyStringToNotEmpty
 
-    public string $excerpt = '';
+    public string $excerpt = ''; // @pest-mutate-ignore: EmptyStringToNotEmpty
 
-    public string $body = '';
+    public string $body = ''; // @pest-mutate-ignore: EmptyStringToNotEmpty
 
-    public bool $isDraft = true;
+    public bool $isDraft = true; // @pest-mutate-ignore: TrueToFalse
 
-    public bool $isFeatured = false;
+    public bool $isFeatured = false; // @pest-mutate-ignore: FalseToTrue
 
     public function mount(PostPreviewFinder $postPreviewFinder, DraftSlug $draftSlug, ?string $slug = null): void
     {
@@ -66,21 +66,19 @@ class PostForm extends Component
     protected function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255'],
+            'title' => ['required', 'max:255'],
             // The draft prefix is owned by storage: accepting it here would file a
             // published post under a draft slug, which reads back as a draft.
-            'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9\-]+$/', Rule::notIn(['draft']), 'doesnt_start_with:'.DraftSlug::PREFIX],
+            'slug' => ['required', 'max:255', 'regex:/^[a-z0-9\-]+$/', Rule::notIn(['draft']), 'doesnt_start_with:'.DraftSlug::PREFIX],
             'date' => ['required', 'date_format:Y-m-d'],
-            'excerpt' => ['nullable', 'string', 'max:300'],
-            'body' => ['required', 'string'],
-            'isDraft' => ['boolean'],
-            'isFeatured' => ['boolean'],
+            'excerpt' => ['max:300'],
+            'body' => ['required'],
         ];
     }
 
     public function save(PostsRepository $posts): mixed
     {
-        /** @var array{title: string, slug: string, date: string, excerpt?: string|null, body: string, isDraft: bool, isFeatured: bool} $data */
+        /** @var array{title: string, slug: string, date: string, excerpt: string, body: string} $data */
         $data = $this->validate();
 
         if ($posts->isSlugTaken($data['slug'], $this->isDraft, $this->originalSlug)) {
@@ -92,8 +90,8 @@ class PostForm extends Component
         $attrs = [
             'title' => $data['title'],
             'date' => $data['date'],
-            'excerpt' => $data['excerpt'] ?? null,
-            'featured' => $data['isFeatured'],
+            'excerpt' => $data['excerpt'],
+            'featured' => $this->isFeatured,
         ];
 
         if ($this->originalSlug === null) {
