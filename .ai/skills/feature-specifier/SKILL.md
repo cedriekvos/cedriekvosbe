@@ -17,9 +17,13 @@ written, and don't touch `app/` or `tests/` while you are in it.
 For each feature, produce two complementary artefacts:
 
 1. **Dutch explanatory document** at `documentation/leesmij/{domain}/{feature}.md`
-   — prose that captures the *why*: business motivation, alternatives
-   considered, trade-offs, edge-case rationale. Write native Dutch, not
-   translated English. Do not restate the Gherkin.
+   — a short note that captures the *why*: an intro of one or two sentences,
+   then one bullet per decision with its reason in a sentence or two. Name a
+   rejected alternative only when it explains the choice. Keep it to the
+   essence: no history or process narration (task numbers, "tot nu toe", earlier
+   rounds), no class names or file paths, and do not restate the Gherkin. When
+   the behavior changes, rewrite the note to the current state rather than
+   appending a section. Write native Dutch, not translated English.
 2. **Gherkin specification** at `documentation/features/{domain}/{feature}.feature`
    — formal English scenarios that pin down *what* must be true.
 
