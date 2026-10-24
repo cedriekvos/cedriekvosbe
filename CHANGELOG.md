@@ -7,6 +7,62 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.2] - 2026-10-24
+
+Maintenance: a Livewire security advisory is cleared, every Composer and npm
+dependency is on its latest minor or patch release, and `composer audit`,
+`composer outdated` and the browser tests run cleanly again. The site itself
+is unchanged.
+
+### Added
+
+- **Composer** — `composer audit:stale-ignores` fails as soon as a package on
+  the abandoned-package ignore list is no longer installed or no longer
+  abandoned, so the ignore is removed once it is no longer needed. It runs
+  after every `composer update`, `require` and `remove`, and in `qa` and
+  `qa:fast`.
+- **Tests** — `composer playwright:install` installs the Chromium build the
+  installed Playwright needs and takes about a second when it is already
+  there. `setup`, `test`, `qa` and `qa:fast` run it first, so the browser
+  tests no longer fail after a Playwright update or an `npm ci`, which remove
+  the browsers from `node_modules`.
+
+### Changed
+
+- **Dependencies** — every Composer and npm package moves to its latest
+  release within the existing constraints; `composer.json` and `package.json`
+  keep their ranges. Among others: Laravel 13.34.0 to 13.38.0, Pest 5.1.3 to
+  5.3.3, Vite 8.2.2 to 8.3.5, Tailwind CSS 4.2.2 to 4.3.3 and Playwright
+  1.61.1 to 1.64.1.
+- **Composer** — `composer audit` ignores the abandoned
+  `symplify/rule-doc-generator-contracts`, a dev-only package of interfaces
+  that `driftingly/rector-laravel` still requires, so the audit passes again.
+- **Composer** — the versions of `cedriekvos/laravel-composer-audit`, which is
+  not on Packagist, are read from a git clone over HTTPS (`no-api`) instead of
+  the GitHub API, whose anonymous limit of 60 requests an hour ran out after a
+  few `composer update` and `composer outdated` runs. `composer update` now
+  needs git; `composer install` and the deploy still download the zip from
+  `composer.lock`.
+- **Agent workflow** — the instruction to record durable rules with Boost's
+  `record-rule` moved into `.ai/guidelines/workflow.md`, because Boost 2.10
+  dropped it from the guidelines it generates.
+
+### Security
+
+- **Livewire** updated from 4.4.4 to 4.4.8, clearing PKSA-xhv3-nr94-h8db
+  (GHSA-mhf7-xp6r-6qrc, medium, affecting 4.3.0 up to 4.4.7): an
+  authorization bypass in the `#[Authorize]` attribute through reordered
+  parameter keys and the execution order of `#[Json]`. The site uses neither
+  attribute, and its admin components sit behind the `auth` middleware on
+  their routes, so it was not exposed.
+- **Frontend build tooling** — the npm update clears the advisories in
+  `shell-quote` through `concurrently` (critical), and in Vite and
+  `source-map-js` (high). They affect the development server and the build,
+  not the deployed site. One moderate advisory remains open:
+  `postcss-selector-parser` (GHSA-rj75-hqrm-r3gf), which
+  `@tailwindcss/typography` pins to 6.0.10 with no fixed release yet. It only
+  parses the project's own CSS during the build.
+
 ## [1.7.1] - 2026-10-20
 
 Internal clean-up from an architecture review: the test helpers, the Markdown
@@ -270,7 +326,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.1...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.2...HEAD
+[1.7.2]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.1...1.7.2
 [1.7.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.0...1.7.1
 [1.7.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.6.0...1.7.0
 [1.6.0]: https://github.com/cedriekvos/cedriekvosbe/compare/1.5.0...1.6.0
