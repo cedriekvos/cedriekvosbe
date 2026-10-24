@@ -198,7 +198,7 @@ function buildIndex(array $classes, array $byDomain, array $edges): string
 
     $body = section('At a glance', 'A flat-file Laravel application', implode("\n", [
         '<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">'.$statCards.'</div>',
-        paragraph('There is no content database. Every post, message, bio and scratchpad note is a Markdown file on disk, read and written through a per-domain repository. The '.count($domains).' bounded domains are '.$domainList.'; they share one kernel, '.code('App\Markdown').', and each exposes a single repository facade to the layer above.'),
+        paragraph('There is no content database. Every post, page, message, bio and scratchpad note is a Markdown file on disk, read and written through a per-domain repository. The '.count($domains).' bounded domains are '.$domainList.'; they share one kernel, '.code('App\Markdown').', and each exposes a single repository facade to the layer above.'),
         paragraph('The whole thing runs on '.count($packages).' runtime packages: '.$packageList.'.'),
         $overview,
     ]))."\n\n".section('Where to go', 'Four views, four questions', '<div class="grid sm:grid-cols-2 gap-3">'.$guideCards.'</div>');
