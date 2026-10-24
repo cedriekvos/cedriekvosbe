@@ -65,6 +65,7 @@
             "@php artisan key:generate",
             "@php artisan migrate --force",
             "npm install --ignore-scripts",
+            "@playwright:install",
             "npm run build"
         ],
         "dev": [
@@ -73,6 +74,7 @@
         ],
         "test": [
             "@php artisan config:clear --ansi @no_additional_args",
+            "@playwright:install",
             "@php artisan test"
         ],
         "post-autoload-dump": [
@@ -112,6 +114,7 @@
             "./vendor/bin/pest --exclude-testsuite=Browser --type-coverage --min=100",
             "./vendor/bin/pest --exclude-testsuite=Browser --mutate --min=100 --no-cache",
             "npm run build",
+            "@playwright:install",
             "./vendor/bin/pest --testsuite=Browser",
             "echo QA passed"
         ],
@@ -123,6 +126,7 @@
             "./vendor/bin/rector process --dry-run",
             "./vendor/bin/pint --test",
             "./vendor/bin/phpstan analyse",
+            "@playwright:install",
             "./vendor/bin/pest --parallel --tia",
             "./vendor/bin/pest --parallel --exclude-testsuite=Browser --coverage --min=100",
             "./vendor/bin/pest --parallel --exclude-testsuite=Browser --type-coverage --min=100",
@@ -132,6 +136,9 @@
             "./vendor/bin/rector process",
             "./vendor/bin/pint",
             "echo QA fixed"
+        ],
+        "playwright:install": [
+            "npx playwright install chromium"
         ],
         "phpmd:install": [
             "curl -sSLf -o bin/phpmd.phar https://github.com/phpmd/phpmd/releases/download/2.15.0/phpmd.phar",

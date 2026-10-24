@@ -53,7 +53,7 @@ is defined in `docker/8.4/` and the services in `compose.yaml`.
 ## Getting started
 
 ```bash
-composer setup     # install, .env, key, migrate, npm install, npm run build
+composer setup     # install, .env, key, migrate, npm install, Playwright's Chromium, npm run build
 php artisan db:seed   # local only: creates the editor account
 composer dev       # serve + queue worker + logs + vite, all at once
 ```
@@ -93,7 +93,10 @@ Four Pest suites, split so each can run alone:
 
 - `Unit` — domain classes in isolation
 - `Feature` — HTTP and Livewire behaviour
-- `Browser` — real-browser journeys via Playwright (`npx playwright install` once)
+- `Browser` — real-browser journeys via Playwright. `composer setup`, `test`, `qa` and
+  `qa:fast` first run `composer playwright:install`, which fetches the Chromium build the
+  installed Playwright needs and takes about a second when it is already there. Run it
+  yourself after a Playwright update if you call Pest or `php artisan test` directly.
 - `Architecture` — layer boundaries, naming, and the PHP/security/Laravel presets
 
 ```bash
