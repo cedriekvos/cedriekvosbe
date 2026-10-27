@@ -4,11 +4,13 @@
 declare(strict_types=1);
 
 /**
- * Generates documentation/architecture/*.html from the source in app/.
+ * Generates documentation/architecture/*.html from the source in app/, and the
+ * feature trace from the specs, leesmij and acceptance tests.
  *
  * The pages are committed so they open with no build step, but every fact on
- * them — every class, edge, layer and vendor touch point — is parsed out of
- * app/ at generation time. Re-run after a refactor and the map stays honest.
+ * them — every class, edge, layer and vendor touch point, every scenario and
+ * the test that checks it — is parsed out of the repository at generation time.
+ * Re-run after a refactor or a spec change and the map stays honest.
  *
  * Usage: php documentation/architecture/generate.php [--dump]
  */
@@ -525,9 +527,33 @@ const PAGES = [
     'anatomy.html' => 'Domain anatomy',
     'flows.html' => 'Flow traces',
     'dependencies.html' => 'Dependency graph',
+    'features.html' => 'Feature trace',
 ];
 
-function shell(string $current, string $heading, string $lede, string $body): string
+/** What the code pages are generated from. */
+const APP_SOURCE = ['label' => 'app/', 'paths' => ['app', 'routes']];
+
+/**
+ * The pages are stamped with the last commit that touched the sources they
+ * describe, not with HEAD or today's date. Stamping HEAD would dirty every page
+ * on any commit anywhere in the repo; this way the output is a pure function of
+ * its sources, and a regenerated page only differs when the map really has.
+ *
+ * @param  array{label:string, paths:list<string>}  $source
+ */
+function sourceStamp(array $source): string
+{
+    $paths = implode(' ', array_map(escapeshellarg(...), $source['paths']));
+    $commit = trim((string) shell_exec(
+        'git -C '.escapeshellarg(ROOT).' log -1 --format=%h%x20%ad --date=short -- '.$paths.' 2>/dev/null'
+    )) ?: 'unknown';
+    $parts = explode(' ', $commit);
+
+    return ($parts[1] ?? '').' · '.$source['label'].' @ '.$parts[0];
+}
+
+/** @param array{label:string, paths:list<string>} $source */
+function shell(string $current, string $heading, string $lede, string $body, array $source = APP_SOURCE): string
 {
     $title = PAGES[$current];
     $nav = '';
@@ -538,8 +564,10 @@ function shell(string $current, string $heading, string $lede, string $body): st
             : '<a href="'.$file.'" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">'.h($label).'</a>';
     }
 
-    $parts = explode(' ', SOURCE_COMMIT);
-    $stamp = h(($parts[1] ?? '').' · app/ @ '.$parts[0]);
+    $stamp = h(sourceStamp($source));
+    $paths = array_map(static fn (string $path): string => '<code class="font-mono">'.h($path).'/</code>', $source['paths']);
+    $last = array_pop($paths);
+    $generatedFrom = $paths === [] ? $last : implode(', ', $paths).' and '.$last;
 
     return <<<HTML
     <!doctype html>
@@ -558,6 +586,8 @@ function shell(string $current, string $heading, string $lede, string $body): st
           html { scroll-behavior: smooth; }
           .mermaid { display: flex; justify-content: center; }
           .mermaid svg { max-width: 100%; height: auto; }
+          summary { list-style: none; }
+          summary::-webkit-details-marker { display: none; }
         </style>
       </head>
       <body class="bg-stone-50 text-slate-900 font-sans antialiased">
@@ -576,7 +606,7 @@ function shell(string $current, string $heading, string $lede, string $body): st
     {$body}
 
           <footer class="border-t border-slate-200 pt-6 text-xs text-slate-400 leading-relaxed space-y-1">
-            <p>Generated from <code class="font-mono">app/</code> and <code class="font-mono">routes/</code> by <code class="font-mono">documentation/architecture/generate.php</code>. Do not hand-edit — re-run the script instead.</p>
+            <p>Generated from {$generatedFrom} by <code class="font-mono">documentation/architecture/generate.php</code>. Do not hand-edit — re-run the script instead.</p>
             <p>Related: <a class="underline underline-offset-2 decoration-slate-300 hover:text-slate-600" href="../decisions/index.html">Architecture Decision Records</a> · <code class="font-mono">documentation/features/</code> · <code class="font-mono">documentation/leesmij/</code></p>
           </footer>
         </main>
@@ -603,16 +633,6 @@ function section(string $label, string $heading, string $inner): string
 
 // ------------------------------------------------------------------- entry --
 
-/**
- * The pages are stamped with the last commit that touched the sources they
- * describe, not with HEAD or today's date. Stamping HEAD would dirty every page
- * on any commit anywhere in the repo; this way the output is a pure function of
- * app/ and routes/, and a regenerated page only differs when the map really has.
- */
-define('SOURCE_COMMIT', trim((string) shell_exec(
-    'git -C '.escapeshellarg(ROOT).' log -1 --format=%h%x20%ad --date=short -- app routes 2>/dev/null'
-)) ?: 'unknown');
-
 $classes = scanClasses();
 $routes = routeMap();
 
@@ -633,6 +653,7 @@ if (in_array('--dump', $argv, true)) {
 }
 
 require __DIR__.'/pages.php';
+require __DIR__.'/features.php';
 
 if (! is_dir(OUT)) {
     mkdir(OUT, 0755, true);

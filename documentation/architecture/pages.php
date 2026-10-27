@@ -56,6 +56,7 @@ function buildPages(array $classes, array $routes): array
         'anatomy.html' => buildAnatomy($classes, $byDomain),
         'flows.html' => buildFlows($classes, $routes),
         'dependencies.html' => buildDependencies($classes, $byDomain, $inbound),
+        'features.html' => buildFeatureTrace(),
     ];
 }
 
@@ -180,6 +181,7 @@ function buildIndex(array $classes, array $byDomain, array $edges): string
         ['anatomy.html', 'Domain anatomy', 'Once I understand one domain, do I understand them all?', 'Mostly yes — the same value-object → repository → storage slice repeats. The interesting part is the slots each domain leaves empty.'],
         ['flows.html', 'Flow traces', 'What actually happens when someone hits a URL?', 'Every route and scheduled command, traced through the objects the container wires up behind it.'],
         ['dependencies.html', 'Dependency graph', 'What breaks if I change this class or drop this package?', 'Class-level fan-in and fan-out, plus the blast radius of each composer package.'],
+        ['features.html', 'Feature trace', 'Is every behavior explained, specified and tested?', 'Each feature from its Dutch leesmij to its Gherkin scenarios to the acceptance tests that check them — and every place that chain breaks.'],
     ];
 
     $guideCards = '';
@@ -201,12 +203,12 @@ function buildIndex(array $classes, array $byDomain, array $edges): string
         paragraph('There is no content database. Every post, page, message, bio and scratchpad note is a Markdown file on disk, read and written through a per-domain repository. The '.count($domains).' bounded domains are '.$domainList.'; they share one kernel, '.code('App\Markdown').', and each exposes a single repository facade to the layer above.'),
         paragraph('The whole thing runs on '.count($packages).' runtime packages: '.$packageList.'.'),
         $overview,
-    ]))."\n\n".section('Where to go', 'Four views, four questions', '<div class="grid sm:grid-cols-2 gap-3">'.$guideCards.'</div>');
+    ]))."\n\n".section('Where to go', 'Five views, five questions', '<div class="grid sm:grid-cols-2 gap-3">'.$guideCards.'</div>');
 
     return shell(
         'index.html',
         'Architecture',
-        'A map of this codebase for reading rather than browsing — what the pieces are, how one domain is shaped, what happens on a request, and what depends on what. Every page is generated from the source.',
+        'A map of this codebase for reading rather than browsing — what the pieces are, how one domain is shaped, what happens on a request, what depends on what, and which behavior is specified and tested. Every page is generated from the source.',
         $body
     );
 }
