@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.4] - 2026-10-27
+
+Deployment and setup only: the production pipeline moves from Buddy's web
+interface into the repository, and new installs default to file sessions. The
+site itself is unchanged.
+
+### Added
+
+- **Deployment** — `.buddy/deploy-production.yml` defines the production
+  pipeline: build the assets, rsync them to the server, then run
+  `composer install`, the migrations and the Laravel caches over SSH. Buddy
+  autodiscovers it, so the repository replaces the pipeline configured in the
+  web interface as the source of truth. The `cedriekvosbe-production` target
+  stays in Buddy with its host, path and SSH key.
+
+### Changed
+
+- **Setup** — `.env.example` sets `SESSION_DRIVER=file` instead of
+  `database`. Public pages never use the session, yet the database driver gave
+  every visitor and crawler a row in the SQLite sessions table; measured
+  locally, file sessions cut `/login` from 77 to 24 ms and the homepage from
+  137 to 79 ms. Existing `.env` files keep their driver; only a new install
+  through `composer setup` picks this up.
+
 ## [1.7.3] - 2026-10-24
 
 Internal work only: the admin components get unit tests, npm insists on
@@ -358,7 +382,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.3...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.4...HEAD
+[1.7.4]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.3...1.7.4
 [1.7.3]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.2...1.7.3
 [1.7.2]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.1...1.7.2
 [1.7.1]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.0...1.7.1
