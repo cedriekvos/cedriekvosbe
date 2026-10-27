@@ -12,7 +12,10 @@ declare(strict_types=1);
  * the test that checks it — is parsed out of the repository at generation time.
  * Re-run after a refactor or a spec change and the map stays honest.
  *
- * Usage: php documentation/architecture/generate.php [--dump]
+ * Usage: php documentation/architecture/generate.php [--dump|--check]
+ *
+ * --check writes nothing: it exits non-zero when a committed page differs from
+ * what the sources generate now, which is how composer qa keeps them current.
  */
 const ROOT = __DIR__.'/../../';
 const OUT = __DIR__.'/';
@@ -598,7 +601,7 @@ function shell(string $current, string $heading, string $lede, string $body, arr
           <header class="space-y-4">
             <div class="flex items-baseline justify-between flex-wrap gap-2">
               <h1 class="font-serif text-4xl tracking-tight">{$heading}</h1>
-              <span class="font-mono text-xs text-slate-400">{$stamp}</span>
+              <span data-stamp class="font-mono text-xs text-slate-400">{$stamp}</span>
             </div>
             <p class="text-slate-600 leading-relaxed max-w-3xl">{$lede}</p>
           </header>
@@ -613,6 +616,15 @@ function shell(string $current, string $heading, string $lede, string $body, arr
       </body>
     </html>
     HTML;
+}
+
+/**
+ * The stamp names the last commit that touched a page's sources, so it changes
+ * the moment a regenerated page is committed. --check compares everything else.
+ */
+function withoutStamp(string $html): string
+{
+    return (string) preg_replace('/<span data-stamp[^>]*>[^<]*<\/span>/', '<span data-stamp></span>', $html);
 }
 
 function mermaid(string $definition): string
@@ -655,11 +667,35 @@ if (in_array('--dump', $argv, true)) {
 require __DIR__.'/pages.php';
 require __DIR__.'/features.php';
 
+$pages = array_map(static fn (string $html): string => $html."\n", buildPages($classes, $routes));
+
+if (in_array('--check', $argv, true)) {
+    $stale = array_keys(array_filter(
+        $pages,
+        static fn (string $html, string $file): bool => ! is_file(OUT.$file) || withoutStamp((string) file_get_contents(OUT.$file)) !== withoutStamp($html),
+        ARRAY_FILTER_USE_BOTH,
+    ));
+
+    foreach ($stale as $file) {
+        echo "out of date: documentation/architecture/{$file}\n";
+    }
+
+    if ($stale !== []) {
+        echo "Run php documentation/architecture/generate.php and commit the pages it writes.\n";
+
+        exit(1);
+    }
+
+    echo "documentation/architecture is up to date\n";
+
+    exit(0);
+}
+
 if (! is_dir(OUT)) {
     mkdir(OUT, 0755, true);
 }
 
-foreach (buildPages($classes, $routes) as $file => $html) {
-    file_put_contents(OUT.$file, $html."\n");
+foreach ($pages as $file => $html) {
+    file_put_contents(OUT.$file, $html);
     echo "wrote documentation/architecture/{$file}\n";
 }
