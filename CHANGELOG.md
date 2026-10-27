@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.6] - 2026-10-27
+
+Documentation and QA only: the architecture site traces every feature from its
+`leesmij` to its tests, and QA fails when that chain breaks or a generated page
+goes stale. The site itself is unchanged.
+
+### Added
+
+- **Documentation** — a Feature trace tab on the architecture site follows each
+  feature from its Dutch `leesmij`, through its Gherkin scenarios, to the
+  acceptance tests that check them, down to each test's code. It lists every
+  place the chain breaks, and the acceptance tests no scenario describes. The
+  link from scenario to test is the existing `// x.feature — Scenario: …`
+  comment above each test.
+- **Tests** — `tests/Architecture/FeatureTraceTest.php` fails when a scenario
+  has no test, a test comment names no scenario, a test file matches no spec,
+  a spec and its `leesmij` lack each other, or a `leesmij` links to no
+  feature. `qa:fast` runs it as its own step, outside `--tia`: TIA ignores
+  comment-only edits and would replay its last result after a test is deleted.
+- **QA** — `generate.php --check` fails `qa` and `qa:fast`, and with them the
+  Buddy deploy, when a committed page under `documentation/architecture/`
+  differs from what the sources generate now. A change to `app/`, `routes/`,
+  a spec, a `leesmij` or an acceptance test now regenerates the pages in the
+  same commit. The commit stamp is left out of the comparison.
+- `.ai/rules/features.md` records that a test comment repeats its scenario's
+  title exactly, and that renaming a scenario updates those comments.
+
+### Changed
+
+- **Documentation** — each architecture page is stamped and footed with its own
+  sources, so the feature trace names the specs and tests it was read from
+  instead of `app/`.
+
 ## [1.7.5] - 2026-10-27
 
 Deployment only: the production pipeline runs the full QA before it deploys.
@@ -404,7 +437,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.5...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.6...HEAD
+[1.7.6]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.5...1.7.6
 [1.7.5]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.4...1.7.5
 [1.7.4]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.3...1.7.4
 [1.7.3]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.2...1.7.3
