@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.5] - 2026-10-27
+
+Deployment only: the production pipeline runs the full QA before it deploys.
+The site itself is unchanged.
+
+### Added
+
+- **Deployment** — a `composer qa` action between the asset build and rsync,
+  so a failing check stops the pipeline before anything reaches the server.
+  It runs on Ubuntu 24.04 with PHP 8.4, PCOV and Node 24, like the Sail
+  container, and stops the `playwright run-server` process the browser suite
+  leaves behind, which would otherwise keep the action from finishing.
+- `.ai/rules/buddy.md` records that every Buddy action shares the filesystem
+  rsync uploads, so anything an action creates needs an exclude.
+
+### Changed
+
+- **Deployment** — rsync excludes `/vendor/` and `/bootstrap/cache/*`. The QA
+  run's dev packages and package manifests stay out of production, and rsync
+  no longer deletes the server's `vendor/` before `composer install` puts it
+  back, which left the site failing in between.
+
 ## [1.7.4] - 2026-10-27
 
 Deployment and setup only: the production pipeline moves from Buddy's web
@@ -382,7 +404,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.4...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.5...HEAD
+[1.7.5]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.4...1.7.5
 [1.7.4]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.3...1.7.4
 [1.7.3]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.2...1.7.3
 [1.7.2]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.1...1.7.2
