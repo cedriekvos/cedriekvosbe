@@ -15,6 +15,34 @@
     shell: BASH
     docker_image_name: library/node
     docker_image_tag: "24"
+  - action: composer qa
+    type: BUILD
+    docker_image_name: library/ubuntu
+    docker_image_tag: "24.04"
+    shell: BASH
+    setup_commands: |-
+      export DEBIAN_FRONTEND=noninteractive
+      apt-get update
+      apt-get install -y ca-certificates curl gnupg git unzip procps
+      mkdir -p /etc/apt/keyrings
+      curl -fsSL 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xb8dc7e53946656efbce4c1dd71daeaab4ad4cab6' | gpg --dearmor -o /etc/apt/keyrings/ppa_ondrej_php.gpg
+      echo "deb [signed-by=/etc/apt/keyrings/ppa_ondrej_php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu noble main" > /etc/apt/sources.list.d/ppa_ondrej_php.list
+      curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+      echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_24.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
+      apt-get update
+      apt-get install -y nodejs php8.4-cli php8.4-bcmath php8.4-curl php8.4-gd php8.4-intl php8.4-mbstring php8.4-pcov php8.4-sqlite3 php8.4-xml php8.4-zip
+      echo 'pcov.directory = .' > /etc/php/8.4/cli/conf.d/99-ci.ini
+      curl -fsSL https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+      npx -y playwright install-deps chromium
+    commands: |-
+      export COMPOSER_ALLOW_SUPERUSER=1
+      composer install --no-interaction --no-progress
+      cp .env.example .env
+      php artisan key:generate
+      status=0; composer qa || status=$?; pkill -f '[p]laywright run-server' || true; exit "$status"
+    cached_dirs:
+    - /root/.cache/composer
+    - /root/.cache/ms-playwright
   - action: rsync
     type: RSYNC
     archive: true
@@ -23,6 +51,8 @@
     deployment_excludes:
     - .git
     - .env
+    - /vendor/
+    - /bootstrap/cache/*
     - /node_modules/*
     - /storage/*
     - /database/database.sqlite
