@@ -5,13 +5,17 @@ declare(strict_types=1);
 /**
  * Reads the feature trace: each feature followed from its Dutch leesmij, through
  * its Gherkin scenarios, to the acceptance tests that check them. features.php
- * draws it as a page.
+ * draws it as a page and tests/Architecture/FeatureTraceTest.php fails QA when it
+ * breaks; both read it here, so the two cannot disagree.
  *
  * Nothing links the three but convention. A leesmij and a spec share a path, a
  * test file shares the spec's directory and (in StudlyCase) its name, and each
  * test names its scenario in the comment directly above it:
  *
  *     // post_form.feature — Scenario: Creating a published post
+ *
+ * Namespaced because the test loads it into the Pest process, next to the global
+ * helpers of Pest, Laravel and tests/Helpers/.
  */
 
 namespace Documentation\Architecture;
@@ -97,7 +101,7 @@ function scanFeatureTrace(string $root): array
 /**
  * Every place the leesmij → spec → test chain breaks, plus the acceptance tests
  * that sit outside it. Only the first kind is broken; every kind is listed, empty
- * or not.
+ * or not, so a check can name each one.
  *
  * @param  array{features: array<string, array>, dangling: list<array>, strays: list<string>, testCount: int}  $trace
  * @return list<array{title:string, note:string, broken:bool, items:list<array{feature:?string, ref:string, detail:string}>}>
@@ -175,7 +179,7 @@ function traceGaps(array $trace): array
         ],
         [
             'title' => 'Tests with no scenario',
-            'note' => 'Checked by an acceptance test, described by no scenario. Often deliberate — but the spec does not record them.',
+            'note' => 'Checked by an acceptance test, described by no scenario. Often deliberate, so QA lets them through — but the spec does not record them.',
             'broken' => false,
             'items' => $unlinked,
         ],

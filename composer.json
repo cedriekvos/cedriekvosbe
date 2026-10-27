@@ -126,6 +126,7 @@
             "./vendor/bin/rector process --dry-run",
             "./vendor/bin/pint --test",
             "./vendor/bin/phpstan analyse",
+            "./vendor/bin/pest tests/Architecture/FeatureTraceTest.php",
             "@playwright:install",
             "./vendor/bin/pest --parallel --tia",
             "./vendor/bin/pest --parallel --exclude-testsuite=Browser --coverage --min=100",

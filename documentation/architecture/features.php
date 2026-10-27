@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 /**
  * The Feature trace page for documentation/architecture/generate.php. trace.php
- * reads the leesmij → spec → test chain; this file only draws it.
+ * reads the leesmij → spec → test chain; this file only draws it, so the page
+ * shows exactly what tests/Architecture/FeatureTraceTest.php enforces.
  */
 
 use function Documentation\Architecture\scanFeatureTrace;
@@ -55,7 +56,7 @@ function buildFeatureTrace(): string
     return shell(
         'features.html',
         'Feature trace',
-        'Each feature followed from the Dutch leesmij that says why, through the Gherkin scenarios that say what, to the acceptance tests that check it. The only link from a scenario to its test is the comment above the test — '.code('// post_form.feature — Scenario: …').' — so a renamed scenario or a forgotten test shows up here as a break in the chain.',
+        'Each feature followed from the Dutch leesmij that says why, through the Gherkin scenarios that say what, to the acceptance tests that check it. The only link from a scenario to its test is the comment above the test — '.code('// post_form.feature — Scenario: …').' — so a renamed scenario or a forgotten test shows up here as a break in the chain, and fails '.code('tests/Architecture/FeatureTraceTest.php').'.',
         $body,
         TRACE_SOURCE
     );
