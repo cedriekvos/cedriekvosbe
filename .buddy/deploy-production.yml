@@ -1,0 +1,43 @@
+# Buddy autodiscovers every pipeline in /.buddy/ (Project Settings > Options).
+# Without `.fixed` in the filename the pipeline is dynamic: each run uses the
+# definition from the branch it deploys. Targets live in Buddy, referenced by identifier.
+- pipeline: Deploy to production
+  name: deploy:production
+  refs:
+  - :default
+  fail_on_prepare_env_warning: true
+  actions:
+  - action: npm run build
+    type: BUILD
+    commands: |-
+      npm ci install
+      npm run build
+    shell: BASH
+    docker_image_name: library/node
+    docker_image_tag: "24"
+  - action: rsync
+    type: RSYNC
+    archive: true
+    compress: true
+    delete_extra_files: true
+    deployment_excludes:
+    - .git
+    - .env
+    - /node_modules/*
+    - /storage/*
+    - /database/database.sqlite
+    - /resources/content/
+    targets:
+    - cedriekvosbe-production
+  - action: composer install and php artisan
+    type: SSH_COMMAND
+    commands: |-
+      composer install -o --no-dev
+      php artisan migrate --force
+      php artisan config:cache
+      php artisan route:cache
+      php artisan view:cache
+      php artisan storage:link
+    targets:
+    - cedriekvosbe-production
+    run_as_script: true
