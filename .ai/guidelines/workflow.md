@@ -28,7 +28,7 @@ not optional documentation: this guideline is the standing request for them.
    `documentation/leesmij/{domain}/{feature}.md`.
 2. **Decision, only when needed** — `feature-architect` skill, when the change
    needs a new dependency, a file or serialization format, storage or layering
-   for a new bounded domain, a new directory under `app/` or `documentation/`,
+   for a new bounded domain, a new directory under `app/`,
    or cross-cutting infrastructure. It records an ADR under
    `documentation/decisions/`. Most features skip this step.
 3. **Red acceptance tests** — `feature-to-pest` skill. `tests/Feature/`,

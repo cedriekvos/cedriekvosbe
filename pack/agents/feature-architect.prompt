@@ -47,7 +47,8 @@ You decide:
 - **A new bounded domain's layering & storage strategy** — how it maps onto the
   `app/Blog` pattern (raw storage → format → source/factory → read/write repos
   → facade) or deliberately diverges, and why.
-- **Directory-structure additions** under `app/` or `documentation/`.
+- **Directory-structure additions** under `app/`. Not `documentation/`: ADRs
+  record decisions about the codebase, and a documentation folder needs none.
 - **Cross-cutting infrastructure** — caching, queue/connection choice, storage
   disks, scheduled-command boundaries.
 

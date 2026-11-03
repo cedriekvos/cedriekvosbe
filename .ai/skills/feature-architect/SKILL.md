@@ -1,6 +1,6 @@
 ---
 name: feature-architect
-description: "Use this skill whenever a change raises a cross-cutting technical decision that must hold across features — the optional step 2 of this project's full pipeline, and equally on the light track. Trigger before adding a composer or npm dependency, choosing a file or serialization format, deciding how a new bounded domain is layered and stored, adding a directory under app/ or documentation/, or picking caching, queue, storage-disk or scheduled-command infrastructure — and whenever the spec, the acceptance tests or the implementation turn out to depend on such a choice nobody has recorded. Covers: what warrants an ADR and what does not, framing the question, researching and weighing alternatives, when to ask the user, and Proposed versus Accepted. Does NOT cover the ADR page format (adr-authoring), externally visible behavior (feature-specifier) or the per-feature class graph (feature-development)."
+description: "Use this skill whenever a change raises a cross-cutting technical decision that must hold across features — the optional step 2 of this project's full pipeline, and equally on the light track. Trigger before adding a composer or npm dependency, choosing a file or serialization format, deciding how a new bounded domain is layered and stored, adding a directory under app/, or picking caching, queue, storage-disk or scheduled-command infrastructure — and whenever the spec, the acceptance tests or the implementation turn out to depend on such a choice nobody has recorded. Covers: what warrants an ADR and what does not, framing the question, researching and weighing alternatives, when to ask the user, and Proposed versus Accepted. Does NOT cover the ADR page format (adr-authoring), externally visible behavior (feature-specifier) or the per-feature class graph (feature-development)."
 metadata:
   author: cedriekvos
 ---
@@ -25,7 +25,8 @@ Decide here:
 - **A new bounded domain's layering & storage strategy** — how it maps onto the
   `app/Blog` pattern (raw storage → format → source/factory → read/write repos
   → facade) or deliberately diverges, and why.
-- **Directory-structure additions** under `app/` or `documentation/`.
+- **Directory-structure additions** under `app/`. Not `documentation/`: ADRs
+  record decisions about the codebase, and a documentation folder needs none.
 - **Cross-cutting infrastructure** — caching, queue/connection choice, storage
   disks, scheduled-command boundaries.
 
