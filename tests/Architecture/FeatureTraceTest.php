@@ -1,9 +1,9 @@
 <?php
 
-use function Documentation\Architecture\scanFeatureTrace;
-use function Documentation\Architecture\traceGaps;
+use function Documentation\Tools\scanFeatureTrace;
+use function Documentation\Tools\traceGaps;
 
-require_once __DIR__.'/../../documentation/architecture/trace.php';
+require_once __DIR__.'/../../documentation/tools/trace.php';
 
 /*
  * Holds the leesmij → spec → test chain the Specifications page draws

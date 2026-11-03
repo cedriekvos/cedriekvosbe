@@ -21,12 +21,12 @@ use Dom\HTMLDocument;
  * A retired lesson shows the code as it was at the commit it names, and is
  * left alone. The index must link every lesson, whatever its status.
  *
- * Usage: php documentation/lessons/check.php
+ * Usage: php documentation/tools/check-lessons.php
  *
  * Exits non-zero, listing every problem, when a lesson no longer matches.
  */
 const ROOT = __DIR__.'/../../';
-const LESSONS = __DIR__.'/';
+const LESSONS = __DIR__.'/../lessons/';
 
 /** A line holding only this marker stands for code the snippet leaves out. */
 const ELISION = '// …';

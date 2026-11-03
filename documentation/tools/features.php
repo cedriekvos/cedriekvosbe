@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 /**
  * The feature trace, written to documentation/specifications/index.html by
- * documentation/architecture/generate.php. trace.php reads the leesmij → spec →
+ * documentation/tools/generate.php. trace.php reads the leesmij → spec →
  * test chain; this file only draws it, so the page shows exactly what
  * tests/Architecture/FeatureTraceTest.php enforces.
  */
 
-use const Documentation\Architecture\LEESMIJ_DIR;
-use const Documentation\Architecture\SPEC_DIR;
+use const Documentation\Tools\LEESMIJ_DIR;
+use const Documentation\Tools\SPEC_DIR;
 
-use function Documentation\Architecture\scanFeatureTrace;
-use function Documentation\Architecture\traceGaps;
+use function Documentation\Tools\scanFeatureTrace;
+use function Documentation\Tools\traceGaps;
 
 require_once __DIR__.'/trace.php';
 

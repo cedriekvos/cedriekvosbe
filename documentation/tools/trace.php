@@ -18,7 +18,7 @@ declare(strict_types=1);
  * helpers of Pest, Laravel and tests/Helpers/.
  */
 
-namespace Documentation\Architecture;
+namespace Documentation\Tools;
 
 use FilesystemIterator;
 use RecursiveDirectoryIterator;

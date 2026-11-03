@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Page builders for documentation/architecture/generate.php. Every string here is
+ * Page builders for documentation/tools/generate.php. Every string here is
  * assembled from the parsed model — nothing on the rendered pages is asserted
  * by hand, so a refactor that moves a class shows up on the next run.
  */

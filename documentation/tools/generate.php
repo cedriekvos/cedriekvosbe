@@ -13,7 +13,7 @@ declare(strict_types=1);
  * the test that checks it — is parsed out of the repository at generation time.
  * Re-run after a refactor or a spec change and the map stays honest.
  *
- * Usage: php documentation/architecture/generate.php [--dump|--check]
+ * Usage: php documentation/tools/generate.php [--dump|--check]
  *
  * --check writes nothing: it exits non-zero when a committed page differs from
  * what the sources generate now, which is how composer qa keeps them current.
@@ -662,7 +662,7 @@ function shell(string $page, string $heading, string $lede, string $body, array 
     {$body}
 
           <footer class="border-t border-slate-200 pt-6 text-xs text-slate-400 leading-relaxed space-y-1">
-            <p>Generated from {$generatedFrom} by <code class="font-mono">documentation/architecture/generate.php</code>. Do not hand-edit — re-run the script instead.</p>
+            <p>Generated from {$generatedFrom} by <code class="font-mono">documentation/tools/generate.php</code>. Do not hand-edit — re-run the script instead.</p>
           </footer>
         </main>
       </body>
@@ -733,7 +733,7 @@ if (in_array('--check', $argv, true)) {
     }
 
     if ($stale !== []) {
-        echo "Run php documentation/architecture/generate.php and commit the pages it writes.\n";
+        echo "Run php documentation/tools/generate.php and commit the pages it writes.\n";
 
         exit(1);
     }
