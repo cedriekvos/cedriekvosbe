@@ -12,6 +12,12 @@
     </style>
   </head>
   <body class="bg-stone-50 text-slate-900 font-sans antialiased">
+    <header class="border-b border-slate-200">
+      <div class="max-w-5xl mx-auto px-6 h-12 flex items-center justify-between gap-4 text-xs">
+        <a href="../index.html" class="font-semibold text-slate-900 hover:text-slate-600 transition">cedriekvos/blog <span class="font-normal text-slate-400">documentation</span></a>
+        <nav aria-label="Documentation" class="flex items-center gap-1 font-medium -mr-2.5"><a href="../architecture/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Architecture</a><a href="../specifications/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Specifications</a><a href="../decisions/index.html" aria-current="page" class="px-2.5 py-1 rounded text-slate-900 bg-slate-200/70">Decisions</a><a href="../lessons/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Lessons</a></nav>
+      </div>
+    </header>
     <main class="max-w-3xl mx-auto px-6 py-12 sm:py-16">
 
       <nav class="flex items-center justify-between text-xs mb-12">
@@ -40,7 +46,7 @@
         </blockquote>
         <dl class="grid sm:grid-cols-[5.5rem_1fr] gap-x-5 gap-y-2 pt-2 border-t border-slate-200 mt-2 pt-5">
           <dt class="lbl text-slate-400 pt-1 sm:text-right">Driver</dt>
-          <dd class="text-sm leading-relaxed text-slate-600"><code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">features/&lt;domain&gt;/&lt;name&gt;.feature</code></dd>
+          <dd class="text-sm leading-relaxed text-slate-600"><code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">specifications/features/&lt;domain&gt;/&lt;name&gt;.feature</code></dd>
           <dt class="lbl text-slate-400 pt-1 sm:text-right">Related</dt>
           <dd class="text-sm leading-relaxed text-slate-600">Other ADRs this builds on or corrects. Delete the pair if none.</dd>
         </dl>

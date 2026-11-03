@@ -4,8 +4,9 @@
 declare(strict_types=1);
 
 /**
- * Generates documentation/architecture/*.html from the source in app/, and the
- * feature trace from the specs, leesmij and acceptance tests.
+ * Generates documentation/architecture/*.html from the source in app/, and
+ * documentation/specifications/index.html, the feature trace, from the specs,
+ * leesmij and acceptance tests.
  *
  * The pages are committed so they open with no build step, but every fact on
  * them — every class, edge, layer and vendor touch point, every scenario and
@@ -18,7 +19,9 @@ declare(strict_types=1);
  * what the sources generate now, which is how composer qa keeps them current.
  */
 const ROOT = __DIR__.'/../../';
-const OUT = __DIR__.'/';
+
+/** Pages are keyed by their path under documentation/, so one run can write to several sections. */
+const OUT = __DIR__.'/../';
 
 /** Groups the top-level App\ segments into the four bands the map is drawn in. */
 const BANDS = [
@@ -524,13 +527,25 @@ function reachableFrom(array $classes, string $entry): array
 
 // ----------------------------------------------------------------- render --
 
+/**
+ * The documentation's top-level sections, in menu order, keyed by folder. The
+ * hand-written pages in decisions/ and lessons/ and the hub at
+ * documentation/index.html carry the same menu, so a change here goes there too.
+ */
+const SECTIONS = [
+    'architecture' => 'Architecture',
+    'specifications' => 'Specifications',
+    'decisions' => 'Decisions',
+    'lessons' => 'Lessons',
+];
+
+/** The tabs within the Architecture section. */
 const PAGES = [
     'index.html' => 'Overview',
     'modules.html' => 'Module map',
     'anatomy.html' => 'Domain anatomy',
     'flows.html' => 'Flow traces',
     'dependencies.html' => 'Dependency graph',
-    'features.html' => 'Feature trace',
 ];
 
 /** What the code pages are generated from. */
@@ -555,17 +570,51 @@ function sourceStamp(array $source): string
     return ($parts[1] ?? '').' · '.$source['label'].' @ '.$parts[0];
 }
 
-/** @param array{label:string, paths:list<string>} $source */
-function shell(string $current, string $heading, string $lede, string $body, array $source = APP_SOURCE): string
+/** The menu every documentation page starts with, the current section marked. */
+function sectionMenu(string $current): string
 {
-    $title = PAGES[$current];
-    $nav = '';
+    $links = '';
+
+    foreach (SECTIONS as $folder => $label) {
+        $links .= $folder === $current
+            ? '<a href="../'.$folder.'/index.html" aria-current="page" class="px-2.5 py-1 rounded text-slate-900 bg-slate-200/70">'.h($label).'</a>'
+            : '<a href="../'.$folder.'/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">'.h($label).'</a>';
+    }
+
+    return $links;
+}
+
+/** The Architecture tabs, or nothing on a page outside that section. */
+function architectureTabs(string $section, string $current): string
+{
+    if ($section !== 'architecture') {
+        return '';
+    }
+
+    $tabs = '';
 
     foreach (PAGES as $file => $label) {
-        $nav .= $file === $current
+        $tabs .= $file === $current
             ? '<span class="px-2.5 py-1 rounded bg-slate-900 text-white">'.h($label).'</span>'
             : '<a href="'.$file.'" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">'.h($label).'</a>';
     }
+
+    return "\n      <nav class=\"flex flex-wrap items-center gap-1 text-xs font-medium -mx-1\">{$tabs}</nav>\n";
+}
+
+/**
+ * @param  string  $page  the page's path under documentation/, such as architecture/modules.html
+ * @param  array{label:string, paths:list<string>}  $source
+ */
+function shell(string $page, string $heading, string $lede, string $body, array $source = APP_SOURCE): string
+{
+    $section = dirname($page);
+    $file = basename($page);
+    $title = $section === 'architecture'
+        ? PAGES[$file].' · cedriekvos blog architecture'
+        : SECTIONS[$section].' · cedriekvos blog';
+    $menu = sectionMenu($section);
+    $tabs = architectureTabs($section, $file);
 
     $stamp = h(sourceStamp($source));
     $paths = array_map(static fn (string $path): string => '<code class="font-mono">'.h($path).'/</code>', $source['paths']);
@@ -578,7 +627,7 @@ function shell(string $current, string $heading, string $lede, string $body, arr
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{$title} · cedriekvos blog architecture</title>
+        <title>{$title}</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <script type="module">
           import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
@@ -594,10 +643,14 @@ function shell(string $current, string $heading, string $lede, string $body, arr
         </style>
       </head>
       <body class="bg-stone-50 text-slate-900 font-sans antialiased">
+        <header class="border-b border-slate-200">
+          <div class="max-w-5xl mx-auto px-6 h-12 flex items-center justify-between gap-4 text-xs">
+            <a href="../index.html" class="font-semibold text-slate-900 hover:text-slate-600 transition">cedriekvos/blog <span class="font-normal text-slate-400">documentation</span></a>
+            <nav aria-label="Documentation" class="flex items-center gap-1 font-medium -mr-2.5">{$menu}</nav>
+          </div>
+        </header>
         <main class="max-w-5xl mx-auto px-6 py-12 sm:py-16 space-y-14">
-
-          <nav class="flex flex-wrap items-center gap-1 text-xs font-medium -mx-1">{$nav}</nav>
-
+    {$tabs}
           <header class="space-y-4">
             <div class="flex items-baseline justify-between flex-wrap gap-2">
               <h1 class="font-serif text-4xl tracking-tight">{$heading}</h1>
@@ -610,7 +663,6 @@ function shell(string $current, string $heading, string $lede, string $body, arr
 
           <footer class="border-t border-slate-200 pt-6 text-xs text-slate-400 leading-relaxed space-y-1">
             <p>Generated from {$generatedFrom} by <code class="font-mono">documentation/architecture/generate.php</code>. Do not hand-edit — re-run the script instead.</p>
-            <p>Related: <a class="underline underline-offset-2 decoration-slate-300 hover:text-slate-600" href="../decisions/index.html">Architecture Decision Records</a> · <a class="underline underline-offset-2 decoration-slate-300 hover:text-slate-600" href="../lessons/index.html">Lessons</a> · <code class="font-mono">documentation/features/</code> · <code class="font-mono">documentation/leesmij/</code></p>
           </footer>
         </main>
       </body>
@@ -677,7 +729,7 @@ if (in_array('--check', $argv, true)) {
     ));
 
     foreach ($stale as $file) {
-        echo "out of date: documentation/architecture/{$file}\n";
+        echo "out of date: documentation/{$file}\n";
     }
 
     if ($stale !== []) {
@@ -686,16 +738,16 @@ if (in_array('--check', $argv, true)) {
         exit(1);
     }
 
-    echo "documentation/architecture is up to date\n";
+    echo "documentation/architecture and documentation/specifications are up to date\n";
 
     exit(0);
 }
 
-if (! is_dir(OUT)) {
-    mkdir(OUT, 0755, true);
-}
-
 foreach ($pages as $file => $html) {
+    if (! is_dir(dirname(OUT.$file))) {
+        mkdir(dirname(OUT.$file), 0755, true);
+    }
+
     file_put_contents(OUT.$file, $html);
-    echo "wrote documentation/architecture/{$file}\n";
+    echo "wrote documentation/{$file}\n";
 }

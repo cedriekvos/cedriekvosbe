@@ -1,6 +1,6 @@
 ---
 paths:
-  - 'documentation/features/**'
+  - 'documentation/specifications/features/**'
 ---
 
 # Features

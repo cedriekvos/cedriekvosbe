@@ -114,17 +114,22 @@ builds the frontend and runs the browser suite last.
 ```
 app/                  delivery layer, bounded domains, shared kernel
 documentation/
-  features/           Gherkin specs, one per feature
-  leesmij/            Dutch plain-language companion to each spec
+  index.html          the hub: open this to browse the documentation
+  architecture/       generated module map, domain anatomy, flows and dependencies
+  specifications/     generated feature trace, plus the specs it traces:
+    features/         Gherkin specs, one per feature
+    leesmij/          Dutch plain-language companion to each spec
   decisions/          ADRs
-  architecture/       generated module map, dependencies and flow traces
+  lessons/            PHP and this codebase, taught from its own code
 pack/                 autonomous multi-agent pipeline (see pack/README.md)
 tests/                Unit, Feature, Browser, Architecture
 ```
 
 ## Documentation
 
-Every feature carries a Gherkin spec in `documentation/features/` and a Dutch `leesmij`
+Open [`documentation/index.html`](documentation/index.html) in a browser to browse all of it.
+
+Every feature carries a Gherkin spec in `documentation/specifications/features/` and a Dutch `leesmij`
 that explains it in plain language. Cross-cutting technical decisions are recorded as ADRs
 in `documentation/decisions/` — start at the [index](documentation/decisions/index.html).
 

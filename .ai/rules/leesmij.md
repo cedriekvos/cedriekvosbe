@@ -1,6 +1,6 @@
 ---
 paths:
-  - 'documentation/leesmij/**'
+  - 'documentation/specifications/leesmij/**'
 ---
 
 # Leesmij

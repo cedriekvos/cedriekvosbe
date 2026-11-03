@@ -21,8 +21,8 @@ tools:
   deny:
     - "Write(app/**)"
     - "Write(tests/**)"
-    - "Write(documentation/features/**)"
-    - "Write(documentation/leesmij/**)"
+    - "Write(documentation/specifications/features/**)"
+    - "Write(documentation/specifications/leesmij/**)"
     - "Edit(app/**)"
     - "Edit(tests/**)"
 ---

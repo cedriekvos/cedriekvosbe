@@ -24,8 +24,8 @@ carries that step's conventions. The spec and `leesmij` are part of the work,
 not optional documentation: this guideline is the standing request for them.
 
 1. **Spec** — `feature-specifier` skill. A Gherkin
-   `documentation/features/{domain}/{feature}.feature` plus a Dutch
-   `documentation/leesmij/{domain}/{feature}.md`.
+   `documentation/specifications/features/{domain}/{feature}.feature` plus a Dutch
+   `documentation/specifications/leesmij/{domain}/{feature}.md`.
 2. **Decision, only when needed** — `feature-architect` skill, when the change
    needs a new dependency, a file or serialization format, storage or layering
    for a new bounded domain, a new directory under `app/`,

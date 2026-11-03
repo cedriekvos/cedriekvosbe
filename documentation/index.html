@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Documentation · cedriekvos blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .lbl { font-size: .625rem; letter-spacing: .12em; text-transform: uppercase; }
+      html { scroll-behavior: smooth; }
+    </style>
+  </head>
+  <body class="bg-stone-50 text-slate-900 font-sans antialiased">
+    <header class="border-b border-slate-200">
+      <div class="max-w-5xl mx-auto px-6 h-12 flex items-center justify-between gap-4 text-xs">
+        <a href="index.html" aria-current="page" class="font-semibold text-slate-900 hover:text-slate-600 transition">cedriekvos/blog <span class="font-normal text-slate-400">documentation</span></a>
+        <nav aria-label="Documentation" class="flex items-center gap-1 font-medium -mr-2.5"><a href="architecture/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Architecture</a><a href="specifications/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Specifications</a><a href="decisions/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Decisions</a><a href="lessons/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Lessons</a></nav>
+      </div>
+    </header>
+    <main class="max-w-5xl mx-auto px-6 py-12 sm:py-16 space-y-14">
+
+      <header class="space-y-4">
+        <h1 class="font-serif text-4xl tracking-tight">Documentation</h1>
+        <p class="text-slate-600 leading-relaxed max-w-3xl">Everything written down about this codebase, in one place. Each section answers a different question, so pick the one that matches yours. The menu at the top of every page brings you back here.</p>
+      </header>
+
+      <section class="space-y-5">
+        <h2 class="lbl text-slate-400">Sections</h2>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <a href="architecture/index.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
+            <h3 class="font-serif text-lg text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4">Architecture</h3>
+            <p class="text-sm font-medium text-slate-900 mt-1.5">What is this codebase made of, and how do the pieces fit?</p>
+            <p class="text-sm text-slate-600 mt-1 leading-relaxed">The module map, the anatomy of a domain, what happens on a request and what depends on what. Generated from the source, so it cannot drift.</p>
+          </a>
+          <a href="specifications/index.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
+            <h3 class="font-serif text-lg text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4">Specifications</h3>
+            <p class="text-sm font-medium text-slate-900 mt-1.5">What exactly does the application do?</p>
+            <p class="text-sm text-slate-600 mt-1 leading-relaxed">A Gherkin spec for every behavior, a Dutch leesmij beside each one explaining why, and the trace from each scenario to the acceptance test that checks it, with every place that chain breaks.</p>
+          </a>
+          <a href="decisions/index.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
+            <h3 class="font-serif text-lg text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4">Decisions</h3>
+            <p class="text-sm font-medium text-slate-900 mt-1.5">Why was this technical choice made, and what lost?</p>
+            <p class="text-sm text-slate-600 mt-1 leading-relaxed">Architecture Decision Records: one cross-cutting technical decision per page, the rule it puts on the code, and the options that were rejected.</p>
+          </a>
+          <a href="lessons/index.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
+            <h3 class="font-serif text-lg text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4">Lessons</h3>
+            <p class="text-sm font-medium text-slate-900 mt-1.5">How does this code use PHP, and why is it shaped this way?</p>
+            <p class="text-sm text-slate-600 mt-1 leading-relaxed">PHP features, practices and design patterns, taught from real snippets of the codebase and what each choice costs. The snippets are checked against the code in QA.</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl tracking-tight">Where to start</h2>
+        <ol class="list-decimal list-outside pl-5 space-y-3 max-w-3xl">
+          <li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400"><a class="text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900 transition" href="architecture/index.html">Architecture</a>, then its module map, for the shape of the whole thing.</li>
+          <li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400">The <a class="text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900 transition" href="specifications/index.html">specifications</a> when you need to know exactly what a feature does, and which test proves it.</li>
+          <li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400">The <a class="text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900 transition" href="lessons/index.html">lessons</a> in order, for how the code is written and why.</li>
+          <li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400">The <a class="text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900 transition" href="decisions/index.html">decisions</a> whenever a rule in the code looks odd: the record behind it explains what it protects.</li>
+        </ol>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl tracking-tight">Also in this folder</h2>
+        <dl class="rounded-xl border border-slate-200 bg-white px-5 py-2">
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900"><a class="font-mono text-[0.875em] underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900 transition" href="refactor.md">refactor.md</a></dt><dd class="text-sm leading-relaxed text-slate-600">The refactor backlog from the architecture review: what is done, and the open points in their recommended order.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900"><code class="font-mono text-[0.875em]">specifications/features/</code></dt><dd class="text-sm leading-relaxed text-slate-600">One <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">.feature</code> file per behavior, in English. The acceptance tests are written from these.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900"><code class="font-mono text-[0.875em]">specifications/leesmij/</code></dt><dd class="text-sm leading-relaxed text-slate-600">The Dutch explanation beside each spec: why the behavior is what it is.</dd></div>
+        </dl>
+      </section>
+
+    </main>
+  </body>
+</html>

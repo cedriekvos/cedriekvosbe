@@ -6,8 +6,8 @@ use function Documentation\Architecture\traceGaps;
 require_once __DIR__.'/../../documentation/architecture/trace.php';
 
 /*
- * Holds the leesmij → spec → test chain the Feature trace page draws
- * (documentation/architecture/features.html): every scenario is named by an
+ * Holds the leesmij → spec → test chain the Specifications page draws
+ * (documentation/specifications/index.html): every scenario is named by an
  * acceptance test's comment, every such comment names a real scenario, and every
  * spec has its leesmij. Tests that name no scenario are allowed — the page lists
  * them, but they break nothing.

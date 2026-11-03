@@ -1,6 +1,6 @@
 ---
 name: feature-specifier
-description: "Use this skill whenever new or changed externally visible behavior needs a specification — step 1 of this project's full pipeline. Trigger when writing or updating a Gherkin .feature file under documentation/features/ or a Dutch leesmij under documentation/leesmij/, when a request adds or changes what a visitor or admin can see or do, or when a later step finds the spec wrong or ambiguous. Covers: the two artefacts and where they go ({domain}/{feature} naming), settling ambiguity before writing and when a question to the user is warranted, the Gherkin conventions (preamble, Background, stable scenario indices, parameters that become Pest datasets), the four-phase workflow, and when a question belongs to feature-architect instead. Does NOT cover acceptance tests (feature-to-pest), production code (feature-development) or technical decisions (feature-architect)."
+description: "Use this skill whenever new or changed externally visible behavior needs a specification — step 1 of this project's full pipeline. Trigger when writing or updating a Gherkin .feature file under documentation/specifications/features/ or a Dutch leesmij under documentation/specifications/leesmij/, when a request adds or changes what a visitor or admin can see or do, or when a later step finds the spec wrong or ambiguous. Covers: the two artefacts and where they go ({domain}/{feature} naming), settling ambiguity before writing and when a question to the user is warranted, the Gherkin conventions (preamble, Background, stable scenario indices, parameters that become Pest datasets), the four-phase workflow, and when a question belongs to feature-architect instead. Does NOT cover acceptance tests (feature-to-pest), production code (feature-development) or technical decisions (feature-architect)."
 metadata:
   author: cedriekvos
 ---
@@ -16,7 +16,7 @@ written, and don't touch `app/` or `tests/` while you are in it.
 
 For each feature, produce two complementary artefacts:
 
-1. **Dutch explanatory document** at `documentation/leesmij/{domain}/{feature}.md`
+1. **Dutch explanatory document** at `documentation/specifications/leesmij/{domain}/{feature}.md`
    — a short note that captures the *why*: an intro of one or two sentences,
    then one bullet per decision with its reason in a sentence or two. Name a
    rejected alternative only when it explains the choice. Keep it to the
@@ -24,11 +24,11 @@ For each feature, produce two complementary artefacts:
    rounds), no class names or file paths, and do not restate the Gherkin. When
    the behavior changes, rewrite the note to the current state rather than
    appending a section. Write native Dutch, not translated English.
-2. **Gherkin specification** at `documentation/features/{domain}/{feature}.feature`
+2. **Gherkin specification** at `documentation/specifications/features/{domain}/{feature}.feature`
    — formal English scenarios that pin down *what* must be true.
 
 `{domain}` is the bounded domain (e.g. `blog/frontend`, `blog/admin`, `auth`):
-list the existing domains under `documentation/features/` and reuse the one
+list the existing domains under `documentation/specifications/features/` and reuse the one
 that fits — that needs no confirmation. Only a *new* domain folder needs the
 user's explicit agreement before you create it. `{feature}` is a kebab-case noun
 matching the naming style of sibling files in the chosen domain.

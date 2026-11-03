@@ -54,7 +54,7 @@ base branch you determine rather than assuming one —
 `git --no-pager log --oneline -5` and `git --no-pager branch -a` tell you
 where you are; this repo's long-lived branches are `main` and `develop`.
 
-From the diff, locate the relevant `documentation/features/**/*.feature` spec
+From the diff, locate the relevant `documentation/specifications/features/**/*.feature` spec
 and its Dutch `leesmij`, the `tests/Feature/`, `tests/Browser/` and
 `tests/Unit/` tests, any `documentation/decisions/*.html` ADRs, and the changed
 `app/` and `resources/` code.

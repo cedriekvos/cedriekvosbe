@@ -29,10 +29,10 @@ tools:
     - "Edit(tests/Unit/**)"
     - "Write(tests/Architecture/**)"
     - "Edit(tests/Architecture/**)"
-    - "Write(documentation/features/**)"
-    - "Write(documentation/leesmij/**)"
-    - "Edit(documentation/features/**)"
-    - "Edit(documentation/leesmij/**)"
+    - "Write(documentation/specifications/features/**)"
+    - "Write(documentation/specifications/leesmij/**)"
+    - "Edit(documentation/specifications/features/**)"
+    - "Edit(documentation/specifications/leesmij/**)"
     - "Bash(php artisan test:*)"
     - "Bash(vendor/bin/pest:*)"
     - "Bash(./vendor/bin/pest:*)"
@@ -57,7 +57,7 @@ assertions to make them pass and do not implement the behavior yourself.
 
 Mirror the feature path under the suite you picked (see *Choosing the test
 surface*), StudlyCasing the `{feature}` segment and appending `Test`:
-`documentation/features/{domain}/{feature}.feature` →
+`documentation/specifications/features/{domain}/{feature}.feature` →
 `tests/Feature/{domain}/{StudlyFeature}Test.php`, or
 `tests/Browser/{domain}/{StudlyFeature}Test.php` for a browser test. Keep the
 `{domain}` path segments exactly as the feature uses them. One test file per

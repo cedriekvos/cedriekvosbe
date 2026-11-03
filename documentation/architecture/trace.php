@@ -27,6 +27,12 @@ use SplFileInfo;
 
 const ACCEPTANCE_SUITES = ['Feature', 'Browser'];
 
+/** Where the Gherkin specs live, relative to the repository root. */
+const SPEC_DIR = 'documentation/specifications/features';
+
+/** Where the Dutch leesmij live, mirroring SPEC_DIR path for path. */
+const LEESMIJ_DIR = 'documentation/specifications/leesmij';
+
 /**
  * @return array{features: array<string, array>, dangling: list<array>, strays: list<string>, testCount: int}
  */
@@ -35,12 +41,12 @@ function scanFeatureTrace(string $root): array
     $root = rtrim($root, '/').'/';
     $features = [];
 
-    foreach (filesUnder($root, 'documentation/features', 'feature') as $file) {
-        $features[substr($file, strlen('documentation/features/'), -strlen('.feature'))]['spec'] = parseGherkin($root.$file);
+    foreach (filesUnder($root, SPEC_DIR, 'feature') as $file) {
+        $features[substr($file, strlen(SPEC_DIR.'/'), -strlen('.feature'))]['spec'] = parseGherkin($root.$file);
     }
 
-    foreach (filesUnder($root, 'documentation/leesmij', 'md') as $file) {
-        $features[substr($file, strlen('documentation/leesmij/'), -strlen('.md'))]['leesmij'] = parseLeesmij($root.$file);
+    foreach (filesUnder($root, LEESMIJ_DIR, 'md') as $file) {
+        $features[substr($file, strlen(LEESMIJ_DIR.'/'), -strlen('.md'))]['leesmij'] = parseLeesmij($root.$file);
     }
 
     ksort($features);

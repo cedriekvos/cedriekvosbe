@@ -10,10 +10,10 @@ tools:
     - Glob
     - Skill
     - AskUserQuestion
-    - "Write(documentation/features/**)"
-    - "Write(documentation/leesmij/**)"
-    - "Edit(documentation/features/**)"
-    - "Edit(documentation/leesmij/**)"
+    - "Write(documentation/specifications/features/**)"
+    - "Write(documentation/specifications/leesmij/**)"
+    - "Edit(documentation/specifications/features/**)"
+    - "Edit(documentation/specifications/leesmij/**)"
     - "Bash(ls:*)"
     - "Bash(git status:*)"
     - "Bash(git diff:*)"
@@ -38,15 +38,15 @@ tests or production code, and you never touch `app/` or `tests/`.
 
 For each feature, produce two complementary artefacts:
 
-1. **Dutch explanatory document** at `documentation/leesmij/{domain}/{feature}.md`
+1. **Dutch explanatory document** at `documentation/specifications/leesmij/{domain}/{feature}.md`
    — prose that captures the *why*: business motivation, alternatives
    considered, trade-offs, edge-case rationale. Write native Dutch, not
    translated English. Do not restate the Gherkin.
-2. **Gherkin specification** at `documentation/features/{domain}/{feature}.feature`
+2. **Gherkin specification** at `documentation/specifications/features/{domain}/{feature}.feature`
    — formal English scenarios that pin down *what* must be true.
 
 `{domain}` is the bounded domain (e.g. `blog/frontend`, `blog/admin`, `auth`):
-list the existing domains under `documentation/features/` and reuse the one
+list the existing domains under `documentation/specifications/features/` and reuse the one
 that fits — that needs no confirmation. Only a *new* domain folder needs the
 user's explicit agreement before you create it. `{feature}` is a kebab-case noun
 matching the naming style of sibling files in the chosen domain.

@@ -45,7 +45,7 @@ function switchSiteThemeTo(PendingAwaitablePage|AwaitableWebpage $page, string $
 
 /**
  * The bare label text a theme switcher menu option renders for a given mode
- * (documentation/leesmij/navigation/theme_switcher.md), used to assert what
+ * (documentation/specifications/leesmij/navigation/theme_switcher.md), used to assert what
  * the open menu's options display. Task 015 replaced each option's Unicode
  * glyph with an inline SVG icon, so the text content is the label alone —
  * the icon is asserted separately via themeModeIconSelector().
@@ -62,7 +62,7 @@ function themeModeLabel(string $mode): string
 
 /**
  * A CSS selector for an inline SVG icon carrying the given mode's
- * `data-mode` attribute (documentation/leesmij/navigation/theme_switcher.md).
+ * `data-mode` attribute (documentation/specifications/leesmij/navigation/theme_switcher.md).
  * Since task 016 only the closed button still renders an icon, and it always
  * renders the "auto" one regardless of the active mode; menu options no
  * longer carry icons at all.

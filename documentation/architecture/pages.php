@@ -42,7 +42,7 @@ const BAND_CHIPS = [
 /**
  * @param  array<string, array>  $classes
  * @param  array<string, list<string>>  $routes
- * @return array<string, string>
+ * @return array<string, string> HTML keyed by its path under documentation/
  */
 function buildPages(array $classes, array $routes): array
 {
@@ -51,12 +51,12 @@ function buildPages(array $classes, array $routes): array
     $inbound = dependents($classes);
 
     return [
-        'index.html' => buildIndex($classes, $byDomain, $edges),
-        'modules.html' => buildModules($classes, $byDomain, $edges),
-        'anatomy.html' => buildAnatomy($classes, $byDomain),
-        'flows.html' => buildFlows($classes, $routes),
-        'dependencies.html' => buildDependencies($classes, $byDomain, $inbound),
-        'features.html' => buildFeatureTrace(),
+        'architecture/index.html' => buildIndex($classes, $byDomain, $edges),
+        'architecture/modules.html' => buildModules($classes, $byDomain, $edges),
+        'architecture/anatomy.html' => buildAnatomy($classes, $byDomain),
+        'architecture/flows.html' => buildFlows($classes, $routes),
+        'architecture/dependencies.html' => buildDependencies($classes, $byDomain, $inbound),
+        'specifications/index.html' => buildFeatureTrace(),
     ];
 }
 
@@ -181,7 +181,6 @@ function buildIndex(array $classes, array $byDomain, array $edges): string
         ['anatomy.html', 'Domain anatomy', 'Once I understand one domain, do I understand them all?', 'Mostly yes — the same value-object → repository → storage slice repeats. The interesting part is the slots each domain leaves empty.'],
         ['flows.html', 'Flow traces', 'What actually happens when someone hits a URL?', 'Every route and scheduled command, traced through the objects the container wires up behind it.'],
         ['dependencies.html', 'Dependency graph', 'What breaks if I change this class or drop this package?', 'Class-level fan-in and fan-out, plus the blast radius of each composer package.'],
-        ['features.html', 'Feature trace', 'Is every behavior explained, specified and tested?', 'Each feature from its Dutch leesmij to its Gherkin scenarios to the acceptance tests that check them — and every place that chain breaks.'],
     ];
 
     $guideCards = '';
@@ -203,12 +202,12 @@ function buildIndex(array $classes, array $byDomain, array $edges): string
         paragraph('There is no content database. Every post, page, message, bio and scratchpad note is a Markdown file on disk, read and written through a per-domain repository. The '.count($domains).' bounded domains are '.$domainList.'; they share one kernel, '.code('App\Markdown').', and each exposes a single repository facade to the layer above.'),
         paragraph('The whole thing runs on '.count($packages).' runtime packages: '.$packageList.'.'),
         $overview,
-    ]))."\n\n".section('Where to go', 'Five views, five questions', '<div class="grid sm:grid-cols-2 gap-3">'.$guideCards.'</div>');
+    ]))."\n\n".section('Where to go', 'Four views, four questions', '<div class="grid sm:grid-cols-2 gap-3">'.$guideCards.'</div>');
 
     return shell(
-        'index.html',
+        'architecture/index.html',
         'Architecture',
-        'A map of this codebase for reading rather than browsing — what the pieces are, how one domain is shaped, what happens on a request, what depends on what, and which behavior is specified and tested. Every page is generated from the source.',
+        'A map of this codebase for reading rather than browsing — what the pieces are, how one domain is shaped, what happens on a request, and what depends on what. Every page is generated from the source. What the application does, and which tests check it, is under Specifications.',
         $body
     );
 }
@@ -398,7 +397,7 @@ function buildModules(array $classes, array $byDomain, array $edges): string
     ]));
 
     return shell(
-        'modules.html',
+        'architecture/modules.html',
         'Module map',
         'What the pieces are and which one is allowed to know about which. Modules are the top-level namespaces under '.code('App\\').'; edges are real import statements, counted.',
         $body
@@ -569,7 +568,7 @@ function buildAnatomy(array $classes, array $byDomain): string
     ."\n\n".section('Per module', 'The same diagram for every domain', '<div class="space-y-8">'.$perDomain.'</div>');
 
     return shell(
-        'anatomy.html',
+        'architecture/anatomy.html',
         'Domain anatomy',
         'Learn one domain and you have mostly learned all of them. This page shows the repeated slice, then exactly where each module deviates from it.',
         $body
@@ -660,7 +659,7 @@ function buildFlows(array $classes, array $routes): string
     }
 
     return shell(
-        'flows.html',
+        'architecture/flows.html',
         'Flow traces',
         'What actually happens when someone hits a URL. Each trace starts at an entry point and follows constructor and method injection outward — this is the object graph the container builds, not a sketch of it.',
         rtrim($body)
@@ -814,7 +813,7 @@ function buildDependencies(array $classes, array $byDomain, array $inbound): str
     ]));
 
     return shell(
-        'dependencies.html',
+        'architecture/dependencies.html',
         'Dependency graph',
         'What breaks if you change this class, and what a package upgrade can reach. Derived from the import statements in '.code('app/').'.',
         $body

@@ -3,10 +3,14 @@
 declare(strict_types=1);
 
 /**
- * The Feature trace page for documentation/architecture/generate.php. trace.php
- * reads the leesmij → spec → test chain; this file only draws it, so the page
- * shows exactly what tests/Architecture/FeatureTraceTest.php enforces.
+ * The feature trace, written to documentation/specifications/index.html by
+ * documentation/architecture/generate.php. trace.php reads the leesmij → spec →
+ * test chain; this file only draws it, so the page shows exactly what
+ * tests/Architecture/FeatureTraceTest.php enforces.
  */
+
+use const Documentation\Architecture\LEESMIJ_DIR;
+use const Documentation\Architecture\SPEC_DIR;
 
 use function Documentation\Architecture\scanFeatureTrace;
 use function Documentation\Architecture\traceGaps;
@@ -16,7 +20,7 @@ require_once __DIR__.'/trace.php';
 /** What the trace is read from. The page stamp names the last commit that touched any of it. */
 const TRACE_SOURCE = [
     'label' => 'specs & tests',
-    'paths' => ['documentation/leesmij', 'documentation/features', 'tests/Feature', 'tests/Browser'],
+    'paths' => [LEESMIJ_DIR, SPEC_DIR, 'tests/Feature', 'tests/Browser'],
 ];
 
 const SUITE_CHIPS = [
@@ -54,9 +58,9 @@ function buildFeatureTrace(): string
     ]))."\n\n".section('Explorer', 'Leesmij → scenarios → tests', traceExplorer($features));
 
     return shell(
-        'features.html',
-        'Feature trace',
-        'Each feature followed from the Dutch leesmij that says why, through the Gherkin scenarios that say what, to the acceptance tests that check it. The only link from a scenario to its test is the comment above the test — '.code('// post_form.feature — Scenario: …').' — so a renamed scenario or a forgotten test shows up here as a break in the chain, and fails '.code('tests/Architecture/FeatureTraceTest.php').'.',
+        'specifications/index.html',
+        'Specifications',
+        'Each feature followed from the Dutch leesmij that says why, through the Gherkin scenarios that say what, to the acceptance tests that check it. The specs live in '.code(SPEC_DIR.'/').' and the leesmij beside them in '.code(LEESMIJ_DIR.'/').'. The only link from a scenario to its test is the comment above the test — '.code('// post_form.feature — Scenario: …').' — so a renamed scenario or a forgotten test shows up here as a break in the chain, and fails '.code('tests/Architecture/FeatureTraceTest.php').'.',
         $body,
         TRACE_SOURCE
     );
@@ -288,8 +292,8 @@ function featurePane(array $feature, array $features): string
 
     $openAll = $scenarios === [] ? '' : '<button type="button" data-open-all class="ml-auto text-xs text-slate-500 hover:text-slate-900">Open all</button>';
 
-    $steps = traceStep('Leesmij', 'documentation/leesmij/'.$key.'.md', leesmijCard($feature, $features))
-        .traceStep('Spec', 'documentation/features/'.$key.'.feature', specBlock($feature), $openAll);
+    $steps = traceStep('Leesmij', LEESMIJ_DIR.'/'.$key.'.md', leesmijCard($feature, $features))
+        .traceStep('Spec', SPEC_DIR.'/'.$key.'.feature', specBlock($feature), $openAll);
 
     if ($feature['unlinked'] !== []) {
         $steps .= traceStep(
