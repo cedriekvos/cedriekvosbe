@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lessons · cedriekvos blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .lbl { font-size: .625rem; letter-spacing: .12em; text-transform: uppercase; }
+      html { scroll-behavior: smooth; }
+    </style>
+  </head>
+  <body class="bg-stone-50 text-slate-900 font-sans antialiased">
+    <main class="max-w-4xl mx-auto px-6 py-12 sm:py-16 space-y-14">
+
+      <header class="space-y-5">
+        <div class="flex items-baseline justify-between flex-wrap gap-2">
+          <h1 class="font-serif text-4xl tracking-tight">Lessons</h1>
+          <span class="font-mono text-xs text-slate-400">cedriekvos/blog · 1 lesson</span>
+        </div>
+        <p class="text-slate-600 leading-relaxed max-w-2xl">
+          PHP and this codebase, taught from the codebase itself. Each lesson takes a few real snippets and explains the
+          <strong class="font-semibold text-slate-900">PHP features</strong>, <strong class="font-semibold text-slate-900">practices</strong> and
+          <strong class="font-semibold text-slate-900">design patterns</strong> behind them, along with what each choice costs. The lessons
+          assume you already know PHP and spend their time on why the code is the way it is.
+        </p>
+        <p class="text-slate-600 leading-relaxed max-w-2xl text-sm">
+          Lessons are added one at a time, on request, and each one builds on the ones before it.
+        </p>
+      </header>
+
+      <section class="space-y-3">
+        <h2 class="lbl text-slate-400">Lessons</h2>
+        <div class="space-y-3">
+        <a href="01-the-shape-of-a-class.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
+          <div class="flex items-baseline gap-3 flex-wrap">
+            <span class="font-mono text-sm text-slate-400">01</span>
+            <h3 class="font-serif text-lg leading-snug text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4 flex-1 min-w-[16rem]">The shape of a class: <code class="font-mono text-[0.9em]">Post</code> and its factory</h3>
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Current</span>
+          </div>
+          <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">What <code class="font-mono text-[0.875em]">final readonly</code> and promotion buy you, why <code class="font-mono text-[0.875em]">Post</code> is a snapshot rather than a value object, where <code class="font-mono text-[0.875em]">mixed</code> gets narrowed, and how tests enforce all of it.</p>
+        </a>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl tracking-tight">Concepts covered so far</h2>
+        <p class="text-slate-600 text-sm leading-relaxed max-w-2xl">Every lesson adds its concepts here, so this grid doubles as an index: find a term, open the lesson that explains it.</p>
+        <div class="grid sm:grid-cols-3 gap-3">
+          <div class="rounded-xl border border-slate-200 bg-white px-5 py-4">
+            <h3 class="lbl text-slate-400 mb-3">PHP features</h3>
+            <ul class="text-sm leading-relaxed text-slate-700 space-y-1.5">
+              <li><code class="font-mono text-[0.875em]">declare(strict_types=1)</code> <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Readonly classes <span class="text-slate-400">8.2</span> <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Constructor promotion <span class="text-slate-400">8.0</span> <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Named arguments <span class="text-slate-400">8.0</span> <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>The <code class="font-mono text-[0.875em]">mixed</code> type <span class="text-slate-400">8.0</span> <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Typed class constants <span class="text-slate-400">8.3</span> <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+            </ul>
+          </div>
+          <div class="rounded-xl border border-slate-200 bg-white px-5 py-4">
+            <h3 class="lbl text-slate-400 mb-3">Patterns</h3>
+            <ul class="text-sm leading-relaxed text-slate-700 space-y-1.5">
+              <li>Value object, and the immutable snapshot that is mistaken for one <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Factory as an injectable service <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Named constructor <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+            </ul>
+          </div>
+          <div class="rounded-xl border border-slate-200 bg-white px-5 py-4">
+            <h3 class="lbl text-slate-400 mb-3">Practices</h3>
+            <ul class="text-sm leading-relaxed text-slate-700 space-y-1.5">
+              <li>Immutable by default <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Final by default, composition over inheritance <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Narrow <code class="font-mono text-[0.875em]">mixed</code> once, at the boundary <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Architecture rules as tests <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Mutation testing over coverage <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl tracking-tight">How to read a lesson</h2>
+        <dl class="rounded-xl border border-slate-200 bg-white px-5 py-2">
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900"><span class="lbl text-emerald-600">From the codebase</span></dt><dd class="text-sm leading-relaxed text-slate-600">Quoted verbatim from the file named above it. QA fails when the quote no longer matches that file, so a current lesson cannot show code the repository no longer has. <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">// …</code> marks lines left out.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900"><span class="lbl text-amber-600">Not in the codebase</span></dt><dd class="text-sm leading-relaxed text-slate-600">An illustration: a counter-example, or the alternative the code did not choose. Never checked, and never to be copied as house style.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">Highlighted lines</dt><dd class="text-sm leading-relaxed text-slate-600">The part of a snippet the text around it is talking about.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">Check yourself</dt><dd class="text-sm leading-relaxed text-slate-600">Every lesson ends with questions and collapsed answers. Answer first, then open. Recalling an answer teaches more than rereading one.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900"><span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Current</span></dt><dd class="text-sm leading-relaxed text-slate-600">The lesson describes the code as it is today. When the code changes and the lesson still teaches the same thing, the lesson is updated along with it.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900"><span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-200 text-slate-600">No longer in the codebase</span></dt><dd class="text-sm leading-relaxed text-slate-600">The code changed so much that updating the lesson would turn it into a different lesson. It stays as written and names the commit its snippets were true at, so <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">git show &lt;commit&gt;:&lt;path&gt;</code> still shows the original.</dd></div>
+        </dl>
+        <p class="text-sm text-slate-500 pt-2">
+          The check is <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">php documentation/lessons/check.php</code>, and it runs as part of <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">composer qa</code>.
+        </p>
+      </section>
+
+      <footer class="border-t border-slate-200 pt-6 text-xs text-slate-400 leading-relaxed space-y-1">
+        <p>Related: <a class="underline underline-offset-2 decoration-slate-300 hover:text-slate-600" href="../architecture/index.html">Architecture</a> · <a class="underline underline-offset-2 decoration-slate-300 hover:text-slate-600" href="../decisions/index.html">Architecture Decision Records</a></p>
+      </footer>
+    </main>
+  </body>
+</html>

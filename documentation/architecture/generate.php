@@ -610,7 +610,7 @@ function shell(string $current, string $heading, string $lede, string $body, arr
 
           <footer class="border-t border-slate-200 pt-6 text-xs text-slate-400 leading-relaxed space-y-1">
             <p>Generated from {$generatedFrom} by <code class="font-mono">documentation/architecture/generate.php</code>. Do not hand-edit — re-run the script instead.</p>
-            <p>Related: <a class="underline underline-offset-2 decoration-slate-300 hover:text-slate-600" href="../decisions/index.html">Architecture Decision Records</a> · <code class="font-mono">documentation/features/</code> · <code class="font-mono">documentation/leesmij/</code></p>
+            <p>Related: <a class="underline underline-offset-2 decoration-slate-300 hover:text-slate-600" href="../decisions/index.html">Architecture Decision Records</a> · <a class="underline underline-offset-2 decoration-slate-300 hover:text-slate-600" href="../lessons/index.html">Lessons</a> · <code class="font-mono">documentation/features/</code> · <code class="font-mono">documentation/leesmij/</code></p>
           </footer>
         </main>
       </body>
