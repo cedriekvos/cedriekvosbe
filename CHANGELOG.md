@@ -7,6 +7,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.7] - 2026-11-03
+
+Documentation and QA only: the documentation gets a front page, a Lessons
+section and a Specifications section of its own, and QA fails when a lesson
+quotes code that has changed. The site itself is unchanged.
+
+### Added
+
+- **Documentation** — `documentation/index.html` is the page to open for
+  browsing the docs: a card per section, where to start, and the files that
+  are not pages. Every documentation page starts with the same menu:
+  Architecture · Specifications · Decisions · Lessons.
+- **Documentation** — a Lessons section teaches PHP and this codebase from its
+  own code, written for an experienced PHP developer. Lesson 01 reads `Post`
+  and `PostFactory`: what `final readonly` and constructor promotion buy, why
+  `Post` is an immutable snapshot rather than a value object, where `mixed` is
+  narrowed, and how the architecture test and mutation testing enforce it.
+  Lessons are added one at a time, on request.
+- **QA** — `documentation/tools/check-lessons.php` fails `qa` and `qa:fast`
+  when a current lesson quotes code that no longer appears in the file it
+  names. A lesson whose point no longer holds is retired, naming the commit its
+  snippets were last true at, instead of being rewritten.
+- `.ai/rules/lessons.md` and `.ai/rules/documentation.md` record how lessons
+  are written and kept honest, the shared menu, where specs and documentation
+  tooling live, and that Pint puts imports above `declare(strict_types=1)` in
+  shebang scripts.
+
+### Changed
+
+- **Documentation** — the Gherkin specs and their `leesmij` move to
+  `documentation/specifications/features/` and `leesmij/`, and the feature
+  trace becomes that section's page instead of an Architecture tab. The
+  workflow guideline, the feature-specifier and feature-to-pest skills, the
+  feature-reviewer agent, the pack agent prompts and their permission rules,
+  the spec rules and README follow.
+- **Documentation** — the generator, its page builders, the trace parser and
+  the lesson check move to `documentation/tools/`, so the section folders hold
+  only pages. The trace parser's namespace is now `Documentation\Tools`.
+- **Workflow** — a new directory under `documentation/` no longer needs an
+  ADR: ADRs record decisions about the codebase only.
+
+### Fixed
+
+- **Documentation** — the ADR index said 8 decisions; it lists 9.
+
 ## [1.7.6] - 2026-10-27
 
 Documentation and QA only: the architecture site traces every feature from its
@@ -437,7 +482,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.6...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.7...HEAD
+[1.7.7]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.6...1.7.7
 [1.7.6]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.5...1.7.6
 [1.7.5]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.4...1.7.5
 [1.7.4]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.3...1.7.4
