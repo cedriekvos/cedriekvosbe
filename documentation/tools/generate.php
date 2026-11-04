@@ -201,7 +201,7 @@ function parseFile(string $path): ?array
         'namespace' => $namespace,
         'domain' => $domain,
         'layer' => $layer,
-        'role' => roleOf($short, $layer, $domain, $ctor !== []),
+        'role' => roleOf($short, $layer, $domain, declaresPublicProperty($tokens)),
         'file' => 'app'.substr($path, strlen(ROOT.'app')),
         'kind' => $kind,
         'imports' => $imports,
@@ -215,6 +215,34 @@ function parseFile(string $path): ?array
 }
 
 /** Distinguishes a `Foo::class` constant fetch from a real class declaration. */
+/**
+ * Whether the class exposes public state, promoted or declared. A `public`
+ * modifier that reaches a `$variable` before `function`, `const` or `;` is a
+ * property's.
+ */
+function declaresPublicProperty(array $tokens): bool
+{
+    $count = count($tokens);
+
+    for ($i = 0; $i < $count; $i++) {
+        if (! is_array($tokens[$i]) || $tokens[$i][0] !== T_PUBLIC) {
+            continue;
+        }
+
+        for ($j = $i + 1; $j < $count; $j++) {
+            if ($tokens[$j] === ';' || (is_array($tokens[$j]) && in_array($tokens[$j][0], [T_FUNCTION, T_CONST], true))) {
+                break;
+            }
+
+            if (is_array($tokens[$j]) && $tokens[$j][0] === T_VARIABLE) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 function isConstantFetch(array $tokens, int $i): bool
 {
     for ($j = $i - 1; $j >= 0; $j--) {
@@ -314,8 +342,12 @@ function constructorDependencies(string $source, array $imports, string $namespa
     return array_values(array_unique($resolved));
 }
 
-/** The job a class does, inferred from its name and sub-namespace. */
-function roleOf(string $short, string $layer, string $domain, bool $hasCollaborators): string
+/**
+ * The job a class does, inferred from its name and sub-namespace. At a domain's
+ * root, where no suffix names the job, the house value object is all public
+ * data and no behaviour, so a class without public state is a service.
+ */
+function roleOf(string $short, string $layer, string $domain, bool $holdsData): string
 {
     return match (true) {
         $domain === 'Models' => 'Eloquent model',
@@ -343,8 +375,8 @@ function roleOf(string $short, string $layer, string $domain, bool $hasCollabora
         str_ends_with($short, 'Provider') => 'Service provider',
         str_ends_with($short, 'Audit') => 'Process adapter',
         str_ends_with($short, 'Result') => 'Result object',
-        $layer === '(root)' && $hasCollaborators => 'Domain service',
-        $layer === '(root)' => 'Value object',
+        $layer === '(root)' && $holdsData => 'Value object',
+        $layer === '(root)' => 'Domain service',
         default => $layer,
     };
 }
