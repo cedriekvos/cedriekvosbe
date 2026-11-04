@@ -1,0 +1,47 @@
+/* Generated from resources/css/app.css by documentation/tools/generate.php. Do not hand-edit. */
+
+:root {
+    --t-bg:       #ffffff;
+    --t-surface:  #f6f8fa;
+    --t-line:     #d0d7de;
+    --t-fg:       #1f2328;
+    --t-muted:    #656d76;
+    --t-accent:   #1a7f37;
+    --t-hi:       #2da44e;
+    --t-grid:     rgba(0, 0, 0, 0.045);
+    --t-hdr:      rgba(255, 255, 255, 0.88);
+}
+
+.dark {
+    --t-bg:       #0d1117;
+    --t-surface:  #161b22;
+    --t-line:     #30363d;
+    --t-fg:       #c9d1d9;
+    --t-muted:    #8b949e;
+    --t-accent:   #3fb950;
+    --t-hi:       #56d364;
+    --t-grid:     rgba(255, 255, 255, 0.025);
+    --t-hdr:      rgba(13, 17, 23, 0.88);
+}
+
+:root {
+    --hl-keyword:  #8839ef;
+    --hl-property: #1e66f5;
+    --hl-type:     #df8e1d;
+    --hl-generic:  #d20f39;
+    --hl-value:    #40a02b;
+    --hl-number:   #fe640b;
+    --hl-variable: #4c4f69;
+    --hl-comment:  #9ca0b0;
+}
+
+.dark {
+    --hl-keyword:  #cba6f7;
+    --hl-property: #89b4fa;
+    --hl-type:     #f9e2af;
+    --hl-generic:  #f38ba8;
+    --hl-value:    #a6e3a1;
+    --hl-number:   #fab387;
+    --hl-variable: #cdd6f4;
+    --hl-comment:  #6c7086;
+}

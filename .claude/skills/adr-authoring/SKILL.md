@@ -25,7 +25,7 @@ new ADR needs a row added to it.
   next zero-padded 4-digit sequence number. `ls documentation/decisions/` to
   find it; never reuse or renumber.
 - **Never hand-write the chrome.** Copy `documentation/decisions/template.html`
-  and fill it in. The Tailwind CDN link, header block, status pill, section
+  and fill it in. The head links to `../assets/`, header block, status pill, section
   headings and prev/next footer are all part of it and must stay byte-identical
   across pages — read a recent ADR (0006 is a compact one, 0003 a long one) if
   you need to see the pattern in use.
@@ -82,17 +82,17 @@ markup without opening it.
 Status pill — swap the colour classes with the status:
 
 ```html
-<span class="text-xs font-semibold px-2 py-1 rounded bg-emerald-100 text-emerald-800">Accepted</span>
+<span class="badge text-accent">Accepted</span>
 ```
 
-`bg-amber-100 text-amber-800` Proposed · `bg-emerald-100 text-emerald-800`
-Accepted · `bg-rose-100 text-rose-800` Rejected · `bg-slate-200 text-slate-600`
-Superseded.
+`text-warn` Proposed · `text-accent` Accepted · `text-danger` Rejected ·
+`text-muted` Superseded. `badge` (in `documentation/assets/docs.css`) is the
+website's post badge, coloured by whichever text colour it is given.
 
 Inline code inside prose:
 
 ```html
-<code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">PostFileParser</code>
+<code class="font-mono text-[0.875em] rounded-[3px] px-1 py-0.5 bg-surface text-hi border border-line">PostFileParser</code>
 ```
 
 Code block — the `whitespace-pre-wrap break-words` pair makes long lines wrap
@@ -100,16 +100,16 @@ instead of hiding off the right edge; drop it only for column-aligned diagrams
 that must not reflow:
 
 ```html
-<div class="rounded-lg bg-slate-900 overflow-hidden">
-  <div class="lbl text-slate-500 px-4 pt-3">php</div>
-  <pre class="overflow-x-auto px-4 py-3 text-[13px] leading-relaxed whitespace-pre-wrap break-words"><code class="font-mono text-slate-100">// escape &lt; &gt; &amp; in here</code></pre>
+<div class="rounded-lg overflow-hidden bg-surface border border-line">
+  <div class="lbl text-muted px-4 pt-3">php</div>
+  <pre class="overflow-x-auto px-4 py-3 text-[13px] leading-relaxed whitespace-pre-wrap break-words"><code class="font-mono text-fg">// escape &lt; &gt; &amp; in here</code></pre>
 </div>
 ```
 
 Cross-links to other ADRs, in prose:
 
 ```html
-<a class="text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900 transition" href="0004-highlight-extension-fenced-only-wiring.html">ADR&nbsp;0004</a>
+<a class="text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent transition" href="0004-highlight-extension-fenced-only-wiring.html">ADR&nbsp;0004</a>
 ```
 
 ## Finishing: three files, not one

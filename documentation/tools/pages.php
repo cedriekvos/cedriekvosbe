@@ -24,19 +24,11 @@ const CANONICAL_ROLES = [
     'Filter' => 'visibility rules',
 ];
 
-/** Mermaid classDef names are namespaced so they cannot collide with subgraph ids. */
-const BAND_STYLES = [
-    'bandDomain' => 'fill:#ffffff,stroke:#0f172a,stroke-width:1.5px,color:#0f172a',
-    'bandKernel' => 'fill:#ecfdf5,stroke:#059669,stroke-width:1.5px,color:#064e3b',
-    'bandDelivery' => 'fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px,color:#1e3a8a',
-    'bandPlatform' => 'fill:#f8fafc,stroke:#94a3b8,stroke-width:1.5px,color:#475569',
-];
-
 const BAND_CHIPS = [
-    'domain' => 'bg-slate-900 text-white',
-    'kernel' => 'bg-emerald-100 text-emerald-800',
-    'delivery' => 'bg-blue-100 text-blue-800',
-    'platform' => 'bg-slate-200 text-slate-600',
+    'domain' => 'text-fg',
+    'kernel' => 'text-accent',
+    'delivery' => 'text-info',
+    'platform' => 'text-muted',
 ];
 
 /**
@@ -73,22 +65,22 @@ function runtimePackages(): array
 
 function card(string $inner, string $extra = ''): string
 {
-    return '<div class="rounded-xl border border-slate-200 bg-white px-5 py-4 '.$extra.'">'.$inner.'</div>';
+    return '<div class="rounded-lg border border-line bg-card px-5 py-4 '.$extra.'">'.$inner.'</div>';
 }
 
 function code(string $text): string
 {
-    return '<code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">'.h($text).'</code>';
+    return '<code class="font-mono text-[0.875em] rounded-[3px] px-1 py-0.5 bg-surface text-hi border border-line">'.h($text).'</code>';
 }
 
 function chip(string $text, string $classes): string
 {
-    return '<span class="text-[11px] font-semibold px-2 py-0.5 rounded '.$classes.'">'.h($text).'</span>';
+    return '<span class="badge '.$classes.'">'.h($text).'</span>';
 }
 
 function paragraph(string $text): string
 {
-    return '<p class="text-slate-600 leading-relaxed max-w-3xl">'.$text.'</p>';
+    return '<p class="text-muted leading-relaxed max-w-3xl">'.$text.'</p>';
 }
 
 /** Bands are ranked so an edge can be classified as downward, lateral or upward. */
@@ -173,7 +165,7 @@ function buildIndex(array $classes, array $byDomain, array $edges): string
     $statCards = '';
 
     foreach ($stats as [$label, $value]) {
-        $statCards .= card('<div class="font-serif text-3xl tracking-tight">'.h($value).'</div><div class="lbl text-slate-400 mt-1">'.h($label).'</div>');
+        $statCards .= card('<div class="font-mono font-bold text-2xl leading-snug">'.h($value).'</div><div class="lbl text-muted mt-1">'.h($label).'</div>');
     }
 
     $guide = [
@@ -186,10 +178,10 @@ function buildIndex(array $classes, array $byDomain, array $edges): string
     $guideCards = '';
 
     foreach ($guide as [$href, $title, $question, $body]) {
-        $guideCards .= '<a href="'.$href.'" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">'
-            .'<h3 class="font-serif text-lg text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4">'.h($title).'</h3>'
-            .'<p class="text-sm font-medium text-slate-900 mt-1.5">'.h($question).'</p>'
-            .'<p class="text-sm text-slate-600 mt-1 leading-relaxed">'.h($body).'</p></a>';
+        $guideCards .= '<a href="'.$href.'" class="group block rounded-lg border border-line bg-card px-5 py-4 hover:border-accent transition">'
+            .'<h3 class="font-mono font-bold text-base text-fg group-hover:text-accent transition-colors">'.h($title).'</h3>'
+            .'<p class="text-sm font-medium text-fg mt-1.5">'.h($question).'</p>'
+            .'<p class="text-sm text-muted mt-1 leading-relaxed">'.h($body).'</p></a>';
     }
 
     $domainList = implode(', ', array_map(static fn (string $name): string => code('App\\'.$name), $domains));
@@ -243,7 +235,7 @@ function isolatedNote(array $byDomain, array $edges): string
 
     $names = implode(', ', array_map(static fn (string $name): string => code('App\\'.$name), $isolated));
 
-    return '<p class="text-sm text-slate-500 leading-relaxed max-w-3xl">Left off the diagram because '
+    return '<p class="text-sm text-muted leading-relaxed max-w-3xl">Left off the diagram because '
         .(count($isolated) === 1 ? 'it imports' : 'they import').' nothing under '.code('App\\')
         .' and nothing imports '.(count($isolated) === 1 ? 'it' : 'them').': '.$names
         .'. Laravel resolves '.(count($isolated) === 1 ? 'it' : 'them').' directly.</p>';
@@ -311,12 +303,11 @@ function bandDiagram(array $byDomain, array $edges, bool $weighted): string
         }
     }
 
+    // Diagram nodes are coloured by class name in documentation/assets/docs.css:
+    // classDef cannot take the theme's var() tokens. The band prefix keeps the
+    // class names clear of subgraph ids.
     foreach (array_keys(connectedModules($byDomain, $edges)) as $domain) {
         $lines[] = '  class '.nodeId($domain).' band'.ucfirst(BANDS[$domain] ?? 'platform');
-    }
-
-    foreach (BAND_STYLES as $name => $style) {
-        $lines[] = '  classDef '.$name.' '.$style;
     }
 
     return implode("\n", $lines);
@@ -357,23 +348,23 @@ function buildModules(array $classes, array $byDomain, array $edges): string
             arsort($outgoing);
 
             $dependsOn = $outgoing === []
-                ? '<span class="text-slate-400">nothing outside itself</span>'
+                ? '<span class="text-muted">nothing outside itself</span>'
                 : implode(' ', array_map(
-                    static fn (string $target, int $weight): string => chip($target.' ×'.$weight, 'bg-slate-100 text-slate-600'),
+                    static fn (string $target, int $weight): string => chip($target.' ×'.$weight, 'text-muted'),
                     array_keys($outgoing),
                     $outgoing
                 ));
 
             $cards .= card(
                 '<div class="flex items-baseline gap-3 flex-wrap">'
-                .'<h4 class="font-serif text-lg text-slate-900">App\\'.h($domain).'</h4>'
-                .chip(count($domainClasses).' '.(count($domainClasses) === 1 ? 'class' : 'classes'), 'bg-slate-100 text-slate-600')
-                .'<span class="font-mono text-[11px] text-slate-400 ml-auto">fan-out '.$out.' · fan-in '.$in.'</span>'
+                .'<h4 class="font-mono font-bold text-base text-fg">App\\'.h($domain).'</h4>'
+                .chip(count($domainClasses).' '.(count($domainClasses) === 1 ? 'class' : 'classes'), 'text-muted')
+                .'<span class="font-mono text-[11px] text-muted ml-auto">fan-out '.$out.' · fan-in '.$in.'</span>'
                 .'</div>'
-                .'<div class="mt-3 lbl text-slate-400">Depends on</div>'
+                .'<div class="mt-3 lbl text-muted">Depends on</div>'
                 .'<div class="mt-1 flex flex-wrap gap-1">'.$dependsOn.'</div>'
-                .'<div class="mt-3 lbl text-slate-400">Roles present</div>'
-                .'<div class="mt-1 flex flex-wrap gap-1">'.implode(' ', array_map(static fn (string $role): string => chip($role, 'bg-white border border-slate-200 text-slate-600'), $roles)).'</div>'
+                .'<div class="mt-3 lbl text-muted">Roles present</div>'
+                .'<div class="mt-1 flex flex-wrap gap-1">'.implode(' ', array_map(static fn (string $role): string => chip($role, 'text-muted'), $roles)).'</div>'
             );
         }
 
@@ -417,10 +408,10 @@ function layeringCallout(array $classes, array $edges): string
     $cycleNote = '';
 
     foreach ($cycles as [$from, $to]) {
-        $cycleNote .= '<div class="rounded-lg border border-red-200 bg-red-50/70 px-5 py-4 text-sm text-red-900 mt-3">'
+        $cycleNote .= '<div class="rounded-lg border border-danger/40 bg-danger/10 px-5 py-4 text-sm text-danger mt-3">'
             .'<strong class="font-semibold">App\\'.h($from).' and App\\'.h($to).' import each other.</strong> '
             .'A module-level cycle: neither can be understood, moved or tested without the other.'
-            .'<div class="mt-2 font-mono text-[12px] text-red-900/70 space-y-0.5">'
+            .'<div class="mt-2 font-mono text-[12px] text-danger/70 space-y-0.5">'
             .implode('', array_map(
                 static fn (array $pair): string => '<div>'.h(shortName($pair[0])).' imports '.h(shortName($pair[1])).'</div>',
                 [...crossingsFor($classes, $from, $to), ...crossingsFor($classes, $to, $from)]
@@ -429,7 +420,7 @@ function layeringCallout(array $classes, array $edges): string
     }
 
     if ($notable === []) {
-        return '<div class="rounded-lg border border-emerald-200 bg-emerald-50/70 px-5 py-4 text-sm leading-relaxed text-emerald-900">'
+        return '<div class="rounded-lg border border-accent/40 bg-accent/10 px-5 py-4 text-sm leading-relaxed text-accent">'
             .'<strong class="font-semibold">Every arrow points downward.</strong> The delivery layer knows about domains, domains know about the kernel, and nothing points back.'
             .'</div>'.$cycleNote;
     }
@@ -442,8 +433,8 @@ function layeringCallout(array $classes, array $edges): string
 
         $items .= '<li class="leading-relaxed">'
             .'<span class="font-mono text-[13px] font-semibold">App\\'.h($from).' &rarr; App\\'.h($to).'</span> '
-            .'<span class="text-amber-800/70">('.h($kind).')</span>'
-            .'<div class="mt-1 font-mono text-[12px] text-amber-900/70 space-y-0.5">'
+            .'<span class="text-warn/70">('.h($kind).')</span>'
+            .'<div class="mt-1 font-mono text-[12px] text-warn/70 space-y-0.5">'
             .implode('', array_map(
                 static fn (array $pair): string => '<div>'.h(shortName($pair[0])).' imports '.h(shortName($pair[1])).'</div>',
                 $crossings
@@ -451,7 +442,7 @@ function layeringCallout(array $classes, array $edges): string
             .'</div></li>';
     }
 
-    return '<div class="rounded-lg border border-amber-200 bg-amber-50/70 px-5 py-4 text-sm text-amber-900">'
+    return '<div class="rounded-lg border border-warn/40 bg-warn/10 px-5 py-4 text-sm text-warn">'
         .'<strong class="font-semibold">'.count($notable).' of the '.(count($classified['downward']) + count($notable)).' arrows do not point straight down.</strong> '
         .'Not necessarily wrong — but these are the couplings that make two modules hard to move independently.'
         .'<ul class="mt-3 space-y-2.5 list-disc pl-5">'.$items.'</ul>'
@@ -480,15 +471,15 @@ function crossingTable(array $classes): string
                 continue;
             }
 
-            $rows .= '<tr class="border-t border-slate-100">'
-                .'<td class="py-1.5 pr-4 font-mono text-[13px] text-slate-700">'.h($class['fqcn']).'</td>'
-                .'<td class="py-1.5 pr-4 text-slate-300">&rarr;</td>'
-                .'<td class="py-1.5 font-mono text-[13px] text-slate-700">'.h($dependency).'</td>'
+            $rows .= '<tr class="border-t border-line/60">'
+                .'<td class="py-1.5 pr-4 font-mono text-[13px] text-fg">'.h($class['fqcn']).'</td>'
+                .'<td class="py-1.5 pr-4 text-muted/60">&rarr;</td>'
+                .'<td class="py-1.5 font-mono text-[13px] text-fg">'.h($dependency).'</td>'
                 .'</tr>';
         }
     }
 
-    return '<div class="rounded-xl border border-slate-200 bg-white px-5 py-4 overflow-x-auto"><table class="w-full text-left"><tbody>'.$rows.'</tbody></table></div>';
+    return '<div class="rounded-lg border border-line bg-card px-5 py-4 overflow-x-auto"><table class="w-full text-left"><tbody>'.$rows.'</tbody></table></div>';
 }
 
 // ----------------------------------------------------------------- anatomy --
@@ -504,33 +495,33 @@ function buildAnatomy(array $classes, array $byDomain): string
         ARRAY_FILTER_USE_BOTH
     ));
 
-    $head = '<th class="py-2 pr-3 text-left lbl text-slate-400 w-[9rem]">Slot</th>';
+    $head = '<th class="py-2 pr-3 text-left lbl text-muted w-[9rem]">Slot</th>';
 
     foreach ($matrixDomains as $domain) {
-        $band = (BANDS[$domain] ?? '') === 'kernel' ? '<span class="block font-normal normal-case tracking-normal text-[10px] text-emerald-600">shared kernel</span>' : '';
-        $head .= '<th class="py-2 px-2 text-left lbl text-slate-500 align-bottom">'.h($domain).$band.'</th>';
+        $band = (BANDS[$domain] ?? '') === 'kernel' ? '<span class="block font-normal normal-case tracking-normal text-[10px] text-accent">shared kernel</span>' : '';
+        $head .= '<th class="py-2 px-2 text-left lbl text-muted align-bottom">'.h($domain).$band.'</th>';
     }
 
     $rows = '';
 
     foreach (CANONICAL_ROLES as $role => $purpose) {
-        $rows .= '<tr class="border-t border-slate-100 align-top">'
-            .'<td class="py-2 pr-3"><div class="font-medium text-[13px] text-slate-900 leading-snug">'.h($role).'</div><div class="text-[11px] text-slate-500 leading-snug">'.h($purpose).'</div></td>';
+        $rows .= '<tr class="border-t border-line/60 align-top">'
+            .'<td class="py-2 pr-3"><div class="font-medium text-[13px] text-fg leading-snug">'.h($role).'</div><div class="text-[11px] text-muted leading-snug">'.h($purpose).'</div></td>';
 
         foreach ($matrixDomains as $domain) {
             $filled = array_values(array_filter($byDomain[$domain], static fn (array $class): bool => $class['role'] === $role));
 
             $rows .= '<td class="py-2 px-2 text-[11px] font-mono leading-tight break-words">'
                 .($filled === []
-                    ? '<span class="text-slate-300">&mdash;</span>'
-                    : implode('<br/>', array_map(static fn (array $class): string => '<span class="text-slate-700">'.h($class['short']).'</span>', $filled)))
+                    ? '<span class="text-muted/60">&mdash;</span>'
+                    : implode('<br/>', array_map(static fn (array $class): string => '<span class="text-fg">'.h($class['short']).'</span>', $filled)))
                 .'</td>';
         }
 
         $rows .= '</tr>';
     }
 
-    $matrix = '<div class="xl:-mx-24"><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 overflow-x-auto"><table class="w-full border-collapse table-fixed"><thead><tr>'.$head.'</tr></thead><tbody>'.$rows.'</tbody></table></div></div>';
+    $matrix = '<div class="xl:-mx-24"><div class="rounded-lg border border-line bg-card px-5 py-4 overflow-x-auto"><table class="w-full border-collapse table-fixed"><thead><tr>'.$head.'</tr></thead><tbody>'.$rows.'</tbody></table></div></div>';
 
     $deviations = '';
 
@@ -540,13 +531,13 @@ function buildAnatomy(array $classes, array $byDomain): string
         $extra = array_values(array_diff($present, array_keys(CANONICAL_ROLES)));
 
         $deviations .= card(
-            '<h4 class="font-serif text-lg text-slate-900">App\\'.h($domain).'</h4>'
+            '<h4 class="font-mono font-bold text-base text-fg">App\\'.h($domain).'</h4>'
             .'<div class="mt-3 grid sm:grid-cols-2 gap-3 text-sm">'
-            .'<div><div class="lbl text-slate-400 mb-1">Slots left empty</div>'
-            .($missing === [] ? '<span class="text-emerald-700">fills every slot</span>' : '<div class="flex flex-wrap gap-1">'.implode(' ', array_map(static fn (string $role): string => chip($role, 'bg-slate-100 text-slate-500'), $missing)).'</div>')
+            .'<div><div class="lbl text-muted mb-1">Slots left empty</div>'
+            .($missing === [] ? '<span class="text-accent">fills every slot</span>' : '<div class="flex flex-wrap gap-1">'.implode(' ', array_map(static fn (string $role): string => chip($role, 'text-muted'), $missing)).'</div>')
             .'</div>'
-            .'<div><div class="lbl text-slate-400 mb-1">Beyond the pattern</div>'
-            .($extra === [] ? '<span class="text-slate-400">nothing</span>' : '<div class="flex flex-wrap gap-1">'.implode(' ', array_map(static fn (string $role): string => chip($role, 'bg-amber-100 text-amber-800'), $extra)).'</div>')
+            .'<div><div class="lbl text-muted mb-1">Beyond the pattern</div>'
+            .($extra === [] ? '<span class="text-muted">nothing</span>' : '<div class="flex flex-wrap gap-1">'.implode(' ', array_map(static fn (string $role): string => chip($role, 'text-warn'), $extra)).'</div>')
             .'</div></div>'
         );
     }
@@ -554,7 +545,7 @@ function buildAnatomy(array $classes, array $byDomain): string
     $perDomain = '';
 
     foreach ($matrixDomains as $domain) {
-        $perDomain .= '<div class="space-y-2"><h4 class="font-serif text-lg text-slate-900">App\\'.h($domain).'</h4>'
+        $perDomain .= '<div class="space-y-2"><h4 class="font-mono font-bold text-base text-fg">App\\'.h($domain).'</h4>'
             .mermaid(domainWiringDiagram($classes, $domain)).'</div>';
     }
 
@@ -600,8 +591,6 @@ function domainWiringDiagram(array $classes, string $domain): string
         }
     }
 
-    $lines[] = '  classDef external fill:#ecfdf5,stroke:#059669,color:#064e3b';
-
     return implode("\n", array_unique($lines));
 }
 
@@ -631,8 +620,8 @@ function buildFlows(array $classes, array $routes): string
             $uris = $routes[$entry['short']] ?? [];
 
             $uriChips = $uris === []
-                ? '<span class="text-xs text-slate-400">no route found in routes/</span>'
-                : implode(' ', array_map(static fn (string $uri): string => '<span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">'.h($uri).'</span>', $uris));
+                ? '<span class="text-xs text-muted">no route found in routes/</span>'
+                : implode(' ', array_map(static fn (string $uri): string => '<span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">'.h($uri).'</span>', $uris));
 
             $touched = [];
 
@@ -641,16 +630,16 @@ function buildFlows(array $classes, array $routes): string
             }
 
             $diagram = $edges === []
-                ? '<p class="text-sm text-slate-500 leading-relaxed">Injects nothing — it renders a view or issues a redirect on its own.</p>'
+                ? '<p class="text-sm text-muted leading-relaxed">Injects nothing — it renders a view or issues a redirect on its own.</p>'
                 : mermaid(traceDiagram($classes, $entry['fqcn'], $edges));
 
             $traces .= card(
                 '<div class="flex items-baseline gap-3 flex-wrap">'
-                .'<h4 class="font-serif text-lg text-slate-900">'.h($entry['short']).'</h4>'
+                .'<h4 class="font-mono font-bold text-base text-fg">'.h($entry['short']).'</h4>'
                 .$uriChips
-                .'<span class="font-mono text-[11px] text-slate-400 ml-auto">'.h($entry['file']).'</span>'
+                .'<span class="font-mono text-[11px] text-muted ml-auto">'.h($entry['file']).'</span>'
                 .'</div>'
-                .'<p class="text-sm text-slate-500 mt-2">Reaches '.count($touched).' '.(count($touched) === 1 ? 'class' : 'classes').' through injection.</p>'
+                .'<p class="text-sm text-muted mt-2">Reaches '.count($touched).' '.(count($touched) === 1 ? 'class' : 'classes').' through injection.</p>'
                 .'<div class="mt-3">'.$diagram.'</div>'
             );
         }
@@ -692,15 +681,12 @@ function traceDiagram(array $classes, string $entry, array $edges): string
     }
 
     $lines[] = '  class '.nodeId($entry).' entry';
-    $lines[] = '  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff';
 
     foreach (array_keys($nodes) as $fqcn) {
         if (isset($classes[$fqcn]) && $classes[$fqcn]['role'] === 'File storage') {
             $lines[] = '  class '.nodeId($fqcn).' disk';
         }
     }
-
-    $lines[] = '  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f';
 
     return implode("\n", array_unique($lines));
 }
@@ -731,10 +717,10 @@ function buildDependencies(array $classes, array $byDomain, array $inbound): str
 
         $blast .= card(
             '<div class="flex items-baseline gap-3 flex-wrap">'
-            .'<h4 class="font-mono text-sm font-semibold text-slate-900">'.h($package).'</h4>'
-            .chip(count($names).' '.(count($names) === 1 ? 'class' : 'classes'), 'bg-slate-100 text-slate-600')
+            .'<h4 class="font-mono text-sm font-semibold text-fg">'.h($package).'</h4>'
+            .chip(count($names).' '.(count($names) === 1 ? 'class' : 'classes'), 'text-muted')
             .'</div>'
-            .'<div class="mt-2 font-mono text-[13px] text-slate-600 leading-relaxed space-y-0.5">'
+            .'<div class="mt-2 font-mono text-[13px] text-muted leading-relaxed space-y-0.5">'
             .implode('', array_map(static fn (string $name): string => '<div>'.h($name).'</div>', $names))
             .'</div>'
         );
@@ -748,29 +734,29 @@ function buildDependencies(array $classes, array $byDomain, array $inbound): str
         sort($dependedOnBy);
         $in = count($dependedOnBy);
 
-        $rows .= '<tr class="border-t border-slate-100 align-top" data-row="'.h(strtolower($class['fqcn'].' '.$class['role'])).'">'
-            .'<td class="py-2 pr-4 font-mono text-[13px] text-slate-800 whitespace-nowrap">'.h($class['fqcn']).'</td>'
-            .'<td class="py-2 pr-4 text-[13px] text-slate-500 whitespace-nowrap">'.h($class['role']).'</td>'
-            .'<td class="py-2 pr-4 text-[13px] font-mono text-slate-500 text-right">'.$in.'</td>'
-            .'<td class="py-2 pr-4 text-[13px] font-mono text-slate-500 text-right">'.$out.'</td>'
-            .'<td class="py-2 font-mono text-[12px] text-slate-500 leading-relaxed">'
+        $rows .= '<tr class="border-t border-line/60 align-top" data-row="'.h(strtolower($class['fqcn'].' '.$class['role'])).'">'
+            .'<td class="py-2 pr-4 font-mono text-[13px] text-fg whitespace-nowrap">'.h($class['fqcn']).'</td>'
+            .'<td class="py-2 pr-4 text-[13px] text-muted whitespace-nowrap">'.h($class['role']).'</td>'
+            .'<td class="py-2 pr-4 text-[13px] font-mono text-muted text-right">'.$in.'</td>'
+            .'<td class="py-2 pr-4 text-[13px] font-mono text-muted text-right">'.$out.'</td>'
+            .'<td class="py-2 font-mono text-[12px] text-muted leading-relaxed">'
             .($dependedOnBy === []
-                ? '<span class="text-slate-300">&mdash;</span>'
+                ? '<span class="text-muted/60">&mdash;</span>'
                 : implode('<br/>', array_map(static fn (string $name): string => h(shortName($name)), $dependedOnBy)))
             .'</td></tr>';
     }
 
     $table = <<<HTML
     <div class="space-y-3">
-      <input id="filter" type="search" placeholder="Filter by class name or role…" class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-mono placeholder:font-sans placeholder:text-slate-400 focus:outline-none focus:border-slate-900" />
-      <div class="rounded-xl border border-slate-200 bg-white px-5 py-4 overflow-x-auto">
+      <input id="filter" type="search" placeholder="Filter by class name or role…" class="w-full rounded-lg border border-line bg-card px-4 py-2 text-sm font-mono placeholder:font-sans placeholder:text-muted focus:outline-none focus:border-accent" />
+      <div class="rounded-lg border border-line bg-card px-5 py-4 overflow-x-auto">
         <table class="w-full border-collapse">
           <thead><tr>
-            <th class="py-2 pr-4 text-left lbl text-slate-400">Class</th>
-            <th class="py-2 pr-4 text-left lbl text-slate-400">Role</th>
-            <th class="py-2 pr-4 text-right lbl text-slate-400">In</th>
-            <th class="py-2 pr-4 text-right lbl text-slate-400">Out</th>
-            <th class="py-2 text-left lbl text-slate-400">Depended on by</th>
+            <th class="py-2 pr-4 text-left lbl text-muted">Class</th>
+            <th class="py-2 pr-4 text-left lbl text-muted">Role</th>
+            <th class="py-2 pr-4 text-right lbl text-muted">In</th>
+            <th class="py-2 pr-4 text-right lbl text-muted">Out</th>
+            <th class="py-2 text-left lbl text-muted">Depended on by</th>
           </tr></thead>
           <tbody id="rows">{$rows}</tbody>
         </table>
@@ -795,8 +781,8 @@ function buildDependencies(array $classes, array $byDomain, array $inbound): str
 
     $orphanList = $orphans === []
         ? paragraph('Every class is imported by at least one other, or is an entry point.')
-        : '<div class="rounded-xl border border-slate-200 bg-white px-5 py-4"><div class="font-mono text-[13px] text-slate-600 space-y-0.5">'
-            .implode('', array_map(static fn (array $class): string => '<div>'.h($class['fqcn']).' <span class="text-slate-400">— '.h($class['role']).'</span></div>', $orphans))
+        : '<div class="rounded-lg border border-line bg-card px-5 py-4"><div class="font-mono text-[13px] text-muted space-y-0.5">'
+            .implode('', array_map(static fn (array $class): string => '<div>'.h($class['fqcn']).' <span class="text-muted">— '.h($class['role']).'</span></div>', $orphans))
             .'</div></div>';
 
     $orphanCount = count($orphans);
@@ -805,7 +791,7 @@ function buildDependencies(array $classes, array $byDomain, array $inbound): str
         paragraph('Every composer package, and the exact classes that import from it. A package with one importing class can be swapped behind that class; one that appears everywhere cannot.'),
         '<div class="grid gap-3">'.$blast.'</div>',
     ]))."\n\n".section('Class graph', 'Fan-in and fan-out, per class', implode("\n", [
-        paragraph('<strong class="font-semibold text-slate-900">In</strong> is how many classes name this one — the cost of changing its signature. <strong class="font-semibold text-slate-900">Out</strong> is how many it names itself — how much it has to know to do its job.'),
+        paragraph('<strong class="font-semibold text-fg">In</strong> is how many classes name this one — the cost of changing its signature. <strong class="font-semibold text-fg">Out</strong> is how many it names itself — how much it has to know to do its job.'),
         $table,
     ]))."\n\n".section('Nothing references these', 'Reached only through the framework', implode("\n", [
         paragraph('No other class in '.code('app/').' names '.($orphanCount === 1 ? 'this one' : 'these').'. That is not dead code — Laravel resolves them itself, from a route, a service provider, a Blade view or an Eloquent call. It is, though, the list to check first if you suspect something really is unused.'),

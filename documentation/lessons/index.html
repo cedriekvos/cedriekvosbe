@@ -4,105 +4,116 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Lessons · cedriekvos blog</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      .lbl { font-size: .625rem; letter-spacing: .12em; text-transform: uppercase; }
-      html { scroll-behavior: smooth; }
-    </style>
+    <link rel="stylesheet" href="../assets/tokens.css" />
+    <link rel="stylesheet" href="../assets/docs.css" />
+    <script src="../assets/docs.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
-  <body class="bg-stone-50 text-slate-900 font-sans antialiased">
-    <header class="border-b border-slate-200">
-      <div class="max-w-5xl mx-auto px-6 h-12 flex items-center justify-between gap-4 text-xs">
-        <a href="../index.html" class="font-semibold text-slate-900 hover:text-slate-600 transition">cedriekvos/blog <span class="font-normal text-slate-400">documentation</span></a>
-        <nav aria-label="Documentation" class="flex items-center gap-1 font-medium -mr-2.5"><a href="../architecture/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Architecture</a><a href="../specifications/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Specifications</a><a href="../decisions/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Decisions</a><a href="../lessons/index.html" aria-current="page" class="px-2.5 py-1 rounded text-slate-900 bg-slate-200/70">Lessons</a></nav>
+  <body class="antialiased flex flex-col min-h-screen">
+    <header class="site-header sticky top-0 z-10">
+      <div class="max-w-5xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+        <a href="../index.html" class="flex items-center gap-2 font-mono font-semibold text-sm text-fg hover:text-accent transition-colors leading-none"><svg viewBox="0 0 24 24" class="w-[1.1rem] h-[1.1rem] shrink-0" aria-hidden="true"><polygon class="fox-icon-a" points="2,3 9,8 12,5 12,22 3,15" /><polygon class="fox-icon-b" points="22,3 15,8 12,5 12,22 21,15" /></svg>~/documentation<span class="cursor"></span></a>
+        <div class="flex items-center gap-4">
+          <nav aria-label="Documentation" class="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs"><a href="../architecture/index.html" class="text-muted hover:text-fg aria-[current=page]:text-accent">[architecture]</a><a href="../specifications/index.html" class="text-muted hover:text-fg aria-[current=page]:text-accent">[specifications]</a><a href="../decisions/index.html" class="text-muted hover:text-fg aria-[current=page]:text-accent">[decisions]</a><a href="../lessons/index.html" aria-current="page" class="text-muted hover:text-fg aria-[current=page]:text-accent">[lessons]</a></nav>
+          <span class="h-[1.1rem] w-px shrink-0 bg-line" aria-hidden="true"></span>
+          <div class="theme-switcher relative">
+            <button id="theme-toggle" class="theme-toggle icon-hover-scale" type="button" aria-label="Theme" aria-haspopup="listbox" aria-expanded="false"><svg viewBox="0 0 24 24" class="theme-icon w-[1.1rem] h-[1.1rem] shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="11" /></svg></button>
+            <ul id="theme-menu" class="theme-menu" role="listbox" hidden><li role="option" data-mode="light" tabindex="-1" aria-checked="false" data-label="Light"><span class="theme-option-label">Light</span></li><li role="option" data-mode="dark" tabindex="-1" aria-checked="false" data-label="Dark"><span class="theme-option-label">Dark</span></li><li role="option" data-mode="auto" tabindex="-1" aria-checked="false" data-label="Auto"><span class="theme-option-label">Auto</span></li></ul>
+          </div>
+        </div>
       </div>
     </header>
-    <main class="max-w-4xl mx-auto px-6 py-12 sm:py-16 space-y-14">
+    <main class="flex-1 w-full max-w-4xl mx-auto px-6 py-12 sm:py-16 space-y-14">
 
       <header class="space-y-5">
         <div class="flex items-baseline justify-between flex-wrap gap-2">
-          <h1 class="font-serif text-4xl tracking-tight">Lessons</h1>
-          <span class="font-mono text-xs text-slate-400">cedriekvos/blog · 1 lesson</span>
+          <h1 class="font-mono font-bold text-2xl leading-snug">Lessons</h1>
+          <span class="font-mono text-xs text-muted">cedriekvos/blog · 1 lesson</span>
         </div>
-        <p class="text-slate-600 leading-relaxed max-w-2xl">
+        <p class="text-muted leading-relaxed max-w-2xl">
           PHP and this codebase, taught from the codebase itself. Each lesson takes a few real snippets and explains the
-          <strong class="font-semibold text-slate-900">PHP features</strong>, <strong class="font-semibold text-slate-900">practices</strong> and
-          <strong class="font-semibold text-slate-900">design patterns</strong> behind them, along with what each choice costs. The lessons
+          <strong class="font-semibold text-fg">PHP features</strong>, <strong class="font-semibold text-fg">practices</strong> and
+          <strong class="font-semibold text-fg">design patterns</strong> behind them, along with what each choice costs. The lessons
           assume you already know PHP and spend their time on why the code is the way it is.
         </p>
-        <p class="text-slate-600 leading-relaxed max-w-2xl text-sm">
+        <p class="text-muted leading-relaxed max-w-2xl text-sm">
           Lessons are added one at a time, on request, and each one builds on the ones before it.
         </p>
       </header>
 
       <section class="space-y-3">
-        <h2 class="lbl text-slate-400">Lessons</h2>
+        <h2 class="lbl text-muted">Lessons</h2>
         <div class="space-y-3">
-        <a href="01-the-shape-of-a-class.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
+        <a href="01-the-shape-of-a-class.html" class="group block rounded-lg border border-line bg-card px-5 py-4 hover:border-accent transition">
           <div class="flex items-baseline gap-3 flex-wrap">
-            <span class="font-mono text-sm text-slate-400">01</span>
-            <h3 class="font-serif text-lg leading-snug text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4 flex-1 min-w-[16rem]">The shape of a class: <code class="font-mono text-[0.9em]">Post</code> and its factory</h3>
-            <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Current</span>
+            <span class="font-mono text-sm text-muted">01</span>
+            <h3 class="font-mono font-bold text-base leading-snug text-fg flex-1 min-w-[16rem] group-hover:text-accent transition-colors">The shape of a class: <code class="font-mono text-[0.9em]">Post</code> and its factory</h3>
+            <span class="badge text-accent">Current</span>
           </div>
-          <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">What <code class="font-mono text-[0.875em]">final readonly</code> and promotion buy you, why <code class="font-mono text-[0.875em]">Post</code> is a snapshot rather than a value object, where <code class="font-mono text-[0.875em]">mixed</code> gets narrowed, and how tests enforce all of it.</p>
+          <p class="text-sm text-muted mt-1.5 leading-relaxed">What <code class="font-mono text-[0.875em]">final readonly</code> and promotion buy you, why <code class="font-mono text-[0.875em]">Post</code> is a snapshot rather than a value object, where <code class="font-mono text-[0.875em]">mixed</code> gets narrowed, and how tests enforce all of it.</p>
         </a>
         </div>
       </section>
 
       <section class="space-y-4">
-        <h2 class="font-serif text-2xl tracking-tight">Concepts covered so far</h2>
-        <p class="text-slate-600 text-sm leading-relaxed max-w-2xl">Every lesson adds its concepts here, so this grid doubles as an index: find a term, open the lesson that explains it.</p>
+        <h2 class="font-mono font-bold text-xl">Concepts covered so far</h2>
+        <p class="text-muted text-sm leading-relaxed max-w-2xl">Every lesson adds its concepts here, so this grid doubles as an index: find a term, open the lesson that explains it.</p>
         <div class="grid sm:grid-cols-3 gap-3">
-          <div class="rounded-xl border border-slate-200 bg-white px-5 py-4">
-            <h3 class="lbl text-slate-400 mb-3">PHP features</h3>
-            <ul class="text-sm leading-relaxed text-slate-700 space-y-1.5">
-              <li><code class="font-mono text-[0.875em]">declare(strict_types=1)</code> <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
-              <li>Readonly classes <span class="text-slate-400">8.2</span> <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
-              <li>Constructor promotion <span class="text-slate-400">8.0</span> <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
-              <li>Named arguments <span class="text-slate-400">8.0</span> <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
-              <li>The <code class="font-mono text-[0.875em]">mixed</code> type <span class="text-slate-400">8.0</span> <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
-              <li>Typed class constants <span class="text-slate-400">8.3</span> <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+          <div class="rounded-lg border border-line bg-card px-5 py-4">
+            <h3 class="lbl text-muted mb-3">PHP features</h3>
+            <ul class="text-sm leading-relaxed text-fg space-y-1.5">
+              <li><code class="font-mono text-[0.875em]">declare(strict_types=1)</code> <a class="text-muted hover:text-fg font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Readonly classes <span class="text-muted">8.2</span> <a class="text-muted hover:text-fg font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Constructor promotion <span class="text-muted">8.0</span> <a class="text-muted hover:text-fg font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Named arguments <span class="text-muted">8.0</span> <a class="text-muted hover:text-fg font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>The <code class="font-mono text-[0.875em]">mixed</code> type <span class="text-muted">8.0</span> <a class="text-muted hover:text-fg font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Typed class constants <span class="text-muted">8.3</span> <a class="text-muted hover:text-fg font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
             </ul>
           </div>
-          <div class="rounded-xl border border-slate-200 bg-white px-5 py-4">
-            <h3 class="lbl text-slate-400 mb-3">Patterns</h3>
-            <ul class="text-sm leading-relaxed text-slate-700 space-y-1.5">
-              <li>Value object, and the immutable snapshot that is mistaken for one <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
-              <li>Factory as an injectable service <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
-              <li>Named constructor <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+          <div class="rounded-lg border border-line bg-card px-5 py-4">
+            <h3 class="lbl text-muted mb-3">Patterns</h3>
+            <ul class="text-sm leading-relaxed text-fg space-y-1.5">
+              <li>Value object, and the immutable snapshot that is mistaken for one <a class="text-muted hover:text-fg font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Factory as an injectable service <a class="text-muted hover:text-fg font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Named constructor <a class="text-muted hover:text-fg font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
             </ul>
           </div>
-          <div class="rounded-xl border border-slate-200 bg-white px-5 py-4">
-            <h3 class="lbl text-slate-400 mb-3">Practices</h3>
-            <ul class="text-sm leading-relaxed text-slate-700 space-y-1.5">
-              <li>Immutable by default <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
-              <li>Final by default, composition over inheritance <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
-              <li>Narrow <code class="font-mono text-[0.875em]">mixed</code> once, at the boundary <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
-              <li>Architecture rules as tests <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
-              <li>Mutation testing over coverage <a class="text-slate-400 hover:text-slate-900 font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+          <div class="rounded-lg border border-line bg-card px-5 py-4">
+            <h3 class="lbl text-muted mb-3">Practices</h3>
+            <ul class="text-sm leading-relaxed text-fg space-y-1.5">
+              <li>Immutable by default <a class="text-muted hover:text-fg font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Final by default, composition over inheritance <a class="text-muted hover:text-fg font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Narrow <code class="font-mono text-[0.875em]">mixed</code> once, at the boundary <a class="text-muted hover:text-fg font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Architecture rules as tests <a class="text-muted hover:text-fg font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
+              <li>Mutation testing over coverage <a class="text-muted hover:text-fg font-mono text-xs" href="01-the-shape-of-a-class.html">01</a></li>
             </ul>
           </div>
         </div>
       </section>
 
       <section class="space-y-4">
-        <h2 class="font-serif text-2xl tracking-tight">How to read a lesson</h2>
-        <dl class="rounded-xl border border-slate-200 bg-white px-5 py-2">
-          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900"><span class="lbl text-emerald-600">From the codebase</span></dt><dd class="text-sm leading-relaxed text-slate-600">Quoted verbatim from the file named above it. QA fails when the quote no longer matches that file, so a current lesson cannot show code the repository no longer has. <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">// …</code> marks lines left out.</dd></div>
-          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900"><span class="lbl text-amber-600">Not in the codebase</span></dt><dd class="text-sm leading-relaxed text-slate-600">An illustration: a counter-example, or the alternative the code did not choose. Never checked, and never to be copied as house style.</dd></div>
-          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">Highlighted lines</dt><dd class="text-sm leading-relaxed text-slate-600">The part of a snippet the text around it is talking about.</dd></div>
-          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900">Check yourself</dt><dd class="text-sm leading-relaxed text-slate-600">Every lesson ends with questions and collapsed answers. Answer first, then open. Recalling an answer teaches more than rereading one.</dd></div>
-          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900"><span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Current</span></dt><dd class="text-sm leading-relaxed text-slate-600">The lesson describes the code as it is today. When the code changes and the lesson still teaches the same thing, the lesson is updated along with it.</dd></div>
-          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900"><span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-200 text-slate-600">No longer in the codebase</span></dt><dd class="text-sm leading-relaxed text-slate-600">The code changed so much that updating the lesson would turn it into a different lesson. It stays as written and names the commit its snippets were true at, so <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">git show &lt;commit&gt;:&lt;path&gt;</code> still shows the original.</dd></div>
+        <h2 class="font-mono font-bold text-xl">How to read a lesson</h2>
+        <dl class="rounded-lg border border-line bg-card px-5 py-2">
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-line/60 last:border-0"><dt class="text-sm font-semibold text-fg"><span class="lbl text-accent">From the codebase</span></dt><dd class="text-sm leading-relaxed text-muted">Quoted verbatim from the file named above it. QA fails when the quote no longer matches that file, so a current lesson cannot show code the repository no longer has. <code class="font-mono text-[0.875em] rounded-[3px] px-1 py-0.5 bg-surface text-hi border border-line">// …</code> marks lines left out.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-line/60 last:border-0"><dt class="text-sm font-semibold text-fg"><span class="lbl text-warn">Not in the codebase</span></dt><dd class="text-sm leading-relaxed text-muted">An illustration: a counter-example, or the alternative the code did not choose. Never checked, and never to be copied as house style.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-line/60 last:border-0"><dt class="text-sm font-semibold text-fg">Highlighted lines</dt><dd class="text-sm leading-relaxed text-muted">The part of a snippet the text around it is talking about.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-line/60 last:border-0"><dt class="text-sm font-semibold text-fg">Check yourself</dt><dd class="text-sm leading-relaxed text-muted">Every lesson ends with questions and collapsed answers. Answer first, then open. Recalling an answer teaches more than rereading one.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-line/60 last:border-0"><dt class="text-sm font-semibold text-fg"><span class="badge text-accent">Current</span></dt><dd class="text-sm leading-relaxed text-muted">The lesson describes the code as it is today. When the code changes and the lesson still teaches the same thing, the lesson is updated along with it.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-line/60 last:border-0"><dt class="text-sm font-semibold text-fg"><span class="badge text-muted">No longer in the codebase</span></dt><dd class="text-sm leading-relaxed text-muted">The code changed so much that updating the lesson would turn it into a different lesson. It stays as written and names the commit its snippets were true at, so <code class="font-mono text-[0.875em] rounded-[3px] px-1 py-0.5 bg-surface text-hi border border-line">git show &lt;commit&gt;:&lt;path&gt;</code> still shows the original.</dd></div>
         </dl>
-        <p class="text-sm text-slate-500 pt-2">
-          The check is <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">php documentation/tools/check-lessons.php</code>, and it runs as part of <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">composer qa</code>.
+        <p class="text-sm text-muted pt-2">
+          The check is <code class="font-mono text-[0.875em] rounded-[3px] px-1 py-0.5 bg-surface text-hi border border-line">php documentation/tools/check-lessons.php</code>, and it runs as part of <code class="font-mono text-[0.875em] rounded-[3px] px-1 py-0.5 bg-surface text-hi border border-line">composer qa</code>.
         </p>
       </section>
 
-      <footer class="border-t border-slate-200 pt-6 text-xs text-slate-400 leading-relaxed space-y-1">
-        <p>Related: <a class="underline underline-offset-2 decoration-slate-300 hover:text-slate-600" href="../architecture/index.html">Architecture</a> · <a class="underline underline-offset-2 decoration-slate-300 hover:text-slate-600" href="../decisions/index.html">Architecture Decision Records</a></p>
+      <footer class="border-t border-line pt-6 text-xs text-muted leading-relaxed space-y-1">
+        <p>Related: <a class="text-accent underline underline-offset-2 decoration-accent/40 hover:text-muted" href="../architecture/index.html">Architecture</a> · <a class="text-accent underline underline-offset-2 decoration-accent/40 hover:text-muted" href="../decisions/index.html">Architecture Decision Records</a></p>
       </footer>
     </main>
+    <footer class="site-footer">
+      <div class="max-w-5xl mx-auto px-6 py-5">
+        <p class="font-mono text-xs text-muted"><span class="text-accent">cedriek@blog</span>:<span class="text-hi">~/documentation/lessons</span>$&nbsp;<span class="opacity-45">exit 0</span></p>
+      </div>
+    </footer>
   </body>
 </html>

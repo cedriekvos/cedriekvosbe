@@ -4,44 +4,42 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Flow traces · cedriekvos blog architecture</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module">
-      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-      mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose", flowchart: { curve: "basis", useMaxWidth: true } });
-    </script>
-    <style>
-      .lbl { font-size: .625rem; letter-spacing: .12em; text-transform: uppercase; }
-      html { scroll-behavior: smooth; }
-      .mermaid { display: flex; justify-content: center; }
-      .mermaid svg { max-width: 100%; height: auto; }
-      summary { list-style: none; }
-      summary::-webkit-details-marker { display: none; }
-    </style>
+    <link rel="stylesheet" href="../assets/tokens.css" />
+    <link rel="stylesheet" href="../assets/docs.css" />
+    <script src="../assets/docs.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
-  <body class="bg-stone-50 text-slate-900 font-sans antialiased">
-    <header class="border-b border-slate-200">
-      <div class="max-w-5xl mx-auto px-6 h-12 flex items-center justify-between gap-4 text-xs">
-        <a href="../index.html" class="font-semibold text-slate-900 hover:text-slate-600 transition">cedriekvos/blog <span class="font-normal text-slate-400">documentation</span></a>
-        <nav aria-label="Documentation" class="flex items-center gap-1 font-medium -mr-2.5"><a href="../architecture/index.html" aria-current="page" class="px-2.5 py-1 rounded text-slate-900 bg-slate-200/70">Architecture</a><a href="../specifications/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Specifications</a><a href="../decisions/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Decisions</a><a href="../lessons/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Lessons</a></nav>
+  <body class="antialiased flex flex-col min-h-screen">
+    <header class="site-header sticky top-0 z-10">
+      <div class="max-w-5xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+        <a href="../index.html" class="flex items-center gap-2 font-mono font-semibold text-sm text-fg hover:text-accent transition-colors leading-none"><svg viewBox="0 0 24 24" class="w-[1.1rem] h-[1.1rem] shrink-0" aria-hidden="true"><polygon class="fox-icon-a" points="2,3 9,8 12,5 12,22 3,15" /><polygon class="fox-icon-b" points="22,3 15,8 12,5 12,22 21,15" /></svg>~/documentation<span class="cursor"></span></a>
+        <div class="flex items-center gap-4">
+          <nav aria-label="Documentation" class="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs"><a href="../architecture/index.html" aria-current="page" class="text-muted hover:text-fg aria-[current=page]:text-accent">[architecture]</a><a href="../specifications/index.html" class="text-muted hover:text-fg aria-[current=page]:text-accent">[specifications]</a><a href="../decisions/index.html" class="text-muted hover:text-fg aria-[current=page]:text-accent">[decisions]</a><a href="../lessons/index.html" class="text-muted hover:text-fg aria-[current=page]:text-accent">[lessons]</a></nav>
+          <span class="h-[1.1rem] w-px shrink-0 bg-line" aria-hidden="true"></span>
+          <div class="theme-switcher relative">
+            <button id="theme-toggle" class="theme-toggle icon-hover-scale" type="button" aria-label="Theme" aria-haspopup="listbox" aria-expanded="false"><svg viewBox="0 0 24 24" class="theme-icon w-[1.1rem] h-[1.1rem] shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="11" /></svg></button>
+            <ul id="theme-menu" class="theme-menu" role="listbox" hidden><li role="option" data-mode="light" tabindex="-1" aria-checked="false" data-label="Light"><span class="theme-option-label">Light</span></li><li role="option" data-mode="dark" tabindex="-1" aria-checked="false" data-label="Dark"><span class="theme-option-label">Dark</span></li><li role="option" data-mode="auto" tabindex="-1" aria-checked="false" data-label="Auto"><span class="theme-option-label">Auto</span></li></ul>
+          </div>
+        </div>
       </div>
     </header>
-    <main class="max-w-5xl mx-auto px-6 py-12 sm:py-16 space-y-14">
+    <main class="flex-1 w-full max-w-5xl mx-auto px-6 py-12 sm:py-16 space-y-14">
 
-      <nav class="flex flex-wrap items-center gap-1 text-xs font-medium -mx-1"><a href="index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Overview</a><a href="modules.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Module map</a><a href="anatomy.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Domain anatomy</a><span class="px-2.5 py-1 rounded bg-slate-900 text-white">Flow traces</span><a href="dependencies.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Dependency graph</a></nav>
+      <nav aria-label="Architecture" class="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs"><a href="index.html" class="text-muted hover:text-fg">[overview]</a><a href="modules.html" class="text-muted hover:text-fg">[module map]</a><a href="anatomy.html" class="text-muted hover:text-fg">[domain anatomy]</a><span aria-current="page" class="text-accent">[flow traces]</span><a href="dependencies.html" class="text-muted hover:text-fg">[dependency graph]</a></nav>
 
       <header class="space-y-4">
         <div class="flex items-baseline justify-between flex-wrap gap-2">
-          <h1 class="font-serif text-4xl tracking-tight">Flow traces</h1>
-          <span data-stamp class="font-mono text-xs text-slate-400">2026-10-24 · app/ @ 0bd1e4f</span>
+          <h1 class="font-mono font-bold text-2xl leading-snug">Flow traces</h1>
+          <span data-stamp class="font-mono text-xs text-muted">2026-10-24 · app/ @ 0bd1e4f</span>
         </div>
-        <p class="text-slate-600 leading-relaxed max-w-3xl">What actually happens when someone hits a URL. Each trace starts at an entry point and follows constructor and method injection outward — this is the object graph the container builds, not a sketch of it.</p>
+        <p class="text-muted leading-relaxed max-w-3xl">What actually happens when someone hits a URL. Each trace starts at an entry point and follows constructor and method injection outward — this is the object graph the container builds, not a sketch of it.</p>
       </header>
 
       <section class="space-y-5">
-        <h2 class="lbl text-slate-400">Public web</h2>
-        <h3 class="font-serif text-2xl tracking-tight text-slate-900 -mt-3">Public web entry points</h3>
-<p class="text-slate-600 leading-relaxed max-w-3xl">A visitor hits a URL. The controller is invoked, the container resolves its collaborators, and a Blade view is returned.</p>
-<div class="grid gap-3"><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">AuthenticatedSessionController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /login</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">POST /login</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">POST /logout</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Auth/AuthenticatedSessionController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 0 classes through injection.</p><div class="mt-3"><p class="text-sm text-slate-500 leading-relaxed">Injects nothing — it renders a view or issues a redirect on its own.</p></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">PreviewController</h4><span class="text-xs text-slate-400">no route found in routes/</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Blog/Admin/PreviewController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 13 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+        <h2 class="lbl text-muted">Public web</h2>
+        <h3 class="font-mono font-bold text-xl text-fg -mt-3">Public web entry points</h3>
+<p class="text-muted leading-relaxed max-w-3xl">A visitor hits a URL. The controller is invoked, the container resolves its collaborators, and a Blade view is returned.</p>
+<div class="grid gap-3"><div class="rounded-lg border border-line bg-card px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-mono font-bold text-base text-fg">AuthenticatedSessionController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /login</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">POST /login</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">POST /logout</span><span class="font-mono text-[11px] text-muted ml-auto">app/Http/Controllers/Auth/AuthenticatedSessionController.php</span></div><p class="text-sm text-muted mt-2">Reaches 0 classes through injection.</p><div class="mt-3"><p class="text-sm text-muted leading-relaxed">Injects nothing — it renders a view or issues a redirect on its own.</p></div></div><div class="rounded-lg border border-line bg-card px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-mono font-bold text-base text-fg">PreviewController</h4><span class="text-xs text-muted">no route found in routes/</span><span class="font-mono text-[11px] text-muted ml-auto">app/Http/Controllers/Blog/Admin/PreviewController.php</span></div><p class="text-sm text-muted mt-2">Reaches 13 classes through injection.</p><div class="mt-3"><div class="rounded-lg border border-line bg-card p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
   App_Http_Controllers_Blog_Admin_PreviewController[&quot;PreviewController&lt;br/&gt;&lt;i&gt;HTTP entry point&lt;/i&gt;&quot;]
   App_Blog_PostPreviewFinder[&quot;PostPreviewFinder&lt;br/&gt;&lt;i&gt;Domain service&lt;/i&gt;&quot;]
   App_Blog_Repositories_PostGetRepository[&quot;PostGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
@@ -72,9 +70,7 @@
   App_Blog_PostFilter --&gt; App_Blog_DraftSlug
   App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter --&gt; App_Blog_Markdown_FencedCodeHighlightExtension
   class App_Http_Controllers_Blog_Admin_PreviewController entry
-  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
-  class App_Blog_Storage_PostFileStorage disk
-  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">BlogRedirectController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /blog</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Blog/Frontend/BlogRedirectController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 0 classes through injection.</p><div class="mt-3"><p class="text-sm text-slate-500 leading-relaxed">Injects nothing — it renders a view or issues a redirect on its own.</p></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">IndexController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Blog/Frontend/IndexController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 33 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  class App_Blog_Storage_PostFileStorage disk</pre></div></div></div><div class="rounded-lg border border-line bg-card px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-mono font-bold text-base text-fg">BlogRedirectController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /blog</span><span class="font-mono text-[11px] text-muted ml-auto">app/Http/Controllers/Blog/Frontend/BlogRedirectController.php</span></div><p class="text-sm text-muted mt-2">Reaches 0 classes through injection.</p><div class="mt-3"><p class="text-sm text-muted leading-relaxed">Injects nothing — it renders a view or issues a redirect on its own.</p></div></div><div class="rounded-lg border border-line bg-card px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-mono font-bold text-base text-fg">IndexController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /</span><span class="font-mono text-[11px] text-muted ml-auto">app/Http/Controllers/Blog/Frontend/IndexController.php</span></div><p class="text-sm text-muted mt-2">Reaches 33 classes through injection.</p><div class="mt-3"><div class="rounded-lg border border-line bg-card p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
   App_Http_Controllers_Blog_Frontend_IndexController[&quot;IndexController&lt;br/&gt;&lt;i&gt;HTTP entry point&lt;/i&gt;&quot;]
   App_Blog_Repositories_PostGetRepository[&quot;PostGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
   App_About_Repositories_AboutRepository[&quot;AboutRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
@@ -148,11 +144,9 @@
   App_Microblog_Markdown_MessageTextToHtmlConverter --&gt; App_Microblog_Markdown_PlainTextRenderingExtension
   App_Microblog_Markdown_MessageTextToHtmlConverter --&gt; App_Microblog_Markdown_WebUrlAutolinkExtension
   class App_Http_Controllers_Blog_Frontend_IndexController entry
-  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
   class App_Blog_Storage_PostFileStorage disk
   class App_About_Storage_AboutFileStorage disk
-  class App_Microblog_Storage_MessageFileStorage disk
-  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">ShowController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /blog/{slug}</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Blog/Frontend/ShowController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 12 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  class App_Microblog_Storage_MessageFileStorage disk</pre></div></div></div><div class="rounded-lg border border-line bg-card px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-mono font-bold text-base text-fg">ShowController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /blog/{slug}</span><span class="font-mono text-[11px] text-muted ml-auto">app/Http/Controllers/Blog/Frontend/ShowController.php</span></div><p class="text-sm text-muted mt-2">Reaches 12 classes through injection.</p><div class="mt-3"><div class="rounded-lg border border-line bg-card p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
   App_Http_Controllers_Blog_Frontend_ShowController[&quot;ShowController&lt;br/&gt;&lt;i&gt;HTTP entry point&lt;/i&gt;&quot;]
   App_Blog_Repositories_PostGetRepository[&quot;PostGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
   App_Blog_Repositories_PostSource[&quot;PostSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
@@ -180,9 +174,7 @@
   App_Blog_PostFilter --&gt; App_Blog_DraftSlug
   App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter --&gt; App_Blog_Markdown_FencedCodeHighlightExtension
   class App_Http_Controllers_Blog_Frontend_ShowController entry
-  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
-  class App_Blog_Storage_PostFileStorage disk
-  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">PreviewController</h4><span class="text-xs text-slate-400">no route found in routes/</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Pages/Admin/PreviewController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 11 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  class App_Blog_Storage_PostFileStorage disk</pre></div></div></div><div class="rounded-lg border border-line bg-card px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-mono font-bold text-base text-fg">PreviewController</h4><span class="text-xs text-muted">no route found in routes/</span><span class="font-mono text-[11px] text-muted ml-auto">app/Http/Controllers/Pages/Admin/PreviewController.php</span></div><p class="text-sm text-muted mt-2">Reaches 11 classes through injection.</p><div class="mt-3"><div class="rounded-lg border border-line bg-card p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
   App_Http_Controllers_Pages_Admin_PreviewController[&quot;PreviewController&lt;br/&gt;&lt;i&gt;HTTP entry point&lt;/i&gt;&quot;]
   App_Pages_PagePreviewFinder[&quot;PagePreviewFinder&lt;br/&gt;&lt;i&gt;Domain service&lt;/i&gt;&quot;]
   App_Pages_Repositories_PageGetRepository[&quot;PageGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
@@ -209,9 +201,7 @@
   App_Pages_Markdown_PageFileParser --&gt; App_Markdown_ProseMarkdownToHtmlConverter
   App_Pages_PageFilter --&gt; App_Pages_DraftSlug
   class App_Http_Controllers_Pages_Admin_PreviewController entry
-  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
-  class App_Pages_Storage_PageFileStorage disk
-  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">ShowController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /blog/{slug}</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Http/Controllers/Pages/Frontend/ShowController.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 10 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  class App_Pages_Storage_PageFileStorage disk</pre></div></div></div><div class="rounded-lg border border-line bg-card px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-mono font-bold text-base text-fg">ShowController</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /blog/{slug}</span><span class="font-mono text-[11px] text-muted ml-auto">app/Http/Controllers/Pages/Frontend/ShowController.php</span></div><p class="text-sm text-muted mt-2">Reaches 10 classes through injection.</p><div class="mt-3"><div class="rounded-lg border border-line bg-card p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
   App_Http_Controllers_Pages_Frontend_ShowController[&quot;ShowController&lt;br/&gt;&lt;i&gt;HTTP entry point&lt;/i&gt;&quot;]
   App_Pages_Repositories_PageGetRepository[&quot;PageGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
   App_Pages_Repositories_PageSource[&quot;PageSource&lt;br/&gt;&lt;i&gt;Source&lt;/i&gt;&quot;]
@@ -235,16 +225,14 @@
   App_Pages_Markdown_PageFileParser --&gt; App_Markdown_ProseMarkdownToHtmlConverter
   App_Pages_PageFilter --&gt; App_Pages_DraftSlug
   class App_Http_Controllers_Pages_Frontend_ShowController entry
-  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
-  class App_Pages_Storage_PageFileStorage disk
-  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div></div>
+  class App_Pages_Storage_PageFileStorage disk</pre></div></div></div></div>
       </section>
 
       <section class="space-y-5">
-        <h2 class="lbl text-slate-400">Admin</h2>
-        <h3 class="font-serif text-2xl tracking-tight text-slate-900 -mt-3">Admin entry points</h3>
-<p class="text-slate-600 leading-relaxed max-w-3xl">An authenticated editor loads a Livewire component. The component holds no domain logic of its own — it injects a repository facade and hands off.</p>
-<div class="grid gap-3"><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">AboutForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/about/edit</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/AboutForm.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 8 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+        <h2 class="lbl text-muted">Admin</h2>
+        <h3 class="font-mono font-bold text-xl text-fg -mt-3">Admin entry points</h3>
+<p class="text-muted leading-relaxed max-w-3xl">An authenticated editor loads a Livewire component. The component holds no domain logic of its own — it injects a repository facade and hands off.</p>
+<div class="grid gap-3"><div class="rounded-lg border border-line bg-card px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-mono font-bold text-base text-fg">AboutForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /admin/about/edit</span><span class="font-mono text-[11px] text-muted ml-auto">app/Livewire/Admin/AboutForm.php</span></div><p class="text-sm text-muted mt-2">Reaches 8 classes through injection.</p><div class="mt-3"><div class="rounded-lg border border-line bg-card p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
   App_Livewire_Admin_AboutForm[&quot;AboutForm&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
   App_About_Repositories_AboutRepository[&quot;AboutRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
   App_About_Repositories_AboutGetRepository[&quot;AboutGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
@@ -264,9 +252,7 @@
   App_About_Repositories_AboutWriteRepository --&gt; App_About_Markdown_AboutFileSerializer
   App_About_AboutFactory --&gt; App_Markdown_ProseMarkdownToHtmlConverter
   class App_Livewire_Admin_AboutForm entry
-  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
-  class App_About_Storage_AboutFileStorage disk
-  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">MessageForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/messages/new</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/messages/{id}/edit</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/MessageForm.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 14 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  class App_About_Storage_AboutFileStorage disk</pre></div></div></div><div class="rounded-lg border border-line bg-card px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-mono font-bold text-base text-fg">MessageForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /admin/messages/new</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /admin/messages/{id}/edit</span><span class="font-mono text-[11px] text-muted ml-auto">app/Livewire/Admin/MessageForm.php</span></div><p class="text-sm text-muted mt-2">Reaches 14 classes through injection.</p><div class="mt-3"><div class="rounded-lg border border-line bg-card p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
   App_Livewire_Admin_MessageForm[&quot;MessageForm&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
   App_Microblog_Repositories_MessagesRepository[&quot;MessagesRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
   App_Microblog_Repositories_MessageGetRepository[&quot;MessageGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
@@ -299,9 +285,7 @@
   App_Microblog_Markdown_MessageTextToHtmlConverter --&gt; App_Microblog_Markdown_PlainTextRenderingExtension
   App_Microblog_Markdown_MessageTextToHtmlConverter --&gt; App_Microblog_Markdown_WebUrlAutolinkExtension
   class App_Livewire_Admin_MessageForm entry
-  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
-  class App_Microblog_Storage_MessageFileStorage disk
-  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">MessageIndex</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/messages</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/MessageIndex.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 14 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  class App_Microblog_Storage_MessageFileStorage disk</pre></div></div></div><div class="rounded-lg border border-line bg-card px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-mono font-bold text-base text-fg">MessageIndex</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /admin/messages</span><span class="font-mono text-[11px] text-muted ml-auto">app/Livewire/Admin/MessageIndex.php</span></div><p class="text-sm text-muted mt-2">Reaches 14 classes through injection.</p><div class="mt-3"><div class="rounded-lg border border-line bg-card p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
   App_Livewire_Admin_MessageIndex[&quot;MessageIndex&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
   App_Microblog_Repositories_MessagesRepository[&quot;MessagesRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
   App_Microblog_Repositories_MessageGetRepository[&quot;MessageGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
@@ -334,9 +318,7 @@
   App_Microblog_Markdown_MessageTextToHtmlConverter --&gt; App_Microblog_Markdown_PlainTextRenderingExtension
   App_Microblog_Markdown_MessageTextToHtmlConverter --&gt; App_Microblog_Markdown_WebUrlAutolinkExtension
   class App_Livewire_Admin_MessageIndex entry
-  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
-  class App_Microblog_Storage_MessageFileStorage disk
-  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">PageForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/pages/new</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/pages/{slug}/edit</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/PageForm.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 11 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  class App_Microblog_Storage_MessageFileStorage disk</pre></div></div></div><div class="rounded-lg border border-line bg-card px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-mono font-bold text-base text-fg">PageForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /admin/pages/new</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /admin/pages/{slug}/edit</span><span class="font-mono text-[11px] text-muted ml-auto">app/Livewire/Admin/PageForm.php</span></div><p class="text-sm text-muted mt-2">Reaches 11 classes through injection.</p><div class="mt-3"><div class="rounded-lg border border-line bg-card p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
   App_Livewire_Admin_PageForm[&quot;PageForm&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
   App_Pages_PagePreviewFinder[&quot;PagePreviewFinder&lt;br/&gt;&lt;i&gt;Domain service&lt;/i&gt;&quot;]
   App_Pages_DraftSlug[&quot;DraftSlug&lt;br/&gt;&lt;i&gt;Domain service&lt;/i&gt;&quot;]
@@ -364,9 +346,7 @@
   App_Pages_Markdown_PageFileParser --&gt; App_Markdown_ProseMarkdownToHtmlConverter
   App_Pages_PageFilter --&gt; App_Pages_DraftSlug
   class App_Livewire_Admin_PageForm entry
-  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
-  class App_Pages_Storage_PageFileStorage disk
-  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">PageIndex</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/pages</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/PageIndex.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 14 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  class App_Pages_Storage_PageFileStorage disk</pre></div></div></div><div class="rounded-lg border border-line bg-card px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-mono font-bold text-base text-fg">PageIndex</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /admin/pages</span><span class="font-mono text-[11px] text-muted ml-auto">app/Livewire/Admin/PageIndex.php</span></div><p class="text-sm text-muted mt-2">Reaches 14 classes through injection.</p><div class="mt-3"><div class="rounded-lg border border-line bg-card p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
   App_Livewire_Admin_PageIndex[&quot;PageIndex&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
   App_Pages_Repositories_PagesRepository[&quot;PagesRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
   App_Pages_Repositories_PageGetRepository[&quot;PageGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
@@ -399,9 +379,7 @@
   App_Pages_Markdown_PageFileParser --&gt; App_Markdown_ProseMarkdownToHtmlConverter
   App_Pages_PageFilter --&gt; App_Pages_DraftSlug
   class App_Livewire_Admin_PageIndex entry
-  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
-  class App_Pages_Storage_PageFileStorage disk
-  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">PostForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/posts/new</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/posts/{slug}/edit</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/PostForm.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 13 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  class App_Pages_Storage_PageFileStorage disk</pre></div></div></div><div class="rounded-lg border border-line bg-card px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-mono font-bold text-base text-fg">PostForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /admin/posts/new</span> <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /admin/posts/{slug}/edit</span><span class="font-mono text-[11px] text-muted ml-auto">app/Livewire/Admin/PostForm.php</span></div><p class="text-sm text-muted mt-2">Reaches 13 classes through injection.</p><div class="mt-3"><div class="rounded-lg border border-line bg-card p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
   App_Livewire_Admin_PostForm[&quot;PostForm&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
   App_Blog_PostPreviewFinder[&quot;PostPreviewFinder&lt;br/&gt;&lt;i&gt;Domain service&lt;/i&gt;&quot;]
   App_Blog_DraftSlug[&quot;DraftSlug&lt;br/&gt;&lt;i&gt;Domain service&lt;/i&gt;&quot;]
@@ -433,9 +411,7 @@
   App_Blog_PostFilter --&gt; App_Blog_DraftSlug
   App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter --&gt; App_Blog_Markdown_FencedCodeHighlightExtension
   class App_Livewire_Admin_PostForm entry
-  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
-  class App_Blog_Storage_PostFileStorage disk
-  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">PostIndex</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/PostIndex.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 16 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  class App_Blog_Storage_PostFileStorage disk</pre></div></div></div><div class="rounded-lg border border-line bg-card px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-mono font-bold text-base text-fg">PostIndex</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /admin</span><span class="font-mono text-[11px] text-muted ml-auto">app/Livewire/Admin/PostIndex.php</span></div><p class="text-sm text-muted mt-2">Reaches 16 classes through injection.</p><div class="mt-3"><div class="rounded-lg border border-line bg-card p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
   App_Livewire_Admin_PostIndex[&quot;PostIndex&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
   App_Blog_Repositories_PostsRepository[&quot;PostsRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
   App_Blog_Repositories_PostGetRepository[&quot;PostGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
@@ -472,9 +448,7 @@
   App_Blog_PostFilter --&gt; App_Blog_DraftSlug
   App_Blog_Markdown_HighlightedPostMarkdownToHtmlConverter --&gt; App_Blog_Markdown_FencedCodeHighlightExtension
   class App_Livewire_Admin_PostIndex entry
-  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
-  class App_Blog_Storage_PostFileStorage disk
-  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div><div class="rounded-xl border border-slate-200 bg-white px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-serif text-lg text-slate-900">ScratchpadForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-900 text-white">GET /admin/scratchpad/edit</span><span class="font-mono text-[11px] text-slate-400 ml-auto">app/Livewire/Admin/ScratchpadForm.php</span></div><p class="text-sm text-slate-500 mt-2">Reaches 4 classes through injection.</p><div class="mt-3"><div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
+  class App_Blog_Storage_PostFileStorage disk</pre></div></div></div><div class="rounded-lg border border-line bg-card px-5 py-4 "><div class="flex items-baseline gap-3 flex-wrap"><h4 class="font-mono font-bold text-base text-fg">ScratchpadForm</h4><span class="font-mono text-[11px] px-2 py-0.5 rounded bg-accent/10 text-accent border border-accent">GET /admin/scratchpad/edit</span><span class="font-mono text-[11px] text-muted ml-auto">app/Livewire/Admin/ScratchpadForm.php</span></div><p class="text-sm text-muted mt-2">Reaches 4 classes through injection.</p><div class="mt-3"><div class="rounded-lg border border-line bg-card p-5 overflow-x-auto"><pre class="mermaid">flowchart LR
   App_Livewire_Admin_ScratchpadForm[&quot;ScratchpadForm&lt;br/&gt;&lt;i&gt;Livewire entry point&lt;/i&gt;&quot;]
   App_Scratchpad_Repositories_ScratchpadRepository[&quot;ScratchpadRepository&lt;br/&gt;&lt;i&gt;Repository facade&lt;/i&gt;&quot;]
   App_Scratchpad_Repositories_ScratchpadGetRepository[&quot;ScratchpadGetRepository&lt;br/&gt;&lt;i&gt;Read repository&lt;/i&gt;&quot;]
@@ -486,14 +460,17 @@
   App_Scratchpad_Repositories_ScratchpadGetRepository --&gt; App_Scratchpad_Storage_ScratchpadFileStorage
   App_Scratchpad_Repositories_ScratchpadWriteRepository --&gt; App_Scratchpad_Storage_ScratchpadFileStorage
   class App_Livewire_Admin_ScratchpadForm entry
-  classDef entry fill:#0f172a,stroke:#0f172a,color:#ffffff
-  class App_Scratchpad_Storage_ScratchpadFileStorage disk
-  classDef disk fill:#fef3c7,stroke:#d97706,color:#78350f</pre></div></div></div></div>
+  class App_Scratchpad_Storage_ScratchpadFileStorage disk</pre></div></div></div></div>
       </section>
 
-      <footer class="border-t border-slate-200 pt-6 text-xs text-slate-400 leading-relaxed space-y-1">
+      <footer class="border-t border-line pt-6 text-xs text-muted leading-relaxed space-y-1">
         <p>Generated from <code class="font-mono">app/</code> and <code class="font-mono">routes/</code> by <code class="font-mono">documentation/tools/generate.php</code>. Do not hand-edit — re-run the script instead.</p>
       </footer>
     </main>
+    <footer class="site-footer">
+      <div class="max-w-5xl mx-auto px-6 py-5">
+        <p class="font-mono text-xs text-muted"><span class="text-accent">cedriek@blog</span>:<span class="text-hi">~/documentation/architecture</span>$&nbsp;<span class="opacity-45">exit 0</span></p>
+      </div>
+    </footer>
   </body>
 </html>

@@ -4,72 +4,84 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Documentation · cedriekvos blog</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      .lbl { font-size: .625rem; letter-spacing: .12em; text-transform: uppercase; }
-      html { scroll-behavior: smooth; }
-    </style>
+    <link rel="stylesheet" href="assets/tokens.css" />
+    <link rel="stylesheet" href="assets/docs.css" />
+    <script src="assets/docs.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
-  <body class="bg-stone-50 text-slate-900 font-sans antialiased">
-    <header class="border-b border-slate-200">
-      <div class="max-w-5xl mx-auto px-6 h-12 flex items-center justify-between gap-4 text-xs">
-        <a href="index.html" aria-current="page" class="font-semibold text-slate-900 hover:text-slate-600 transition">cedriekvos/blog <span class="font-normal text-slate-400">documentation</span></a>
-        <nav aria-label="Documentation" class="flex items-center gap-1 font-medium -mr-2.5"><a href="architecture/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Architecture</a><a href="specifications/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Specifications</a><a href="decisions/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Decisions</a><a href="lessons/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">Lessons</a></nav>
+  <body class="antialiased flex flex-col min-h-screen">
+    <header class="site-header sticky top-0 z-10">
+      <div class="max-w-5xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+        <a href="index.html" aria-current="page" class="flex items-center gap-2 font-mono font-semibold text-sm text-fg hover:text-accent transition-colors leading-none"><svg viewBox="0 0 24 24" class="w-[1.1rem] h-[1.1rem] shrink-0" aria-hidden="true"><polygon class="fox-icon-a" points="2,3 9,8 12,5 12,22 3,15" /><polygon class="fox-icon-b" points="22,3 15,8 12,5 12,22 21,15" /></svg>~/documentation<span class="cursor"></span></a>
+        <div class="flex items-center gap-4">
+          <nav aria-label="Documentation" class="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs"><a href="architecture/index.html" class="text-muted hover:text-fg aria-[current=page]:text-accent">[architecture]</a><a href="specifications/index.html" class="text-muted hover:text-fg aria-[current=page]:text-accent">[specifications]</a><a href="decisions/index.html" class="text-muted hover:text-fg aria-[current=page]:text-accent">[decisions]</a><a href="lessons/index.html" class="text-muted hover:text-fg aria-[current=page]:text-accent">[lessons]</a></nav>
+          <span class="h-[1.1rem] w-px shrink-0 bg-line" aria-hidden="true"></span>
+          <div class="theme-switcher relative">
+            <button id="theme-toggle" class="theme-toggle icon-hover-scale" type="button" aria-label="Theme" aria-haspopup="listbox" aria-expanded="false"><svg viewBox="0 0 24 24" class="theme-icon w-[1.1rem] h-[1.1rem] shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="11" /></svg></button>
+            <ul id="theme-menu" class="theme-menu" role="listbox" hidden><li role="option" data-mode="light" tabindex="-1" aria-checked="false" data-label="Light"><span class="theme-option-label">Light</span></li><li role="option" data-mode="dark" tabindex="-1" aria-checked="false" data-label="Dark"><span class="theme-option-label">Dark</span></li><li role="option" data-mode="auto" tabindex="-1" aria-checked="false" data-label="Auto"><span class="theme-option-label">Auto</span></li></ul>
+          </div>
+        </div>
       </div>
     </header>
-    <main class="max-w-5xl mx-auto px-6 py-12 sm:py-16 space-y-14">
+    <main class="flex-1 w-full max-w-5xl mx-auto px-6 py-12 sm:py-16 space-y-14">
 
       <header class="space-y-4">
-        <h1 class="font-serif text-4xl tracking-tight">Documentation</h1>
-        <p class="text-slate-600 leading-relaxed max-w-3xl">Everything written down about this codebase, in one place. Each section answers a different question, so pick the one that matches yours. The menu at the top of every page brings you back here.</p>
+        <h1 class="font-mono font-bold text-2xl leading-snug">Documentation</h1>
+        <p class="text-muted leading-relaxed max-w-3xl">Everything written down about this codebase, in one place. Each section answers a different question, so pick the one that matches yours. The menu at the top of every page brings you back here.</p>
       </header>
 
       <section class="space-y-5">
-        <h2 class="lbl text-slate-400">Sections</h2>
+        <h2 class="lbl text-muted">Sections</h2>
         <div class="grid sm:grid-cols-2 gap-3">
-          <a href="architecture/index.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
-            <h3 class="font-serif text-lg text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4">Architecture</h3>
-            <p class="text-sm font-medium text-slate-900 mt-1.5">What is this codebase made of, and how do the pieces fit?</p>
-            <p class="text-sm text-slate-600 mt-1 leading-relaxed">The module map, the anatomy of a domain, what happens on a request and what depends on what. Generated from the source, so it cannot drift.</p>
+          <a href="architecture/index.html" class="group block rounded-lg border border-line bg-card px-5 py-4 hover:border-accent transition">
+            <h3 class="font-mono font-bold text-base text-fg group-hover:text-accent transition-colors">Architecture</h3>
+            <p class="text-sm font-medium text-fg mt-1.5">What is this codebase made of, and how do the pieces fit?</p>
+            <p class="text-sm text-muted mt-1 leading-relaxed">The module map, the anatomy of a domain, what happens on a request and what depends on what. Generated from the source, so it cannot drift.</p>
           </a>
-          <a href="specifications/index.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
-            <h3 class="font-serif text-lg text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4">Specifications</h3>
-            <p class="text-sm font-medium text-slate-900 mt-1.5">What exactly does the application do?</p>
-            <p class="text-sm text-slate-600 mt-1 leading-relaxed">A Gherkin spec for every behavior, a Dutch leesmij beside each one explaining why, and the trace from each scenario to the acceptance test that checks it, with every place that chain breaks.</p>
+          <a href="specifications/index.html" class="group block rounded-lg border border-line bg-card px-5 py-4 hover:border-accent transition">
+            <h3 class="font-mono font-bold text-base text-fg group-hover:text-accent transition-colors">Specifications</h3>
+            <p class="text-sm font-medium text-fg mt-1.5">What exactly does the application do?</p>
+            <p class="text-sm text-muted mt-1 leading-relaxed">A Gherkin spec for every behavior, a Dutch leesmij beside each one explaining why, and the trace from each scenario to the acceptance test that checks it, with every place that chain breaks.</p>
           </a>
-          <a href="decisions/index.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
-            <h3 class="font-serif text-lg text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4">Decisions</h3>
-            <p class="text-sm font-medium text-slate-900 mt-1.5">Why was this technical choice made, and what lost?</p>
-            <p class="text-sm text-slate-600 mt-1 leading-relaxed">Architecture Decision Records: one cross-cutting technical decision per page, the rule it puts on the code, and the options that were rejected.</p>
+          <a href="decisions/index.html" class="group block rounded-lg border border-line bg-card px-5 py-4 hover:border-accent transition">
+            <h3 class="font-mono font-bold text-base text-fg group-hover:text-accent transition-colors">Decisions</h3>
+            <p class="text-sm font-medium text-fg mt-1.5">Why was this technical choice made, and what lost?</p>
+            <p class="text-sm text-muted mt-1 leading-relaxed">Architecture Decision Records: one cross-cutting technical decision per page, the rule it puts on the code, and the options that were rejected.</p>
           </a>
-          <a href="lessons/index.html" class="group block rounded-xl border border-slate-200 bg-white px-5 py-4 hover:border-slate-400 hover:shadow-sm transition">
-            <h3 class="font-serif text-lg text-slate-900 group-hover:underline decoration-slate-300 underline-offset-4">Lessons</h3>
-            <p class="text-sm font-medium text-slate-900 mt-1.5">How does this code use PHP, and why is it shaped this way?</p>
-            <p class="text-sm text-slate-600 mt-1 leading-relaxed">PHP features, practices and design patterns, taught from real snippets of the codebase and what each choice costs. The snippets are checked against the code in QA.</p>
+          <a href="lessons/index.html" class="group block rounded-lg border border-line bg-card px-5 py-4 hover:border-accent transition">
+            <h3 class="font-mono font-bold text-base text-fg group-hover:text-accent transition-colors">Lessons</h3>
+            <p class="text-sm font-medium text-fg mt-1.5">How does this code use PHP, and why is it shaped this way?</p>
+            <p class="text-sm text-muted mt-1 leading-relaxed">PHP features, practices and design patterns, taught from real snippets of the codebase and what each choice costs. The snippets are checked against the code in QA.</p>
           </a>
         </div>
       </section>
 
       <section class="space-y-4">
-        <h2 class="font-serif text-2xl tracking-tight">Where to start</h2>
+        <h2 class="font-mono font-bold text-xl">Where to start</h2>
         <ol class="list-decimal list-outside pl-5 space-y-3 max-w-3xl">
-          <li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400"><a class="text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900 transition" href="architecture/index.html">Architecture</a>, then its module map, for the shape of the whole thing.</li>
-          <li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400">The <a class="text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900 transition" href="specifications/index.html">specifications</a> when you need to know exactly what a feature does, and which test proves it.</li>
-          <li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400">The <a class="text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900 transition" href="lessons/index.html">lessons</a> in order, for how the code is written and why.</li>
-          <li class="pl-2 leading-relaxed text-slate-700 marker:text-slate-400">The <a class="text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900 transition" href="decisions/index.html">decisions</a> whenever a rule in the code looks odd: the record behind it explains what it protects.</li>
+          <li class="pl-2 leading-relaxed text-fg marker:text-muted"><a class="text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent transition" href="architecture/index.html">Architecture</a>, then its module map, for the shape of the whole thing.</li>
+          <li class="pl-2 leading-relaxed text-fg marker:text-muted">The <a class="text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent transition" href="specifications/index.html">specifications</a> when you need to know exactly what a feature does, and which test proves it.</li>
+          <li class="pl-2 leading-relaxed text-fg marker:text-muted">The <a class="text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent transition" href="lessons/index.html">lessons</a> in order, for how the code is written and why.</li>
+          <li class="pl-2 leading-relaxed text-fg marker:text-muted">The <a class="text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent transition" href="decisions/index.html">decisions</a> whenever a rule in the code looks odd: the record behind it explains what it protects.</li>
         </ol>
       </section>
 
       <section class="space-y-4">
-        <h2 class="font-serif text-2xl tracking-tight">Also in this folder</h2>
-        <dl class="rounded-xl border border-slate-200 bg-white px-5 py-2">
-          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900"><a class="font-mono text-[0.875em] underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900 transition" href="refactor.md">refactor.md</a></dt><dd class="text-sm leading-relaxed text-slate-600">The refactor backlog from the architecture review: what is done, and the open points in their recommended order.</dd></div>
-          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900"><code class="font-mono text-[0.875em]">specifications/features/</code></dt><dd class="text-sm leading-relaxed text-slate-600">One <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">.feature</code> file per behavior, in English. The acceptance tests are written from these.</dd></div>
-          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900"><code class="font-mono text-[0.875em]">specifications/leesmij/</code></dt><dd class="text-sm leading-relaxed text-slate-600">The Dutch explanation beside each spec: why the behavior is what it is.</dd></div>
-          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-slate-100 last:border-0"><dt class="text-sm font-semibold text-slate-900"><code class="font-mono text-[0.875em]">tools/</code></dt><dd class="text-sm leading-relaxed text-slate-600">The scripts that build and check these pages: <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">generate.php</code> writes the Architecture and Specifications pages, <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">check-lessons.php</code> verifies every lesson’s snippets. Both run in <code class="font-mono text-[0.875em] bg-slate-100 text-slate-800 rounded px-1 py-0.5">composer qa</code>.</dd></div>
+        <h2 class="font-mono font-bold text-xl">Also in this folder</h2>
+        <dl class="rounded-lg border border-line bg-card px-5 py-2">
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-line/60 last:border-0"><dt class="text-sm font-semibold text-fg"><a class="text-accent font-mono text-[0.875em] underline decoration-accent/40 underline-offset-2 hover:decoration-accent transition" href="refactor.md">refactor.md</a></dt><dd class="text-sm leading-relaxed text-muted">The refactor backlog from the architecture review: what is done, and the open points in their recommended order.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-line/60 last:border-0"><dt class="text-sm font-semibold text-fg"><code class="font-mono text-[0.875em]">specifications/features/</code></dt><dd class="text-sm leading-relaxed text-muted">One <code class="font-mono text-[0.875em] rounded-[3px] px-1 py-0.5 bg-surface text-hi border border-line">.feature</code> file per behavior, in English. The acceptance tests are written from these.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-line/60 last:border-0"><dt class="text-sm font-semibold text-fg"><code class="font-mono text-[0.875em]">specifications/leesmij/</code></dt><dd class="text-sm leading-relaxed text-muted">The Dutch explanation beside each spec: why the behavior is what it is.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-line/60 last:border-0"><dt class="text-sm font-semibold text-fg"><code class="font-mono text-[0.875em]">assets/</code></dt><dd class="text-sm leading-relaxed text-muted">The look every page shares, taken from the website: <code class="font-mono text-[0.875em] rounded-[3px] px-1 py-0.5 bg-surface text-hi border border-line">docs.css</code> and <code class="font-mono text-[0.875em] rounded-[3px] px-1 py-0.5 bg-surface text-hi border border-line">docs.js</code>, and <code class="font-mono text-[0.875em] rounded-[3px] px-1 py-0.5 bg-surface text-hi border border-line">tokens.css</code>, the site’s colours, which <code class="font-mono text-[0.875em] rounded-[3px] px-1 py-0.5 bg-surface text-hi border border-line">generate.php</code> copies out of <code class="font-mono text-[0.875em] rounded-[3px] px-1 py-0.5 bg-surface text-hi border border-line">resources/css/app.css</code>.</dd></div>
+          <div class="grid sm:grid-cols-[13rem_1fr] gap-x-5 gap-y-1 py-3 border-b border-line/60 last:border-0"><dt class="text-sm font-semibold text-fg"><code class="font-mono text-[0.875em]">tools/</code></dt><dd class="text-sm leading-relaxed text-muted">The scripts that build and check these pages: <code class="font-mono text-[0.875em] rounded-[3px] px-1 py-0.5 bg-surface text-hi border border-line">generate.php</code> writes the Architecture and Specifications pages, <code class="font-mono text-[0.875em] rounded-[3px] px-1 py-0.5 bg-surface text-hi border border-line">check-lessons.php</code> verifies every lesson’s snippets. Both run in <code class="font-mono text-[0.875em] rounded-[3px] px-1 py-0.5 bg-surface text-hi border border-line">composer qa</code>.</dd></div>
         </dl>
       </section>
 
     </main>
+    <footer class="site-footer">
+      <div class="max-w-5xl mx-auto px-6 py-5">
+        <p class="font-mono text-xs text-muted"><span class="text-accent">cedriek@blog</span>:<span class="text-hi">~/documentation</span>$&nbsp;<span class="opacity-45">exit 0</span></p>
+      </div>
+    </footer>
   </body>
 </html>

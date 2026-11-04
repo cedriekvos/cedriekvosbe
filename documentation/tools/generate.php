@@ -6,7 +6,8 @@ declare(strict_types=1);
 /**
  * Generates documentation/architecture/*.html from the source in app/, and
  * documentation/specifications/index.html, the feature trace, from the specs,
- * leesmij and acceptance tests.
+ * leesmij and acceptance tests, and documentation/assets/tokens.css, the
+ * website's colour tokens, from resources/css/app.css.
  *
  * The pages are committed so they open with no build step, but every fact on
  * them — every class, edge, layer and vendor touch point, every scenario and
@@ -608,9 +609,8 @@ function sectionMenu(string $current): string
     $links = '';
 
     foreach (SECTIONS as $folder => $label) {
-        $links .= $folder === $current
-            ? '<a href="../'.$folder.'/index.html" aria-current="page" class="px-2.5 py-1 rounded text-slate-900 bg-slate-200/70">'.h($label).'</a>'
-            : '<a href="../'.$folder.'/index.html" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">'.h($label).'</a>';
+        $links .= '<a href="../'.$folder.'/index.html"'.($folder === $current ? ' aria-current="page"' : '')
+            .' class="text-muted hover:text-fg aria-[current=page]:text-accent">['.h(strtolower($label)).']</a>';
     }
 
     return $links;
@@ -627,11 +627,11 @@ function architectureTabs(string $section, string $current): string
 
     foreach (PAGES as $file => $label) {
         $tabs .= $file === $current
-            ? '<span class="px-2.5 py-1 rounded bg-slate-900 text-white">'.h($label).'</span>'
-            : '<a href="'.$file.'" class="px-2.5 py-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition">'.h($label).'</a>';
+            ? '<span aria-current="page" class="text-accent">['.h(strtolower($label)).']</span>'
+            : '<a href="'.$file.'" class="text-muted hover:text-fg">['.h(strtolower($label)).']</a>';
     }
 
-    return "\n      <nav class=\"flex flex-wrap items-center gap-1 text-xs font-medium -mx-1\">{$tabs}</nav>\n";
+    return "\n      <nav aria-label=\"Architecture\" class=\"flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs\">{$tabs}</nav>\n";
 }
 
 /**
@@ -660,46 +660,63 @@ function shell(string $page, string $heading, string $lede, string $body, array 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{$title}</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script type="module">
-          import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-          mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose", flowchart: { curve: "basis", useMaxWidth: true } });
-        </script>
-        <style>
-          .lbl { font-size: .625rem; letter-spacing: .12em; text-transform: uppercase; }
-          html { scroll-behavior: smooth; }
-          .mermaid { display: flex; justify-content: center; }
-          .mermaid svg { max-width: 100%; height: auto; }
-          summary { list-style: none; }
-          summary::-webkit-details-marker { display: none; }
-        </style>
+        <link rel="stylesheet" href="../assets/tokens.css" />
+        <link rel="stylesheet" href="../assets/docs.css" />
+        <script src="../assets/docs.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
       </head>
-      <body class="bg-stone-50 text-slate-900 font-sans antialiased">
-        <header class="border-b border-slate-200">
-          <div class="max-w-5xl mx-auto px-6 h-12 flex items-center justify-between gap-4 text-xs">
-            <a href="../index.html" class="font-semibold text-slate-900 hover:text-slate-600 transition">cedriekvos/blog <span class="font-normal text-slate-400">documentation</span></a>
-            <nav aria-label="Documentation" class="flex items-center gap-1 font-medium -mr-2.5">{$menu}</nav>
+      <body class="antialiased flex flex-col min-h-screen">
+        <header class="site-header sticky top-0 z-10">
+          <div class="max-w-5xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+            <a href="../index.html" class="flex items-center gap-2 font-mono font-semibold text-sm text-fg hover:text-accent transition-colors leading-none"><svg viewBox="0 0 24 24" class="w-[1.1rem] h-[1.1rem] shrink-0" aria-hidden="true"><polygon class="fox-icon-a" points="2,3 9,8 12,5 12,22 3,15" /><polygon class="fox-icon-b" points="22,3 15,8 12,5 12,22 21,15" /></svg>~/documentation<span class="cursor"></span></a>
+            <div class="flex items-center gap-4">
+              <nav aria-label="Documentation" class="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs">{$menu}</nav>
+              <span class="h-[1.1rem] w-px shrink-0 bg-line" aria-hidden="true"></span>
+              <div class="theme-switcher relative">
+                <button id="theme-toggle" class="theme-toggle icon-hover-scale" type="button" aria-label="Theme" aria-haspopup="listbox" aria-expanded="false"><svg viewBox="0 0 24 24" class="theme-icon w-[1.1rem] h-[1.1rem] shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="11" /></svg></button>
+                <ul id="theme-menu" class="theme-menu" role="listbox" hidden><li role="option" data-mode="light" tabindex="-1" aria-checked="false" data-label="Light"><span class="theme-option-label">Light</span></li><li role="option" data-mode="dark" tabindex="-1" aria-checked="false" data-label="Dark"><span class="theme-option-label">Dark</span></li><li role="option" data-mode="auto" tabindex="-1" aria-checked="false" data-label="Auto"><span class="theme-option-label">Auto</span></li></ul>
+              </div>
+            </div>
           </div>
         </header>
-        <main class="max-w-5xl mx-auto px-6 py-12 sm:py-16 space-y-14">
+        <main class="flex-1 w-full max-w-5xl mx-auto px-6 py-12 sm:py-16 space-y-14">
     {$tabs}
           <header class="space-y-4">
             <div class="flex items-baseline justify-between flex-wrap gap-2">
-              <h1 class="font-serif text-4xl tracking-tight">{$heading}</h1>
-              <span data-stamp class="font-mono text-xs text-slate-400">{$stamp}</span>
+              <h1 class="font-mono font-bold text-2xl leading-snug">{$heading}</h1>
+              <span data-stamp class="font-mono text-xs text-muted">{$stamp}</span>
             </div>
-            <p class="text-slate-600 leading-relaxed max-w-3xl">{$lede}</p>
+            <p class="text-muted leading-relaxed max-w-3xl">{$lede}</p>
           </header>
 
     {$body}
 
-          <footer class="border-t border-slate-200 pt-6 text-xs text-slate-400 leading-relaxed space-y-1">
+          <footer class="border-t border-line pt-6 text-xs text-muted leading-relaxed space-y-1">
             <p>Generated from {$generatedFrom} by <code class="font-mono">documentation/tools/generate.php</code>. Do not hand-edit — re-run the script instead.</p>
           </footer>
         </main>
+        <footer class="site-footer">
+          <div class="max-w-5xl mx-auto px-6 py-5">
+            <p class="font-mono text-xs text-muted"><span class="text-accent">cedriek@blog</span>:<span class="text-hi">~/documentation/{$section}</span>$&nbsp;<span class="opacity-45">exit 0</span></p>
+          </div>
+        </footer>
       </body>
     </html>
     HTML;
+}
+
+/**
+ * The website's colour tokens, copied out of resources/css/app.css: every
+ * top-level `:root` and `.dark` block. Every documentation page links the
+ * result, so a palette change on the site reaches the docs on the next run,
+ * and --check fails until it has.
+ */
+function themeTokens(): string
+{
+    preg_match_all('/^(?::root|\.dark)\s*\{[^}]*\}/m', (string) file_get_contents(ROOT.'resources/css/app.css'), $blocks);
+
+    return "/* Generated from resources/css/app.css by documentation/tools/generate.php. Do not hand-edit. */\n\n"
+        .implode("\n\n", $blocks[0]);
 }
 
 /**
@@ -713,15 +730,15 @@ function withoutStamp(string $html): string
 
 function mermaid(string $definition): string
 {
-    return '<div class="rounded-xl border border-slate-200 bg-white p-5 overflow-x-auto"><pre class="mermaid">'.h($definition).'</pre></div>';
+    return '<div class="rounded-lg border border-line bg-card p-5 overflow-x-auto"><pre class="mermaid">'.h($definition).'</pre></div>';
 }
 
 function section(string $label, string $heading, string $inner): string
 {
     return <<<HTML
           <section class="space-y-5">
-            <h2 class="lbl text-slate-400">{$label}</h2>
-            <h3 class="font-serif text-2xl tracking-tight text-slate-900 -mt-3">{$heading}</h3>
+            <h2 class="lbl text-muted">{$label}</h2>
+            <h3 class="font-mono font-bold text-xl text-fg -mt-3">{$heading}</h3>
     {$inner}
           </section>
     HTML;
@@ -751,7 +768,7 @@ if (in_array('--dump', $argv, true)) {
 require __DIR__.'/pages.php';
 require __DIR__.'/features.php';
 
-$pages = array_map(static fn (string $html): string => $html."\n", buildPages($classes, $routes));
+$pages = array_map(static fn (string $html): string => $html."\n", [...buildPages($classes, $routes), 'assets/tokens.css' => themeTokens()]);
 
 if (in_array('--check', $argv, true)) {
     $stale = array_keys(array_filter(
@@ -770,7 +787,7 @@ if (in_array('--check', $argv, true)) {
         exit(1);
     }
 
-    echo "documentation/architecture and documentation/specifications are up to date\n";
+    echo "documentation/architecture, documentation/specifications and documentation/assets/tokens.css are up to date\n";
 
     exit(0);
 }
