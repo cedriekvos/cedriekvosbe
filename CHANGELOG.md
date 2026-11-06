@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.9] - 2026-11-06
+
+The 1.7.8 deploy stopped at `composer validate`, so its security updates
+never reached production. This release ships them. The site itself is
+unchanged.
+
+### Fixed
+
+- **Composer** — `composer.lock` carries the content hash that Composer 2.11
+  computes. Composer 2.11 adds `config.policy` to the hash, and
+  `composer.json` sets `config.policy.abandoned.ignore`, so the hash written by
+  Composer 2.10 no longer matched. The deploy pipeline installs the latest
+  Composer, so it rejected the lock file. No package versions change.
+
+### Changed
+
+- **Composer** — the project now needs Composer 2.11 or later. Composer 2.10
+  reports the lock file as out of date, which fails `composer validate` and,
+  with it, `qa` and `qa:fast`. Rebuilding the Sail image installs the latest
+  Composer.
+
 ## [1.7.8] - 2026-11-06
 
 Dependencies with open security advisories are updated to patched versions,
@@ -529,7 +550,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.8...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.9...HEAD
+[1.7.9]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.8...1.7.9
 [1.7.8]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.7...1.7.8
 [1.7.7]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.6...1.7.7
 [1.7.6]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.5...1.7.6
