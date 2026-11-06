@@ -7,6 +7,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.8] - 2026-11-06
+
+Dependencies with open security advisories are updated to patched versions,
+and `composer audit` passes again. The site itself is unchanged.
+
+### Security
+
+- **Symfony** — `http-foundation`, `http-kernel`, `routing` and `yaml` go from
+  8.1.9 to 8.1.11 and `mime` from 8.1.7 to 8.1.10. That clears eight
+  advisories. None of them could be reached on this site:
+  - **YAML parser** (GHSA-hwfg-qwvh-2wfx, high): crafted documents take
+    exponential or quadratic time to parse. The site parses YAML only from its
+    own content files on disk, which visitors cannot write, and never parses a
+    request body as YAML.
+  - **Generated URLs** (GHSA-5mx8-mwrp-5693, moderate): `Request::getBaseUrl()`
+    could take a host from the request path, so links and redirects pointed to
+    another site. This needs a front controller in a subdirectory, or a web
+    server that sets `SCRIPT_NAME` to the request path.
+  - **Trusted proxies** (GHSA-xg2q-4rrq-657q, moderate): the `private_ranges`
+    shortcut also trusted clients behind some IPv6 prefixes. The site sets no
+    trusted proxies.
+  - **Path rules in front of PHP** (GHSA-3h27-hjv7-fqjx, low): a path like
+    `/index.phpadmin` routed as `/admin` and slipped past web-server or CDN
+    rules. The admin is protected by the `auth` middleware on its routes.
+  - **Host placeholders in compiled routes** (CVE-2026-118516): a placeholder
+    in a route's host could match the start of its path. The site has no host
+    routes. The deploy runs `route:cache`, so its compiled routes are rebuilt
+    by the fixed version anyway.
+  - **HEAD requests** (CVE-2026-118514), and **inline fragments**
+    (GHSA-wg5q-m2ww-f3c9, moderate): both are in Symfony's own request
+    matchers and sub-request handling, which Laravel does not use.
+  - **Email header injection** (CVE-2026-45070): through MIME parameter names.
+    The only mail the site sends is the Composer vulnerability alert, which
+    uses fixed parameter names.
+- **PHPUnit** 13.4.3 to 13.4.5, clearing CVE-2026-119193 (moderate): another
+  local user could run code through a shared temporary directory while PHPT
+  tests ran with code coverage. Development only, and the project has no PHPT
+  tests.
+
+### Changed
+
+- **Dependencies** — Pest 5.3.3 does not allow a PHPUnit newer than 13.4.3, so
+  Pest moves to 5.3.5, the browser plugin to 5.2.0 and the type-coverage plugin
+  to 5.1.0. PHPStan, Paratest and the other Symfony components move with them.
+  Only these packages and their dependencies are updated, so Laravel stays at
+  13.38.0, and `composer.json` is unchanged.
+
 ## [1.7.7] - 2026-11-03
 
 Documentation and QA only: the documentation gets a front page, a Lessons
@@ -482,7 +529,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.7...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.8...HEAD
+[1.7.8]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.7...1.7.8
 [1.7.7]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.6...1.7.7
 [1.7.6]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.5...1.7.6
 [1.7.5]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.4...1.7.5
