@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.10] - 2026-11-06
+
+The 1.7.9 deploy stopped at Rector, so the security updates from 1.7.8 still
+had not reached production. This release ships them. The site itself is
+unchanged.
+
+### Fixed
+
+- **QA** — Rector goes from 2.7.0 to 2.8.4. Rector ships its own copy of
+  `phpstan/phpdoc-parser` and loads it first. In 2.7.0 that copy is too old
+  for PHPStan 2.3.5, which 1.7.8 brought in, so the uncached Rector run in
+  `composer qa` failed on the three `*Source` repositories. `qa:fast` runs
+  Rector with its cache, which skipped those unchanged files, so it did not
+  catch the failure.
+
 ## [1.7.9] - 2026-11-06
 
 The 1.7.8 deploy stopped at `composer validate`, so its security updates
@@ -550,7 +565,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.9...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.10...HEAD
+[1.7.10]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.9...1.7.10
 [1.7.9]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.8...1.7.9
 [1.7.8]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.7...1.7.8
 [1.7.7]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.6...1.7.7
