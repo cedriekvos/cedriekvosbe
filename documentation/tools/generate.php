@@ -562,7 +562,7 @@ function reachableFrom(array $classes, string $entry): array
 
 /**
  * The documentation's top-level sections, in menu order, keyed by folder. The
- * hand-written pages in decisions/ and lessons/ and the hub at
+ * hand-written pages in decisions/, lessons/ and workflow/ and the hub at
  * documentation/index.html carry the same menu, so a change here goes there too.
  */
 const SECTIONS = [
@@ -570,6 +570,7 @@ const SECTIONS = [
     'specifications' => 'Specifications',
     'decisions' => 'Decisions',
     'lessons' => 'Lessons',
+    'workflow' => 'Workflow outline',
 ];
 
 /** The tabs within the Architecture section. */
