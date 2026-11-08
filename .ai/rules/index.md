@@ -5,6 +5,7 @@ Before planning or editing, find the row whose globs match the file's path and r
 | Applies to | Rule file |
 | --- | --- |
 | .buddy/** | .ai/rules/buddy.md |
+| composer.lock | .ai/rules/composer-lock.md |
 | docs/** | .ai/rules/docs.md |
 | documentation/**/*.php, documentation/**/*.html | .ai/rules/documentation.md |
 | documentation/specifications/features/** | .ai/rules/features.md |
