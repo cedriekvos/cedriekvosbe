@@ -1,6 +1,6 @@
 ---
 name: feature-to-pest
-description: "Use this skill whenever a Gherkin .feature spec is turned into Pest acceptance tests — step 3 of this project's full pipeline. Trigger when writing or updating tests under tests/Feature/ or tests/Browser/ from a spec under documentation/specifications/features/, or when a spec changed and its acceptance tests must follow. Covers: red-first authoring (write, don't run, never soften), where the test file goes, the Gherkin→Pest mapping (Scenario, Scenario Outline, Background, data tables, Examples), choosing between an HTTP feature test, a Livewire component test and a Pest 4 browser test, reusing and adding tests/Helpers/ helpers, traceability comments, and deterministic assertions. Does NOT cover unit tests or production code (feature-development), the spec itself (feature-specifier), or general test-design guidance (testing-best-practices, which this skill builds on)."
+description: "Use this skill whenever a Gherkin .feature spec is turned into Pest acceptance tests — step 3 of this project's full pipeline. Trigger when writing or updating tests under tests/Feature/ or tests/Browser/ from a spec under documentation/specifications/features/, or when a spec changed and its acceptance tests must follow. Covers: red-first authoring (write, don't run, never soften), where the test file goes, the Gherkin→Pest mapping (Scenario, Scenario Outline, Background, data tables, Examples), choosing between an HTTP feature test, a Livewire component test and a Pest browser test, reusing and adding tests/Helpers/ helpers, traceability comments, and deterministic assertions. Does NOT cover unit tests or production code (feature-development), the spec itself (feature-specifier), or general test-design guidance (testing-best-practices, which this skill builds on)."
 metadata:
   author: cedriekvos
 ---
@@ -35,8 +35,9 @@ gets one file in each, and every scenario lives in exactly one of them.
 
 Invoke the `testing-best-practices` skill before you write anything — it
 covers test design: coverage choices, naming, structure, isolation, assertion
-quality. For Pest 4 API syntax it does not carry (datasets, `visit()` browser
-assertions, Livewire component testing), use `search-docs`. The rules below
+quality. For the Pest API syntax it does not carry (datasets, `visit()` browser
+assertions, Livewire component testing), use `search-docs`, which answers for
+the installed Pest version. The rules below
 are specific to this project's Gherkin→Pest mapping and win where they
 differ.
 
@@ -62,7 +63,7 @@ differ.
   `Livewire::test(Component::class)->set(…)->call(…)->assert…()`.
 - Behavior the HTTP response cannot show, because the browser decides it —
   computed styles, `localStorage`, hover/focus states, a menu that opens
-  client-side → Pest 4 browser test in `tests/Browser/`: `visit('/')`, then
+  client-side → Pest browser test in `tests/Browser/`: `visit('/')`, then
   `assertPresent(…)`, `->text(…)`, `->script(…)`. Open such a file with a
   comment saying why the scenarios cannot be asserted over HTTP, the way
   `tests/Browser/navigation/ThemeSwitcherTest.php` does.
