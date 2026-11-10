@@ -1,6 +1,6 @@
 ---
 name: feature-specifier
-description: "Use this skill whenever new or changed externally visible behavior needs a specification — step 1 of this project's full pipeline. Trigger when writing or updating a Gherkin .feature file under documentation/specifications/features/ or a Dutch leesmij under documentation/specifications/leesmij/, when a request adds or changes what a visitor or admin can see or do, or when a later step finds the spec wrong or ambiguous. Covers: the two artefacts and where they go ({domain}/{feature} naming), settling ambiguity before writing and when a question to the user is warranted, the Gherkin conventions (preamble, Background, stable scenario indices, parameters that become Pest datasets), the four-phase workflow, and when a question belongs to feature-architect instead. Does NOT cover acceptance tests (feature-to-pest), production code (feature-development) or technical decisions (feature-architect)."
+description: "Use this skill whenever new or changed externally visible behavior needs a specification — step 1 of this project's full pipeline. Trigger when writing or updating a Gherkin .feature file under documentation/specifications/features/ or a Dutch leesmij under documentation/specifications/leesmij/, when a request adds or changes what a visitor or admin can see or do, or when a later step finds the spec wrong or ambiguous. Covers: the two artefacts and where they go ({domain}/{feature} naming), the grilling interview that settles every decision with the user before anything is written, the Gherkin conventions (preamble, Background, stable scenario indices, parameters that become Pest datasets), the four-phase workflow, and when a question belongs to feature-architect instead. Does NOT cover acceptance tests (feature-to-pest), production code (feature-development) or technical decisions (feature-architect)."
 metadata:
   author: cedriekvos
 ---
@@ -28,24 +28,35 @@ For each feature, produce two complementary artefacts:
    — formal English scenarios that pin down *what* must be true.
 
 `{domain}` is the bounded domain (e.g. `blog/frontend`, `blog/admin`, `auth`):
-list the existing domains under `documentation/specifications/features/` and reuse the one
-that fits — that needs no confirmation. Only a *new* domain folder needs the
-user's explicit agreement before you create it. `{feature}` is a kebab-case noun
+list the existing domains under `documentation/specifications/features/` and
+recommend the one that fits in the interview below; a *new* domain folder is
+proposed there like any other decision. `{feature}` is a kebab-case noun
 matching the naming style of sibling files in the chosen domain.
 
-## First step: settle ambiguity
+## First step: the grilling interview
 
-Before writing anything, identify the dimensions the requirement leaves open —
-ordering, pagination, empty states, auth, validation, error handling,
-draft/published distinctions, future-dated content, etc. If the domain is
-unfamiliar, read 2–3 existing `.feature` files first to learn the patterns.
+Before writing anything, **invoke the `grilling` skill** and interview the
+user until every decision the spec depends on is settled. Follow it in full:
+rounds over the design tree, every question with your recommended answer, and
+no writing until the frontier is empty and the user confirms you share an
+understanding. Every decision goes to the user, including the ones you could
+have settled yourself. How the interview applies to a spec:
 
-Where a dimension is genuinely open — two defensible answers, and the choice
-changes what the tests assert — use **AskUserQuestion** to ask up to four
-focused questions, and do not invent answers. Where the request, the existing
-spec, or the sibling features already settle it, settle it yourself and tell
-the user which reading you took. Every question interrupts the user, so spend
-them on real forks, not on confirmations.
+- **The design tree is the behavior.** Map the dimensions the requirement
+  leaves open — ordering, pagination, empty states, auth, validation, error
+  handling, draft/published distinctions, future-dated content, etc. — and the
+  decisions that hang off each one. The `{domain}` and `{feature}` names are
+  questions in the first round.
+- **Recommend what already exists.** Before the first round, read the existing
+  spec if there is one and 2–3 sibling `.feature` files in the domain. Where
+  they or the request already answer a question, make that your recommended
+  answer and say where it comes from, so a "yes" confirms it.
+- **Leave technical branches to feature-architect.** A branch that turns on a
+  cross-cutting technical decision (new dependency, file/serialization format,
+  how a new bounded domain is stored) is not the user's to settle here: name it
+  as open and carry it forward (see *Boundaries*).
+- **Keep the reasons.** When the user explains an answer, note why: each
+  decision and its reason becomes a bullet in the `leesmij`.
 
 ## Gherkin conventions
 
@@ -63,10 +74,9 @@ them on real forks, not on confirmations.
 1. Write the Gherkin plus the Dutch `leesmij`.
 2. Prune parameters that don't improve mutation coverage of the behavior.
 3. Move repeated scenario setup into `Background` where it preserves meaning.
-4. Ask the user to approve the finished spec **when you asked them questions
-   in the first place, or when you are proposing a new `{domain}` folder** —
-   those calls are theirs. A spec that lands in an existing domain with
-   nothing genuinely open goes straight on to the next step.
+4. Ask the user to approve the finished spec. The interview settled the
+   decisions; this checks that the Gherkin and the `leesmij` say what was
+   agreed.
 
 ## Boundaries — escalate instead of guessing
 
@@ -83,9 +93,8 @@ them on real forks, not on confirmations.
 
 ## Before you move on
 
-A new `{domain}` folder and any genuine ambiguity need the user's explicit
-answer first; nothing else does. When you report on the spec, say which
-questions you asked and which dimensions you settled yourself, so the user can
-tell what was decided from what was assumed. Carry forward what the next step
-needs: the domain and feature paths you chose, the ambiguity resolutions, and
-any technical question still open for **feature-architect**.
+The spec moves on only once the interview has ended and the user has approved
+the finished spec. When you report on it, list the decisions the interview
+settled and the answers given. Carry forward what the next step needs: the
+domain and feature paths, those decisions, and any technical question still
+open for **feature-architect**.
