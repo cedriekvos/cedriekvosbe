@@ -140,6 +140,7 @@
         "fix-qa": [
             "./vendor/bin/rector process",
             "./vendor/bin/pint",
+            "@php documentation/tools/generate.php",
             "echo QA fixed"
         ],
         "playwright:install": [

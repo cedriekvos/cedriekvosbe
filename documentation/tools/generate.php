@@ -783,7 +783,7 @@ if (in_array('--check', $argv, true)) {
     }
 
     if ($stale !== []) {
-        echo "Run php documentation/tools/generate.php and commit the pages it writes.\n";
+        echo "Run composer fix-qa (or php documentation/tools/generate.php) and include the pages it writes in the change.\n";
 
         exit(1);
     }

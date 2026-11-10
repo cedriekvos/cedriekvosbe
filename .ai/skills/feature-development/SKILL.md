@@ -114,14 +114,18 @@ class graph within the strategy an ADR sets.
    `php artisan test --compact --filter=<name>`. If they include
    `tests/Browser/` tests, run those the way *Running browser tests* below
    describes — never on the Bash tool's synchronous path.
-5. **Format and auto-fix**: `composer fix-qa`, or at minimum
-   `vendor/bin/pint --dirty --format agent`.
+5. **Format, auto-fix and regenerate**: `composer fix-qa`. Rector and Pint fix
+   the code, and `generate.php` rewrites the generated documentation pages
+   that the spec, the acceptance tests and your code made stale: the feature
+   trace, the architecture pages and `assets/tokens.css`. Run the whole
+   script; Pint alone leaves those pages stale and `qa:fast` red.
 6. **Run the gate:** `composer qa:fast` — must pass end to end.
 
 ## Quality gate — `composer qa:fast` must be green
 
 `composer qa:fast` is your gate: `composer validate`, `npm run build`, `rector
---dry-run` + `pint --test`, `phpstan analyse`, `pest --parallel --tia`, then
+--dry-run` + `pint --test`, `phpstan analyse`, `generate.php --check` (the
+generated pages are current), `pest --parallel --tia`, then
 coverage and type-coverage at `--min=100`, both `--exclude-testsuite=Browser`.
 Write unit tests as the thing that carries coverage: browser tests are
 excluded from the coverage, type-coverage and mutation gates entirely, so a
@@ -174,8 +178,9 @@ live in `tests/Browser/`.
   wrong, say so and let the user or the reviewer settle it.
 - Stay under `app/`, `resources/`, and `tests/Unit/`. Don't touch
   `tests/Feature/`, `tests/Browser/`, `tests/Architecture/` or
-  `documentation/` while implementing, and don't add dependencies without an
-  ADR approving them.
+  `documentation/` while implementing — except the generated pages that
+  `composer fix-qa` rewrites — and don't add dependencies without an ADR
+  approving them.
 - When what stands between you and green is a change you may not make
   yourself, such as an edit to `tests/Architecture/`, stop and ask the user:
   give the exact change as a ready-to-apply diff, and say what is already
