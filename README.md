@@ -121,7 +121,6 @@ documentation/
     leesmij/          Dutch plain-language companion to each spec
   decisions/          ADRs
   lessons/            PHP and this codebase, taught from its own code
-pack/                 autonomous multi-agent pipeline (see pack/README.md)
 tests/                Unit, Feature, Browser, Architecture
 ```
 
@@ -132,10 +131,3 @@ Open [`documentation/index.html`](documentation/index.html) in a browser to brow
 Every feature carries a Gherkin spec in `documentation/specifications/features/` and a Dutch `leesmij`
 that explains it in plain language. Cross-cutting technical decisions are recorded as ADRs
 in `documentation/decisions/` — start at the [index](documentation/decisions/index.html).
-
-## Agent pack
-
-`pack/` is a self-contained multi-agent pipeline that can drive a feature from spec to
-reviewed implementation: specifier → architect → tests → development → review, handing off
-through a queue and archiving a full audit trail per run. It is separate from the
-application. See [`pack/README.md`](pack/README.md).
