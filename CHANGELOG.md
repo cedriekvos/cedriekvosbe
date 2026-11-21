@@ -7,6 +7,66 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.11] - 2026-11-21
+
+Laravel goes to 13.43.0, which clears a security advisory, and
+`composer audit` passes again. The other changes are to the documentation and
+the agent workflow. The site itself is unchanged.
+
+### Security
+
+- **Laravel** 13.38.0 to 13.43.0, clearing CVE-2026-128083
+  (GHSA-63hm-g96r-2m2q, low): when a task passed to `Concurrency::run()`
+  prints user-controlled text, that text can forge the result the framework
+  reads back from the child process and, in some conditions, run code. The
+  site never calls `Concurrency::run()`.
+
+### Added
+
+- **Documentation** — a Workflow outline section maps every instruction that
+  steers an agent through the project: the sources an agent loads, in order,
+  then each instruction by pipeline step, with the file that defines it and
+  the files that repeat it. Every documentation page links to it from the
+  menu, and the hub gets a fifth card.
+- `.ai/rules/composer-lock.md` records the two traps behind the 1.7.8 and
+  1.7.9 deploys: a Composer release that changes how the lock's content hash
+  is computed, and `qa:fast` running Rector and PHPStan with their caches.
+
+### Changed
+
+- **Dependencies** — only `laravel/framework` and its dependencies are
+  updated, so `composer.json` is unchanged. Guzzle goes from 8.3.0 to 8.5.4,
+  with its promises to 3.2.0 and PSR-7 to 3.5.1, Monolog to 3.13.0,
+  `ramsey/uuid` to 4.10.0, phpdotenv to 5.8.0 and
+  `laravel/serializable-closure` to 2.2.0, with patch releases of Carbon,
+  Prompts, Termwind, `doctrine/inflector`, `doctrine/deprecations`,
+  `webmozart/assert` and the PHP 8.5 polyfill.
+- **Dependencies** — Laravel Boost 2.10.4. Its Pest guideline no longer tells
+  agents to ask the user to run the full test suite, which contradicted the
+  `qa:fast` and `qa` gates.
+- **Workflow** — feature-specifier runs the grilling skill's full interview
+  before it writes a spec: questions in rounds, a recommended answer with each
+  one, and nothing written until the user confirms what was agreed. The user
+  approves every finished spec.
+- **Workflow** — `composer fix-qa` also regenerates the documentation pages,
+  and feature-development runs it, so the implementation step can fix the
+  stale-page failure in `qa:fast` that a new spec or test causes.
+- **Workflow** — the vendored skills codebase-design, grilling,
+  improve-codebase-architecture and git-commit are updated from upstream.
+
+### Removed
+
+- **Workflow** — the agent pack under `pack/`: a second copy of the feature
+  pipeline for unattended runs, whose prompts had drifted from the skills. The
+  skills and the feature-reviewer agent are now the only definition of the
+  pipeline.
+
+### Fixed
+
+- **Workflow** — feature-to-pest said Pest 4 while Pest 5 is installed. It now
+  names no version and sends syntax questions to `search-docs`, which answers
+  for the installed Pest.
+
 ## [1.7.10] - 2026-11-06
 
 The 1.7.9 deploy stopped at Rector, so the security updates from 1.7.8 still
@@ -565,7 +625,8 @@ the editor account, sessions, cache and queue.
 - **Documentation** — a Gherkin spec and Dutch `leesmij` per feature, seven ADRs,
   and a generated architecture site.
 
-[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.10...HEAD
+[Unreleased]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.11...HEAD
+[1.7.11]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.10...1.7.11
 [1.7.10]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.9...1.7.10
 [1.7.9]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.8...1.7.9
 [1.7.8]: https://github.com/cedriekvos/cedriekvosbe/compare/1.7.7...1.7.8
