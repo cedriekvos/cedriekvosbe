@@ -16,6 +16,8 @@
         "feature-architect",
         "feature-development",
         "feature-specifier",
-        "feature-to-pest"
+        "feature-to-pest",
+        "release",
+        "security-update"
     ]
 }
